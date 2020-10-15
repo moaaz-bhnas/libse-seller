@@ -71,14 +71,13 @@ const AccountDropdown = ({ previousInteractiveElement }) => {
   const contentDirection = useContext(ContentDirectionContext);
 
   // profile
-  // const { uid } = useContext(AuthContext);
-  // const dispatch = useDispatch();
-  // useEffect(() => {
-  //   dispatch(setProfile(uid));
-  // }, []);
-  // const profile = useSelector((state) => state.profile.profile);
-  // const firstName = profile && profile.username.split(" ")[0];
-  const firstName = "test";
+  const { uid } = useContext(AuthContext);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(setProfile(uid));
+  }, []);
+  const profile = useSelector((state) => state.profile.profile);
+  const firstName = profile && profile.username.split(" ")[0];
 
   // Refs
   const containerRef = useRef(null);

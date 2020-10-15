@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AddProduct, AddIcon, Button, NextIcon, PreviousIcon } from "./Style";
+import { AddProduct, AddIcon, Button, NextIcon, PreviousIcon } from "./style";
 import addIcon from "../../img/add.svg";
 import nextIcon from "../../img/next.svg";
 import previousIcon from "../../img/previous.svg";

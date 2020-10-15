@@ -13,27 +13,26 @@ export const AuthProvider = ({ children }) => {
   const { lang } = router.query;
   const [user, setUser] = useState("not set");
 
-  // useEffect(() => {
-  //   return firebase.auth().onIdTokenChanged(async (user) => {
-  //     if (!user) {
-  //       setUser(null);
-  //       destroyCookie({}, "token", { path: "/" });
-  //       router.push(`/${lang}/login`);
-  //       return;
-  //     }
+  useEffect(() => {
+    return firebase.auth().onIdTokenChanged(async (user) => {
+      if (!user) {
+        setUser(null);
+        destroyCookie({}, "token", { path: "/" });
+        router.push(`/${lang}/login`);
+        return;
+      }
 
-  //     const token = await user.getIdToken();
-  //     setUser(user);
-  //     setCookie({}, "token", token, { path: "/" });
-  //   });
-  // }, []);
+      const token = await user.getIdToken();
+      setUser(user);
+      setCookie({}, "token", token, { path: "/" });
+    });
+  }, []);
 
   console.log("(auth) user: ", user);
 
   return (
     <AuthContext.Provider value={user}>
-      {/* {user !== "not set" ? children : <></>} */}
-      {children}
+      {user !== "not set" ? children : <></>}
     </AuthContext.Provider>
   );
 };

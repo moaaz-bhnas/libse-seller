@@ -15,7 +15,8 @@ import { SellerContext } from "../../../contexts/seller";
 
 const TopBar = () => {
   const user = useContext(AuthContext);
-  const { isSeller } = useContext(SellerContext);
+  // const { isSeller } = useContext(SellerContext);
+  const isSeller = !!user;
 
   const router = useRouter();
   const { locale } = useContext(LocaleContext);
