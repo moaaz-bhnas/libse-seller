@@ -1,0 +1,31 @@
+const strings = {
+  en: {
+    registerStore: "Register your store",
+    personalInfo: "Personal Information",
+    firstName: "First name",
+    surName: "Surname",
+    phone: "Phone number (e.g. 01027050131)",
+    store: "Store",
+    storeName: "Store name",
+    address: "Store address",
+    workingHours: "Working Hours",
+    from: "From",
+    to: "To",
+    register: "Register",
+  },
+  ar: {
+    registerStore: "سجل محلك",
+    personalInfo: "بيانات شخصية",
+    firstName: "الاسم الأول",
+    surName: "اسم العائلة",
+    phone: "رقم الموبايل (مثلاً: 01027050131)",
+    store: "بيانات المحل",
+    storeName: "اسم المحل",
+    address: "العنوان",
+    workingHours: "ساعات العمل",
+    from: "من",
+    to: "إلى",
+    register: "سجل",
+  },
+};
+export default strings;
