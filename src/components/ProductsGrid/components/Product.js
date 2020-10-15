@@ -23,7 +23,7 @@ import {
 import { AuthContext } from "../../../contexts/auth";
 import { LocaleContext } from "../../../contexts/locale";
 import { useDispatch } from "react-redux";
-import ImageSlider from "../../ImageSlider";
+import ImageSlider from "../../ImageSlider/Index";
 import formatPrice from "../../../utils/formatPrice";
 import { ContentDirectionContext } from "../../../contexts/contentDirection";
 

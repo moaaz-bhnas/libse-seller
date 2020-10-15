@@ -1,7 +1,7 @@
-// import { AddProductButton } from "../../components/Button";
+import { AddProductButton } from "../../components/Button/Index";
 import styled from "styled-components";
 import { title } from "../../components/Title/style";
-// import ProductsGrid from "../../components/ProductsGrid";
+import ProductsGrid from "../../components/ProductsGrid/Index";
 import useTranslation from "../../hooks/useTranslation";
 import strings from "../../translations/strings/productsPage";
 import Layout from "../../components/Layout/Index";
@@ -45,11 +45,11 @@ const IndexPage = ({ lang }) => {
     <LocaleProvider lang={lang}>
       <ContentDirectionProvider>
         <Layout>
-          {/* <AddProductButton />
+          <AddProductButton />
 
           <Title>{t(strings, "myProducts")}</Title>
 
-          {products && <ProductsGrid products={products} seller />} */}
+          {products && <ProductsGrid products={products} seller />}
         </Layout>
       </ContentDirectionProvider>
     </LocaleProvider>
