@@ -1,4 +1,4 @@
-export const registerSeller = (seller, setIsSeller, router) => {
+export const registerSeller = ({ seller, callback }) => {
   return async (dispatch, getState, { firestore }) => {
     console.log(seller);
     const {
@@ -13,10 +13,8 @@ export const registerSeller = (seller, setIsSeller, router) => {
       closingHour,
     } = seller;
 
-    firestore
-      .collection("sellers")
-      .doc(uid)
-      .set({
+    try {
+      await firestore.collection("sellers").doc(uid).set({
         firstName,
         lastName,
         phoneNumber,
@@ -24,22 +22,20 @@ export const registerSeller = (seller, setIsSeller, router) => {
         address,
         openingHour,
         closingHour,
-      })
-      .then(() => {
-        dispatch({ type: "SELLER_REGISTRATION_SUCCESS" });
-        router.push("/");
-      })
-      .catch((err) => {
-        console.log(err);
-        dispatch({ type: "SELLER_REGISTRATION_ERROR", err });
       });
 
-    firestore
-      .collection("users")
-      .doc(uid)
-      .update({ isSeller: true })
-      .then(() => {
-        setIsSeller(true);
-      });
+      await firestore
+        .collection("users")
+        .doc(uid)
+        .update({ isSeller: true })
+        .then(() => {
+          setIsSeller(true);
+        });
+
+      dispatch({ type: "SELLER_REGISTRATION_SUCCESS" });
+      callback();
+    } catch (err) {
+      dispatch({ type: "SELLER_REGISTRATION_ERROR", err });
+    }
   };
 };

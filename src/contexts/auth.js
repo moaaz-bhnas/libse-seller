@@ -1,38 +1,67 @@
-import { useEffect, useState, createContext, useContext } from "react";
+import {
+  useEffect,
+  useState,
+  createContext,
+  useContext,
+  useCallback,
+} from "react";
 import { useRouter } from "next/router";
-import { setCookie, destroyCookie } from "nookies";
+// import { setCookie, destroyCookie } from "nookies";
 import firebase from "../firebase/clientApp";
-import { LocaleContext } from "./locale";
-// import { useRouter } from "next/router";
+import {
+  getUserFromCookie,
+  removeUserCookie,
+  setUserCookie,
+} from "../utils/auth/userCookies";
+import { useDispatch } from "react-redux";
+import { setProfile } from "../redux/actions/profileActions";
+import useUpdateEffect from "../hooks/useUpdateEffect";
+
+/* Redirections
+- Once the the provider runs. If no user from the cookies, redirect to login. 
+- If user signs in or out, redirect to /[locale] or /[locale]/login
+*/
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  console.log("AuthProvider");
   const router = useRouter();
-  console.log(router);
   const { lang } = router.query;
+  const dispatch = useDispatch();
+
   const [user, setUser] = useState("not set");
 
   useEffect(() => {
-    return firebase.auth().onIdTokenChanged(async (user) => {
-      if (!user) {
+    const cancelAuthListener = firebase.auth().onIdTokenChanged((user) => {
+      if (user) {
+        setUserCookie(user);
+        setUser(user);
+      } else {
+        removeUserCookie();
         setUser(null);
-        destroyCookie({}, "token", { path: "/" });
-        router.push(`/${lang}/login`);
-        return;
       }
-
-      const token = await user.getIdToken();
-      setUser(user);
-      setCookie({}, "token", token, { path: "/" });
     });
-  }, []);
+
+    const userFromCookie = getUserFromCookie();
+    if (!userFromCookie) {
+      router.push(`/${lang}/login`);
+      return;
+    }
+
+    setUser(userFromCookie);
+    return () => {
+      cancelAuthListener();
+    };
+  }, [lang]);
+
+  useUpdateEffect(() => {
+    if (user) dispatch(setProfile(user.uid));
+  }, [user]);
 
   console.log("(auth) user: ", user);
 
   return (
-    <AuthContext.Provider value={user}>
-      {user !== "not set" ? children : <></>}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
   );
 };

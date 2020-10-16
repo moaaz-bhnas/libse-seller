@@ -1,4 +1,4 @@
-export const signUp = (credentials) => {
+export const signUp = ({ credentials, callback }) => {
   return (dispatch, getState, { firebase, firestore }) => {
     firebase
       .auth()
@@ -11,22 +11,22 @@ export const signUp = (credentials) => {
         });
       })
       .then(() => {
-        console.log("username added");
+        callback();
         dispatch({ type: "SIGNUP_SUCCESS" });
       })
       .catch((err) => {
-        console.log(err);
         dispatch({ type: "SIGNUP_ERROR", err });
       });
   };
 };
 
-export const logIn = (credentials) => {
+export const logIn = ({ credentials, callback }) => {
   return (dispatch, getState, { firebase }) => {
     firebase
       .auth()
       .signInWithEmailAndPassword(credentials.email, credentials.password)
       .then(() => {
+        callback();
         dispatch({ type: "LOGIN_SUCCESS" });
       })
       .catch((err) => {

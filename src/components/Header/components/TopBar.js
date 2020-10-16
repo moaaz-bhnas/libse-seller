@@ -10,13 +10,11 @@ import { headerButtonStyles } from "../../Button/style";
 import { LocaleContext } from "../../../contexts/locale";
 import { useRouter } from "next/router";
 import { ContentDirectionContext } from "../../../contexts/contentDirection";
-import { AuthContext } from "../../../contexts/auth";
-import { SellerContext } from "../../../contexts/seller";
+import { useSelector } from "react-redux";
 
 const TopBar = () => {
-  const user = useContext(AuthContext);
-  // const { isSeller } = useContext(SellerContext);
-  const isSeller = !!user;
+  const profile = useSelector((state) => state.profile.profile);
+  const isSeller = profile ? profile.isSeller : null;
 
   const router = useRouter();
   const { locale } = useContext(LocaleContext);

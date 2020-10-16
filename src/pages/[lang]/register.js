@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import Form from "../../components/Register/Index";
 import { useRouter } from "next/router";
-import { SellerContext } from "../../contexts/seller";
 import Layout from "../../components/Layout/Index";
 import { LocaleProvider } from "../../contexts/locale";
 import { ContentDirectionProvider } from "../../contexts/contentDirection";

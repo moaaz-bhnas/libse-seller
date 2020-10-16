@@ -2,7 +2,6 @@ import { useContext, useEffect } from "react";
 import { useRouter } from "next/router";
 import AuthForm from "../../components/AuthForm/Index";
 import { AuthContext } from "../../contexts/auth";
-import { SellerContext } from "../../contexts/seller";
 import Layout from "../../components/Layout/Index";
 import { LocaleProvider } from "../../contexts/locale";
 import { ContentDirectionProvider } from "../../contexts/contentDirection";
@@ -28,7 +27,7 @@ export async function getStaticProps({ params }) {
 }
 
 const SignupPage = ({ lang }) => {
-  const user = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   // const { isSeller } = useContext(SellerContext);
   const router = useRouter();
 

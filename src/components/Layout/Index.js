@@ -4,13 +4,12 @@ import styled from "styled-components";
 import { LayoutContext } from "../../contexts/layout";
 import measurements from "../../shared/measurements";
 import time from "../../shared/time";
-import { AuthContext } from "../../contexts/auth";
-import { SellerContext } from "../../contexts/seller";
 import { ContentDirectionContext } from "../../contexts/contentDirection";
+import { useSelector } from "react-redux";
 
 const Layout = ({ children }) => {
-  const user = useContext(AuthContext);
-  const { isSeller } = useContext(SellerContext);
+  const profile = useSelector((state) => state.profile.profile);
+  const isSeller = profile ? profile.isSeller : null;
   const { sidebarExpanded } = useContext(LayoutContext);
 
   const contentDirection = useContext(ContentDirectionContext);

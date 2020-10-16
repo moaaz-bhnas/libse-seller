@@ -1,4 +1,4 @@
-import { memo, useState, useCallback } from "react";
+import { memo, useState, useCallback, useContext } from "react";
 import Link from "next/link";
 import {
   Form,
@@ -13,8 +13,14 @@ import { useDispatch } from "react-redux";
 import { logIn } from "../../../redux/actions/authActions";
 import translations from "../../../translations/strings/login";
 import useTranslation from "../../../hooks/useTranslation";
+import { LocaleContext } from "../../../contexts/locale";
+import { useRouter } from "next/router";
 
 const LoginForm = () => {
+  // locale
+  const { locale } = useContext(LocaleContext);
+
+  const router = useRouter();
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
@@ -25,7 +31,9 @@ const LoginForm = () => {
       event.preventDefault();
 
       const credentials = { email, password };
-      dispatch(logIn(credentials));
+      dispatch(
+        logIn({ credentials, callback: () => router.push(`/${locale}`) })
+      );
     },
     [email, password]
   );
@@ -65,7 +73,7 @@ const LoginForm = () => {
 
       <P>
         {t(translations, "noAccount")}{" "}
-        <Link passHref href="/signup">
+        <Link passHref href={`/${locale}/signup`}>
           <AuthLink>{t(translations, "createAccount")}</AuthLink>
         </Link>
       </P>

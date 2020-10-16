@@ -35,24 +35,29 @@ export async function getStaticProps({ params }) {
 const fetcher = (uid) => getSellerProducts(uid);
 
 const IndexPage = ({ lang }) => {
-  const user = useContext(AuthContext);
-  const { uid } = user;
-  const { data: products, error } = useSWR(uid, fetcher);
+  const { user } = useContext(AuthContext);
+  const { data: products, error } = useSWR(user ? user.uid : null, fetcher);
 
   const { t } = useTranslation(lang);
 
   return (
-    <LocaleProvider lang={lang}>
-      <ContentDirectionProvider>
-        <Layout>
-          <AddProductButton />
+    <>
+      {user === "not set" ? (
+        <div>Loading...</div>
+      ) : (
+        <LocaleProvider lang={lang}>
+          <ContentDirectionProvider>
+            <Layout>
+              <AddProductButton />
 
-          <Title>{t(strings, "myProducts")}</Title>
+              <Title>{t(strings, "myProducts")}</Title>
 
-          {products && <ProductsGrid products={products} seller />}
-        </Layout>
-      </ContentDirectionProvider>
-    </LocaleProvider>
+              {products && <ProductsGrid products={products} seller />}
+            </Layout>
+          </ContentDirectionProvider>
+        </LocaleProvider>
+      )}
+    </>
   );
 };
 

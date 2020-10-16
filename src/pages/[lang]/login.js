@@ -28,13 +28,13 @@ export async function getStaticProps({ params }) {
 
 const LoginPage = ({ lang }) => {
   console.log("login page");
-  const user = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   // const { isSeller } = useContext(SellerContext);
   const router = useRouter();
 
   useEffect(() => {
     if (user) {
-      router.push(`/${lang}`);
+      // router.push(`/${lang}`);
       //   if (isSeller) router.push(`/${locale}`);
       //   else router.push(`/${locale}/register`);
     }

@@ -4,25 +4,25 @@ import { Input } from "../Input/style";
 import { useDispatch } from "react-redux";
 import { registerSeller } from "../../redux/actions/sellerRegistrationActions";
 import { AuthContext } from "../../contexts/auth";
-import { SellerContext } from "../../contexts/seller";
-
 import styled from "styled-components";
 import theme from "../../shared/theme";
 import { rectButton } from "../Button/style";
 import { title } from "../Title/style";
 import useTranslation from "../../hooks/useTranslation";
 import translations from "../../translations/strings/register";
+import { LocaleContext } from "../../contexts/locale";
 
 const Register = () => {
+  // locale
+  const { locale } = useContext(LocaleContext);
+
   // translations
   const { t } = useTranslation();
 
   const router = useRouter();
-
   const dispatch = useDispatch();
 
   const { uid, email } = useContext(AuthContext);
-  const { setIsSeller } = useContext(SellerContext);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -47,7 +47,9 @@ const Register = () => {
         openingHour,
         closingHour,
       };
-      dispatch(registerSeller(seller, setIsSeller, router));
+      dispatch(
+        registerSeller({ seller, callback: () => router.push(`/${locale}`) })
+      );
     },
     [
       firstName,

@@ -1,18 +1,14 @@
-import { useContext } from "react";
 import styled, { css } from "styled-components";
 import { title } from "../../shared/data";
-import { AuthContext } from "../../contexts/auth";
 import TopBar from "./components/TopBar";
-import { SellerContext } from "../../contexts/seller";
+import { useSelector } from "react-redux";
 
 const Header = () => {
-  const user = useContext(AuthContext);
-  const { isSeller } = useContext(SellerContext);
+  const profile = useSelector((state) => state.profile.profile);
+  const isSeller = profile ? profile.isSeller : null;
 
   return (
-    <StyledHeader
-    // seller={user && isSeller}
-    >
+    <StyledHeader seller={isSeller}>
       <Title>{title}</Title>
 
       <Navigation>

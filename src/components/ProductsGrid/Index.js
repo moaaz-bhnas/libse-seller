@@ -4,7 +4,7 @@ import { Grid } from "./style";
 import { AuthContext } from "../../contexts/auth";
 
 const ProductsGrid = ({ products, seller }) => {
-  const user = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   // const { favorites } = useSelector((state) => state.firebase.profile);
   const favorites = [];
 

@@ -1,22 +1,22 @@
-import { memo, useState, useCallback } from "react";
+import { memo, useState, useCallback, useContext } from "react";
 import Link from "next/link";
-import {
-  Form,
-  Title,
-  SubmitButton,
-  PasswordRecoveryLink,
-  P,
-  AuthLink,
-} from "../style";
+import { Form, Title, SubmitButton, P, AuthLink } from "../style";
 import { Input } from "../../Input/style";
 import { useDispatch } from "react-redux";
-import { logIn } from "../../../redux/actions/authActions";
-import translations from "../../../translations/strings/login";
+import { signUp } from "../../../redux/actions/authActions";
+import translations from "../../../translations/strings/signup";
 import useTranslation from "../../../hooks/useTranslation";
+import { LocaleContext } from "../../../contexts/locale";
+import { useRouter } from "next/router";
 
-const LoginForm = () => {
+const SignupForm = () => {
+  // locale
+  const { locale } = useContext(LocaleContext);
+
+  const router = useRouter();
   const dispatch = useDispatch();
 
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -24,10 +24,15 @@ const LoginForm = () => {
     (event) => {
       event.preventDefault();
 
-      const credentials = { email, password };
-      dispatch(logIn(credentials));
+      const credentials = { username, email, password };
+      dispatch(
+        signUp({
+          credentials,
+          callback: () => router.push(`/${locale}/register`),
+        })
+      );
     },
-    [email, password]
+    [username, email, password]
   );
 
   // translations
@@ -35,7 +40,16 @@ const LoginForm = () => {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <Title>{t(translations, "login")}</Title>
+      <Title>{t(translations, "createAccount")}</Title>
+
+      <Input
+        type="text"
+        aria-label={t(translations, "name")}
+        placeholder={t(translations, "name")}
+        value={username}
+        onChange={(event) => setUsername(event.target.value)}
+        required
+      />
 
       <Input
         type="email"
@@ -55,22 +69,16 @@ const LoginForm = () => {
         required
       />
 
-      <Link passHref href="/password-recovery">
-        <PasswordRecoveryLink>
-          {t(translations, "forgotPass")}
-        </PasswordRecoveryLink>
-      </Link>
-
-      <SubmitButton type="submit">{t(translations, "login")}</SubmitButton>
+      <SubmitButton type="submit">{t(translations, "create")}</SubmitButton>
 
       <P>
-        {t(translations, "noAccount")}{" "}
-        <Link passHref href="/signup">
-          <AuthLink>{t(translations, "createAccount")}</AuthLink>
+        {t(translations, "haveAccount")}{" "}
+        <Link passHref href="/login">
+          <AuthLink>{t(translations, "login")}</AuthLink>
         </Link>
       </P>
     </Form>
   );
 };
 
-export default memo(LoginForm);
+export default memo(SignupForm);

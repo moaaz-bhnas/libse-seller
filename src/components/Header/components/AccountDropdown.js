@@ -19,7 +19,6 @@ import capitalize from "../../../utils/capitalize";
 import strings from "../../../translations/strings/header";
 import { ContentDirectionContext } from "../../../contexts/contentDirection";
 import { LocaleContext } from "../../../contexts/locale";
-import { setProfile } from "../../../redux/actions/profileActions";
 import { AuthContext } from "../../../contexts/auth";
 
 const MenuItem = (props) => {
@@ -71,11 +70,7 @@ const AccountDropdown = ({ previousInteractiveElement }) => {
   const contentDirection = useContext(ContentDirectionContext);
 
   // profile
-  const { uid } = useContext(AuthContext);
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(setProfile(uid));
-  }, []);
   const profile = useSelector((state) => state.profile.profile);
   const firstName = profile && profile.username.split(" ")[0];
 
