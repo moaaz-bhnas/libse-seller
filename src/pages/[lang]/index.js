@@ -11,6 +11,7 @@ import { useContext } from "react";
 import { AuthContext } from "../../contexts/auth";
 import { LocaleProvider } from "../../contexts/locale";
 import { ContentDirectionProvider } from "../../contexts/contentDirection";
+import Protected from "../../Protected";
 
 export const getStaticPaths = async () => {
   const languages = ["ar", "en"];
@@ -43,13 +44,15 @@ const IndexPage = ({ lang }) => {
   return (
     <LocaleProvider lang={lang}>
       <ContentDirectionProvider>
-        <Layout>
-          <AddProductButton />
+        <Protected>
+          <Layout>
+            <AddProductButton />
 
-          <Title>{t(strings, "myProducts")}</Title>
+            <Title>{t(strings, "myProducts")}</Title>
 
-          {products && <ProductsGrid products={products} seller />}
-        </Layout>
+            {products && <ProductsGrid products={products} seller />}
+          </Layout>
+        </Protected>
       </ContentDirectionProvider>
     </LocaleProvider>
   );

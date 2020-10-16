@@ -5,6 +5,7 @@ import { AuthContext } from "../../contexts/auth";
 import Layout from "../../components/Layout/Index";
 import { LocaleProvider } from "../../contexts/locale";
 import { ContentDirectionProvider } from "../../contexts/contentDirection";
+import { useSelector } from "react-redux";
 
 export const getStaticPaths = async () => {
   const languages = ["ar", "en"];
@@ -28,20 +29,18 @@ export async function getStaticProps({ params }) {
 
 const SignupPage = ({ lang }) => {
   const { user } = useContext(AuthContext);
-  // const { isSeller } = useContext(SellerContext);
+
+  const profile = useSelector((state) => state.profile.profile);
+  const isSeller = profile ? profile.isSeller : null;
+
   const router = useRouter();
 
   useEffect(() => {
     if (user) {
-      // router.push(`/${lang}`);
-      //   if (isSeller) router.push(`/${locale}`);
-      //   else router.push(`/${locale}/register`);
+      if (isSeller) router.push(`/${lang}`);
+      else router.push(`/${lang}/register`);
     }
-  }, [user]);
-  // if (user) {
-  // if (isSeller) router.push("/");
-  // else router.push("/register");
-  // }
+  }, [user, isSeller]);
 
   return (
     <LocaleProvider lang={lang}>

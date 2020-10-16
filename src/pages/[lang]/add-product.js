@@ -1,11 +1,8 @@
-import { useContext, useEffect } from "react";
-import Form from "../../components/Register/Index";
-import { useRouter } from "next/router";
+import AddProductForm from "../../components/AddProductForm/Index";
 import Layout from "../../components/Layout/Index";
-import { LocaleProvider } from "../../contexts/locale";
 import { ContentDirectionProvider } from "../../contexts/contentDirection";
+import { LocaleProvider } from "../../contexts/locale";
 import Protected from "../../Protected";
-import { useSelector } from "react-redux";
 
 export const getStaticPaths = async () => {
   const languages = ["ar", "en"];
@@ -27,21 +24,13 @@ export async function getStaticProps({ params }) {
   };
 }
 
-const RegisterPage = ({ lang }) => {
-  const profile = useSelector((state) => state.profile.profile);
-  const isSeller = profile ? profile.isSeller : null;
-
-  const router = useRouter();
-  useEffect(() => {
-    if (isSeller) router.push(`/${lang}`);
-  }, [isSeller]);
-
+const AddProduct = ({ lang }) => {
   return (
     <LocaleProvider lang={lang}>
       <ContentDirectionProvider>
         <Protected>
           <Layout>
-            <Form />
+            <AddProductForm />
           </Layout>
         </Protected>
       </ContentDirectionProvider>
@@ -49,4 +38,4 @@ const RegisterPage = ({ lang }) => {
   );
 };
 
-export default RegisterPage;
+export default AddProduct;
