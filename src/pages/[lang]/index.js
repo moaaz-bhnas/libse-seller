@@ -41,23 +41,17 @@ const IndexPage = ({ lang }) => {
   const { t } = useTranslation(lang);
 
   return (
-    <>
-      {user === "not set" ? (
-        <div>Loading...</div>
-      ) : (
-        <LocaleProvider lang={lang}>
-          <ContentDirectionProvider>
-            <Layout>
-              <AddProductButton />
+    <LocaleProvider lang={lang}>
+      <ContentDirectionProvider>
+        <Layout>
+          <AddProductButton />
 
-              <Title>{t(strings, "myProducts")}</Title>
+          <Title>{t(strings, "myProducts")}</Title>
 
-              {products && <ProductsGrid products={products} seller />}
-            </Layout>
-          </ContentDirectionProvider>
-        </LocaleProvider>
-      )}
-    </>
+          {products && <ProductsGrid products={products} seller />}
+        </Layout>
+      </ContentDirectionProvider>
+    </LocaleProvider>
   );
 };
 
