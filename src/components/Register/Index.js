@@ -11,6 +11,7 @@ import { title } from "../Title/style";
 import useTranslation from "../../hooks/useTranslation";
 import translations from "../../translations/strings/register";
 import { LocaleContext } from "../../contexts/locale";
+import { setProfile } from "../../redux/actions/profileActions";
 
 const Register = () => {
   // locale
@@ -22,7 +23,9 @@ const Register = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const { uid, email } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
+  const uid = user ? user.uid : null;
+  const email = user ? user.email : null;
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -47,9 +50,13 @@ const Register = () => {
         openingHour,
         closingHour,
       };
-      dispatch(
-        registerSeller({ seller, callback: () => router.push(`/${locale}`) })
-      );
+
+      const callback = () => {
+        dispatch(setProfile(uid));
+        router.push(`/${locale}`);
+      };
+
+      dispatch(registerSeller({ seller, callback }));
     },
     [
       firstName,

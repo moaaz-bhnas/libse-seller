@@ -18,6 +18,11 @@ const sellerRegistrationReducer = (state = initState, action) => {
         ...state,
         profileError: action.err.message,
       };
+    case "CLEAR_PROFILE":
+      return {
+        ...state,
+        profile: null,
+      };
     default:
       return state;
   }

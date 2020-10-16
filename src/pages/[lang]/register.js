@@ -26,12 +26,12 @@ export async function getStaticProps({ params }) {
 }
 
 const RegisterPage = ({ lang }) => {
-  const { isSeller } = useContext(SellerContext);
+  // const { isSeller } = useContext(SellerContext);
   const router = useRouter();
 
-  if (isSeller) {
-    // router.push("/");
-  }
+  // if (isSeller) {
+  // router.push("/");
+  // }
 
   return (
     <LocaleProvider lang={lang}>

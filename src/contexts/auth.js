@@ -8,13 +8,13 @@ import {
 import { useRouter } from "next/router";
 // import { setCookie, destroyCookie } from "nookies";
 import firebase from "../firebase/clientApp";
-import {
-  getUserFromCookie,
-  removeUserCookie,
-  setUserCookie,
-} from "../utils/auth/userCookies";
+// import {
+//   getUserFromCookie,
+//   removeUserCookie,
+//   setUserCookie,
+// } from "../utils/auth/userCookies";
 import { useDispatch } from "react-redux";
-import { setProfile } from "../redux/actions/profileActions";
+import { clearProfile, setProfile } from "../redux/actions/profileActions";
 import useUpdateEffect from "../hooks/useUpdateEffect";
 
 /* Redirections
@@ -33,30 +33,23 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState("not set");
 
   useEffect(() => {
-    const cancelAuthListener = firebase.auth().onIdTokenChanged((user) => {
-      if (user) {
-        setUserCookie(user);
-        setUser(user);
-      } else {
-        removeUserCookie();
-        setUser(null);
-      }
-    });
+    const cancelAuthListener = firebase.auth().onIdTokenChanged(setUser);
 
-    const userFromCookie = getUserFromCookie();
-    if (!userFromCookie) {
-      router.push(`/${lang}/login`);
-      return;
-    }
+    // const userFromCookie = getUserFromCookie();
+    // if (!userFromCookie) {
+    //   router.push(`/${lang}/login`);
+    //   return;
+    // }
 
-    setUser(userFromCookie);
+    // setUser(userFromCookie);
     return () => {
       cancelAuthListener();
     };
-  }, [lang]);
+  }, []);
 
   useUpdateEffect(() => {
     if (user) dispatch(setProfile(user.uid));
+    else dispatch(clearProfile());
   }, [user]);
 
   console.log("(auth) user: ", user);

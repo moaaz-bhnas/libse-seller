@@ -13,8 +13,10 @@ export const registerSeller = ({ seller, callback }) => {
       closingHour,
     } = seller;
 
-    try {
-      await firestore.collection("sellers").doc(uid).set({
+    firestore
+      .collection("sellers")
+      .doc(uid)
+      .set({
         firstName,
         lastName,
         phoneNumber,
@@ -22,20 +24,49 @@ export const registerSeller = ({ seller, callback }) => {
         address,
         openingHour,
         closingHour,
+      })
+      .then(() => {
+        console.log(1);
+        return firestore
+          .collection("users")
+          .doc(uid)
+          .update({ isSeller: true });
+      })
+      .then(() => {
+        console.log(2);
+        dispatch({ type: "SELLER_REGISTRATION_SUCCESS" });
+        callback();
+      })
+      .catch((err) => {
+        dispatch({ type: "SELLER_REGISTRATION_ERROR", err });
       });
 
-      await firestore
-        .collection("users")
-        .doc(uid)
-        .update({ isSeller: true })
-        .then(() => {
-          setIsSeller(true);
-        });
+    // try {
+    //   console.log("try");
+    //   await firestore.collection("sellers").doc(uid).set({
+    //     firstName,
+    //     lastName,
+    //     phoneNumber,
+    //     storeName,
+    //     address,
+    //     openingHour,
+    //     closingHour,
+    //   });
+    //   console.log(1);
 
-      dispatch({ type: "SELLER_REGISTRATION_SUCCESS" });
-      callback();
-    } catch (err) {
-      dispatch({ type: "SELLER_REGISTRATION_ERROR", err });
-    }
+    //   await firestore
+    //     .collection("users")
+    //     .doc(uid)
+    //     .update({ isSeller: true })
+    //     .then(() => {
+    //       setIsSeller(true);
+    //     });
+    //   console.log(2);
+
+    //   dispatch({ type: "SELLER_REGISTRATION_SUCCESS" });
+    //   callback();
+    // } catch (err) {
+    //   dispatch({ type: "SELLER_REGISTRATION_ERROR", err });
+    // }
   };
 };

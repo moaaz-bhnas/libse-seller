@@ -33,7 +33,7 @@ const SignupPage = ({ lang }) => {
 
   useEffect(() => {
     if (user) {
-      router.push(`/${lang}`);
+      // router.push(`/${lang}`);
       //   if (isSeller) router.push(`/${locale}`);
       //   else router.push(`/${locale}/register`);
     }

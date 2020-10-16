@@ -10,3 +10,7 @@ export const setProfile = (sellerId) => {
     }
   };
 };
+
+export const clearProfile = () => {
+  return { type: "CLEAR_PROFILE" };
+};

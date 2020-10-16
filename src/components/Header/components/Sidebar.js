@@ -22,13 +22,16 @@ const Item = ({ itemObject, expanded, index, locale, contentDirection }) => {
   const [contentVisible, setContentVisible] = useState(expanded);
   useEffect(
     function delayShowingContent() {
+      let timer;
       if (expanded) {
-        setTimeout(() => {
+        timer = setTimeout(() => {
           setContentVisible(true);
         }, 150);
       } else {
         setContentVisible(false);
       }
+
+      return () => clearTimeout(timer);
     },
     [expanded]
   );
