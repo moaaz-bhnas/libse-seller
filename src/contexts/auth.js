@@ -27,7 +27,6 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   console.log("AuthProvider");
   const router = useRouter();
-  const { lang } = router.query;
   const dispatch = useDispatch();
 
   const [user, setUser] = useState("not set");

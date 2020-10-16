@@ -6,22 +6,17 @@ import { isLocale } from "../translations/types";
 export const LocaleContext = createContext();
 
 export const LocaleProvider = ({ children, lang }) => {
-  const { query } = useRouter();
   const [locale, setLocale] = useState(lang);
   console.log("LocaleProvider - locale: ", locale);
 
   useEffect(
     function updateLocaleOnQueryChange() {
-      console.log("updateLocaleOnQueryChange - query.lang: ", query.lang);
-      if (
-        typeof query.lang === "string" &&
-        isLocale(query.lang) &&
-        locale !== query.lang
-      ) {
-        setLocale(query.lang);
+      console.log("updateLocaleOnQueryChange - query.locale: ", locale);
+      if (typeof locale === "string" && isLocale(locale) && locale !== locale) {
+        setLocale(locale);
       }
     },
-    [query.lang]
+    [locale]
   );
 
   useEffect(
