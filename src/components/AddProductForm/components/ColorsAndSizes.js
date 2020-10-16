@@ -15,7 +15,7 @@ import uploadIcon from "../../../img/upload.svg";
 import useTranslation from "../../../hooks/useTranslation";
 import translations from "../../../translations/strings/addProductPage";
 import { ContentDirectionContext } from "../../../contexts/contentDirection";
-import { MultiLanguageSelect } from "../../input";
+import { MultiLanguageSelect } from "../../Input/Index";
 import { LocaleContext } from "../../../contexts/locale";
 import CheckboxesGroup from "./CheckboxesGroup";
 
