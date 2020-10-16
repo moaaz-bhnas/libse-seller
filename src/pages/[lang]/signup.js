@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { useRouter } from "next/router";
 import AuthForm from "../../components/AuthForm/Index";
 import { AuthContext } from "../../contexts/auth";
@@ -6,6 +6,7 @@ import Layout from "../../components/Layout/Index";
 import { LocaleProvider } from "../../contexts/locale";
 import { ContentDirectionProvider } from "../../contexts/contentDirection";
 import { useSelector } from "react-redux";
+import useUpdateEffect from "../../hooks/useUpdateEffect";
 
 export const getStaticPaths = async () => {
   const languages = ["ar", "en"];
@@ -35,7 +36,7 @@ const SignupPage = ({ lang }) => {
 
   const router = useRouter();
 
-  useEffect(() => {
+  useUpdateEffect(() => {
     if (user) {
       if (isSeller) router.push(`/${lang}`);
       else router.push(`/${lang}/register`);
