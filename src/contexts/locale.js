@@ -9,6 +9,7 @@ export const LocaleProvider = ({ children, lang }) => {
   const [locale, setLocale] = useState(lang);
   console.log("LocaleProvider - locale: ", locale);
 
+  const { query } = useRouter();
   useEffect(
     function updateLocaleOnQueryChange() {
       console.log("updateLocaleOnQueryChange - query.lang: ", query.lang);
