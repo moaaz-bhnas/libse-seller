@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { isLocale } from "../translations/types";
 // import Error from "next/error";
 
-export const LocaleContext = createContext();
+export const LocaleContext = createContext({ locale: "ar" });
 
 export const LocaleProvider = ({ children, lang }) => {
   const [locale, setLocale] = useState(lang);
