@@ -73,7 +73,7 @@ const SignupForm = () => {
 
       <P>
         {t(translations, "haveAccount")}{" "}
-        <Link passHref href="/login">
+        <Link passHref href={`/${locale}/login`}>
           <AuthLink>{t(translations, "login")}</AuthLink>
         </Link>
       </P>
