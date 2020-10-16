@@ -11,12 +11,16 @@ export const LocaleProvider = ({ children, lang }) => {
 
   useEffect(
     function updateLocaleOnQueryChange() {
-      console.log("updateLocaleOnQueryChange - query.locale: ", locale);
-      if (typeof locale === "string" && isLocale(locale) && locale !== locale) {
-        setLocale(locale);
+      console.log("updateLocaleOnQueryChange - query.lang: ", query.lang);
+      if (
+        typeof query.lang === "string" &&
+        isLocale(query.lang) &&
+        locale !== query.lang
+      ) {
+        setLocale(query.lang);
       }
     },
-    [locale]
+    [query.lang]
   );
 
   useEffect(
