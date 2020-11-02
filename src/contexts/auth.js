@@ -1,21 +1,9 @@
-import {
-  useEffect,
-  useState,
-  createContext,
-  useContext,
-  useCallback,
-} from "react";
-import { useRouter } from "next/router";
-// import { setCookie, destroyCookie } from "nookies";
+import { useEffect, useState, createContext } from "react";
 import firebase from "../firebase/clientApp";
-// import {
-//   getUserFromCookie,
-//   removeUserCookie,
-//   setUserCookie,
-// } from "../utils/auth/userCookies";
 import { useDispatch } from "react-redux";
 import { clearProfile, setProfile } from "../redux/actions/profileActions";
 import useUpdateEffect from "../hooks/useUpdateEffect";
+import { setCookie, destroyCookie } from "nookies";
 
 /* Redirections
 - Once the the provider runs. If no user from the cookies, redirect to login. 
@@ -26,24 +14,23 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   console.log("AuthProvider");
-  const router = useRouter();
   const dispatch = useDispatch();
 
   const [user, setUser] = useState("not set");
 
   useEffect(() => {
-    const cancelAuthListener = firebase.auth().onIdTokenChanged(setUser);
+    const cancelAuthListener = firebase.auth().onIdTokenChanged((user) => {
+      if (user) {
+        setUser(user);
+        const token = user.getIdToken();
+        setCookie(null, "token", token, { path: "/" });
+      } else {
+        setUser(null);
+        destroyCookie(null, "token", { path: "/" });
+      }
+    });
 
-    // const userFromCookie = getUserFromCookie();
-    // if (!userFromCookie) {
-    //   router.push(`/${lang}/login`);
-    //   return;
-    // }
-
-    // setUser(userFromCookie);
-    return () => {
-      cancelAuthListener();
-    };
+    return () => cancelAuthListener();
   }, []);
 
   useUpdateEffect(() => {

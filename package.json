@@ -7,11 +7,11 @@
     "start": "next start"
   },
   "dependencies": {
+    "cookies": "^0.8.0",
     "firebase": "7.17.0",
-    "js-cookie": "^2.2.1",
     "next": "^10.0.0",
     "next-redux-wrapper": "^6.0.2",
-    "nookies": "^2.4.0",
+    "nookies": "^2.5.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-flip-move": "^3.0.4",

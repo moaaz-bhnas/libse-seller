@@ -12,23 +12,27 @@ import { AuthContext } from "../../contexts/auth";
 import { LocaleProvider } from "../../contexts/locale";
 import { ContentDirectionProvider } from "../../contexts/contentDirection";
 import Protected from "../../Protected";
+import { parseCookies } from "nookies";
 
-export const getStaticPaths = async () => {
-  const languages = ["ar", "en"];
-
-  const paths = languages.map((lang) => ({
+export async function getServerSideProps(context) {
+  const {
     params: { lang },
-  }));
+  } = context;
 
-  // fallback: false means pages that don’t have the
-  // correct id will 404.
-  return { paths, fallback: false };
-};
+  const cookies = parseCookies(context);
+  console.log(cookies);
+  if (!cookies.token) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: `${lang}/login`,
+      },
+    };
+  }
 
-export async function getStaticProps({ params }) {
   return {
     props: {
-      lang: params.lang,
+      lang: lang,
     },
   };
 }
