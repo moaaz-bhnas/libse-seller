@@ -33,7 +33,7 @@ const TopBar = () => {
   return (
     <StyledTopBar>
       {isSeller && <Sidebar />}
-      <Logo isSeller={isSeller} />
+      <Logo />
       {isSeller && <Chat ref={chatButtonRef} />}
       {profile && (
         <AccountDropdown previousInteractiveElement={chatButtonRef} />
