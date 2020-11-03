@@ -3,12 +3,6 @@ import firebase from "../firebase/clientApp";
 import { useDispatch } from "react-redux";
 import { clearProfile, setProfile } from "../redux/actions/profileActions";
 import useUpdateEffect from "../hooks/useUpdateEffect";
-// import { setCookie, destroyCookie, parseCookies } from "nookies";
-
-/* Redirections
-- Once the the provider runs. If no user from the cookies, redirect to login. 
-- If user signs in or out, redirect to /[locale] or /[locale]/login
-*/
 
 export const AuthContext = createContext();
 
@@ -26,25 +20,9 @@ export const AuthProvider = ({ children, serverUser = null }) => {
           setUser(user);
           const token = await user.getIdToken();
           document.cookie = `token=${token}; Path=/`;
-          console.log("document.cookie: ", document.cookie);
-          // setCookie(null, "token", token, { path: "none" });
-          // console.log(
-          //   "onIdTokenChanged - user: ",
-          //   user,
-          //   "cookies: ",
-          //   parseCookies()
-          // );
         } else {
           setUser(null);
           document.cookie = `token=; Path=/`;
-          console.log("document.cookie: ", document.cookie);
-          // setCookie(null, "token", "", { path: "none" });
-          // console.log(
-          //   "onIdTokenChanged - user: ",
-          //   user,
-          //   "cookies: ",
-          //   parseCookies()
-          // );
         }
       });
 
