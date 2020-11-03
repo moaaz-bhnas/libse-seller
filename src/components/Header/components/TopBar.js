@@ -10,7 +10,6 @@ import { headerButtonStyles } from "../../Button/style";
 import { LocaleContext } from "../../../contexts/locale";
 import { useRouter } from "next/router";
 import { ContentDirectionContext } from "../../../contexts/contentDirection";
-import { useSelector } from "react-redux";
 import { ProfileContext } from "../../../contexts/profile";
 
 const TopBar = () => {
@@ -36,7 +35,7 @@ const TopBar = () => {
       {isSeller && <Sidebar />}
       <Logo isSeller={isSeller} />
       {isSeller && <Chat ref={chatButtonRef} />}
-      {isSeller && (
+      {profile && (
         <AccountDropdown previousInteractiveElement={chatButtonRef} />
       )}
       <Button onClick={setLocale} contentDirection={contentDirection}>

@@ -20,6 +20,7 @@ export async function getServerSideProps(context) {
 
   try {
     const cookies = parseCookies(context);
+    console.log("index - cookies: ", cookies);
     var serverUser = await firebaseAdmin.auth().verifyIdToken(cookies.token);
     var serverProfile = getProfile(serverUser.uid);
     var products = getSellerProducts(serverUser.uid);
