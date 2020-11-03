@@ -4,7 +4,7 @@ import { LocaleProvider } from "../../contexts/locale";
 import { ContentDirectionProvider } from "../../contexts/contentDirection";
 import { AuthProvider } from "../../contexts/auth";
 import { ProfileProvider } from "../../contexts/profile";
-import { parseCookies } from "nookies";
+import Cookies from "next-cookies";
 import firebaseAdmin from "../../firebase/admin";
 import { getProfile } from "../../api/firebase";
 
@@ -14,7 +14,7 @@ export async function getServerSideProps(context) {
   } = context;
 
   try {
-    const cookies = parseCookies(context);
+    const cookies = Cookies(context);
     var serverUser = await firebaseAdmin.auth().verifyIdToken(cookies.token);
     var serverProfile = await getProfile(serverUser.uid);
     if (serverProfile.isSeller) {

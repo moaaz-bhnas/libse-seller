@@ -1,4 +1,4 @@
-import { parseCookies } from "nookies";
+import Cookies from "next-cookies";
 import AddProductForm from "../../components/AddProductForm/Index";
 import Layout from "../../components/Layout/Index";
 import { AuthProvider } from "../../contexts/auth";
@@ -14,9 +14,17 @@ export async function getServerSideProps(context) {
   } = context;
 
   try {
-    const cookies = parseCookies(context);
+    const cookies = Cookies(context);
     var serverUser = await firebaseAdmin.auth().verifyIdToken(cookies.token);
     var serverProfile = await getProfile(serverUser.uid);
+    if (!serverProfile.isSeller) {
+      return {
+        redirect: {
+          permanent: false,
+          destination: `/${lang}/register`,
+        },
+      };
+    }
   } catch (err) {
     console.log(err);
     return {

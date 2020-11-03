@@ -6,7 +6,7 @@ import { ContentDirectionProvider } from "../../contexts/contentDirection";
 import { ProfileProvider } from "../../contexts/profile";
 import { getProfile } from "../../api/firebase";
 import firebaseAdmin from "../../firebase/admin";
-import { parseCookies } from "nookies";
+import Cookies from "next-cookies";
 
 export async function getServerSideProps(context) {
   const {
@@ -14,7 +14,7 @@ export async function getServerSideProps(context) {
   } = context;
 
   try {
-    const cookies = parseCookies(context);
+    const cookies = Cookies(context);
     const serverUser = await firebaseAdmin.auth().verifyIdToken(cookies.token);
     const serverProfile = await getProfile(serverUser.uid);
     const destination = serverProfile.isSeller

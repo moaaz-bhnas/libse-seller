@@ -3,7 +3,7 @@ import { AuthProvider } from "../../contexts/auth";
 import Layout from "../../components/Layout/Index";
 import { LocaleProvider } from "../../contexts/locale";
 import { ContentDirectionProvider } from "../../contexts/contentDirection";
-import { parseCookies } from "nookies";
+import Cookies from "next-cookies";
 import firebaseAdmin from "../../firebase/admin";
 import { ProfileProvider } from "../../contexts/profile";
 import { getProfile } from "../../api/firebase";
@@ -14,7 +14,7 @@ export async function getServerSideProps(context) {
   } = context;
 
   try {
-    const cookies = parseCookies(context);
+    const cookies = Cookies(context);
     console.log("login page - cookies: ", cookies);
     const serverUser = await firebaseAdmin.auth().verifyIdToken(cookies.token);
     const serverProfile = await getProfile(serverUser.uid);

@@ -9,7 +9,6 @@ import { getProfile, getSellerProducts } from "../../api/firebase";
 import { AuthProvider } from "../../contexts/auth";
 import { LocaleProvider } from "../../contexts/locale";
 import { ContentDirectionProvider } from "../../contexts/contentDirection";
-// import { parseCookies } from "nookies";
 import firebaseAdmin from "../../firebase/admin";
 import { ProfileProvider } from "../../contexts/profile";
 import Cookies from "next-cookies";
@@ -23,8 +22,16 @@ export async function getServerSideProps(context) {
     const cookies = Cookies(context);
     console.log("index - cookies: ", cookies);
     var serverUser = await firebaseAdmin.auth().verifyIdToken(cookies.token);
-    var serverProfile = getProfile(serverUser.uid);
-    var products = getSellerProducts(serverUser.uid);
+    var serverProfile = await getProfile(serverUser.uid);
+    if (!serverProfile.isSeller) {
+      return {
+        redirect: {
+          permanent: false,
+          destination: `/${lang}/register`,
+        },
+      };
+    }
+    var products = await getSellerProducts(serverUser.uid);
   } catch (err) {
     console.log(err);
     return {
@@ -39,8 +46,8 @@ export async function getServerSideProps(context) {
     props: {
       lang,
       serverUser,
-      serverProfile: await serverProfile,
-      products: await products,
+      serverProfile,
+      products,
     },
   };
 }
