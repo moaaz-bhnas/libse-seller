@@ -1,52 +1,62 @@
-import { useContext, useEffect } from "react";
 import Form from "../../components/Register/Index";
-import { useRouter } from "next/router";
 import Layout from "../../components/Layout/Index";
 import { LocaleProvider } from "../../contexts/locale";
 import { ContentDirectionProvider } from "../../contexts/contentDirection";
-import Protected from "../../Protected";
-import { useSelector } from "react-redux";
+import { AuthProvider } from "../../contexts/auth";
+import { ProfileProvider } from "../../contexts/profile";
+import { parseCookies } from "nookies";
+import firebaseAdmin from "../../firebase/admin";
+import { getProfile } from "../../api/firebase";
 
-export const getStaticPaths = async () => {
-  const languages = ["ar", "en"];
-
-  const paths = languages.map((lang) => ({
+export async function getServerSideProps(context) {
+  const {
     params: { lang },
-  }));
+  } = context;
 
-  // fallback: false means pages that don’t have the
-  // correct id will 404.
-  return { paths, fallback: false };
-};
+  try {
+    const cookies = parseCookies(context);
+    var serverUser = await firebaseAdmin.auth().verifyIdToken(cookies.token);
+    var serverProfile = await getProfile(serverUser.uid);
+    if (serverProfile.isSeller) {
+      return {
+        redirect: {
+          permanent: false,
+          destination: `/${lang}`,
+        },
+      };
+    }
+  } catch (err) {
+    console.log(err);
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/${lang}/login`,
+      },
+    };
+  }
 
-export async function getStaticProps({ params }) {
   return {
     props: {
-      lang: params.lang,
+      lang,
+      serverUser,
+      serverProfile,
     },
   };
 }
 
-const RegisterPage = ({ lang }) => {
-  const {
-    profile: { isSeller },
-  } = useContext(ProfileContext);
-
-  const router = useRouter();
-  useEffect(() => {
-    if (isSeller) router.push(`/${lang}`);
-  }, [isSeller]);
-
+const RegisterPage = ({ lang, serverUser, serverProfile }) => {
   return (
-    <LocaleProvider lang={lang}>
-      <ContentDirectionProvider>
-        <Protected>
-          <Layout>
-            <Form />
-          </Layout>
-        </Protected>
-      </ContentDirectionProvider>
-    </LocaleProvider>
+    <AuthProvider serverUser={serverUser}>
+      <ProfileProvider serverProfile={serverProfile}>
+        <LocaleProvider lang={lang}>
+          <ContentDirectionProvider>
+            <Layout>
+              <Form />
+            </Layout>
+          </ContentDirectionProvider>
+        </LocaleProvider>
+      </ProfileProvider>
+    </AuthProvider>
   );
 };
 
