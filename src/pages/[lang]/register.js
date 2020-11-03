@@ -28,8 +28,9 @@ export async function getStaticProps({ params }) {
 }
 
 const RegisterPage = ({ lang }) => {
-  const profile = useSelector((state) => state.profile.profile);
-  const isSeller = profile ? profile.isSeller : null;
+  const {
+    profile: { isSeller },
+  } = useContext(ProfileContext);
 
   const router = useRouter();
   useEffect(() => {

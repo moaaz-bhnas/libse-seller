@@ -12,23 +12,27 @@ import { setCookie, destroyCookie } from "nookies";
 
 export const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children, serverUser = null }) => {
+  console.log("serverUser:", serverUser);
+
   console.log("AuthProvider");
   const dispatch = useDispatch();
 
-  const [user, setUser] = useState("not set");
+  const [user, setUser] = useState(serverUser);
 
   useEffect(() => {
-    const cancelAuthListener = firebase.auth().onIdTokenChanged((user) => {
-      if (user) {
-        setUser(user);
-        const token = user.getIdToken();
-        setCookie(null, "token", token, { path: "/" });
-      } else {
-        setUser(null);
-        destroyCookie(null, "token", { path: "/" });
-      }
-    });
+    const cancelAuthListener = firebase
+      .auth()
+      .onIdTokenChanged(async (user) => {
+        if (user) {
+          setUser(user);
+          const token = await user.getIdToken();
+          setCookie(null, "token", token);
+        } else {
+          setUser(null);
+          destroyCookie(null, "token");
+        }
+      });
 
     return () => cancelAuthListener();
   }, []);

@@ -20,6 +20,7 @@ import strings from "../../../translations/strings/header";
 import { ContentDirectionContext } from "../../../contexts/contentDirection";
 import { LocaleContext } from "../../../contexts/locale";
 import { AuthContext } from "../../../contexts/auth";
+import { ProfileContext } from "../../../contexts/profile";
 
 const MenuItem = (props) => {
   const {
@@ -71,8 +72,8 @@ const AccountDropdown = ({ previousInteractiveElement }) => {
 
   // profile
   const dispatch = useDispatch();
-  const profile = useSelector((state) => state.profile.profile);
-  const firstName = profile && profile.username.split(" ")[0];
+  const { profile } = useContext(ProfileContext);
+  const firstName = profile.username.split(" ")[0];
 
   // Refs
   const containerRef = useRef(null);

@@ -6,12 +6,12 @@ import { LayoutProvider } from "../contexts/layout";
 function MyApp({ Component, pageProps }) {
   return (
     <Provider>
-      <AuthProvider>
-        <LayoutProvider>
-          <GlobalStyles />
-          <Component {...pageProps} />
-        </LayoutProvider>
-      </AuthProvider>
+      {/* <AuthProvider> */}
+      <LayoutProvider>
+        <GlobalStyles />
+        <Component {...pageProps} />
+      </LayoutProvider>
+      {/* </AuthProvider> */}
     </Provider>
   );
 }

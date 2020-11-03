@@ -1,10 +1,11 @@
 import styled, { css } from "styled-components";
 import { title } from "../../shared/data";
 import TopBar from "./components/TopBar";
-import { useSelector } from "react-redux";
+import { useContext } from "react";
+import { ProfileContext } from "../../contexts/profile";
 
 const Header = () => {
-  const profile = useSelector((state) => state.profile.profile);
+  const { profile } = useContext(ProfileContext);
   const isSeller = profile ? profile.isSeller : null;
 
   return (

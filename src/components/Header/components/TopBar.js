@@ -11,9 +11,10 @@ import { LocaleContext } from "../../../contexts/locale";
 import { useRouter } from "next/router";
 import { ContentDirectionContext } from "../../../contexts/contentDirection";
 import { useSelector } from "react-redux";
+import { ProfileContext } from "../../../contexts/profile";
 
 const TopBar = () => {
-  const profile = useSelector((state) => state.profile.profile);
+  const { profile } = useContext(ProfileContext);
   const isSeller = profile ? profile.isSeller : null;
 
   const router = useRouter();

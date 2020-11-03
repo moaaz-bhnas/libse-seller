@@ -16,3 +16,9 @@ export const getSellerProducts = async (sellerId) => {
 
   return products;
 };
+
+export const getProfile = async (uid) => {
+  const doc = await firestore.collection("users").doc(uid).get();
+  const profile = doc.data();
+  return profile;
+};

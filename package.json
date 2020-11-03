@@ -9,6 +9,7 @@
   "dependencies": {
     "cookies": "^0.8.0",
     "firebase": "7.17.0",
+    "firebase-admin": "^9.3.0",
     "next": "^10.0.0",
     "next-redux-wrapper": "^6.0.2",
     "nookies": "^2.5.0",
@@ -18,8 +19,7 @@
     "react-redux": "^7.2.1",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
-    "styled-components": "^5.2.0",
-    "swr": "^0.3.5"
+    "styled-components": "^5.2.0"
   },
   "license": "MIT",
   "devDependencies": {

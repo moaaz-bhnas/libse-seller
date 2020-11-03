@@ -6,9 +6,11 @@ import measurements from "../../shared/measurements";
 import time from "../../shared/time";
 import { ContentDirectionContext } from "../../contexts/contentDirection";
 import { useSelector } from "react-redux";
+import { ProfileContext } from "../../contexts/profile";
+import { AuthContext } from "../../contexts/auth";
 
 const Layout = ({ children }) => {
-  const profile = useSelector((state) => state.profile.profile);
+  const { profile } = useContext(ProfileContext);
   const isSeller = profile ? profile.isSeller : null;
   const { sidebarExpanded } = useContext(LayoutContext);
 
