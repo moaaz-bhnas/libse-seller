@@ -3,7 +3,7 @@ import firebase from "../firebase/clientApp";
 import { useDispatch } from "react-redux";
 import { clearProfile, setProfile } from "../redux/actions/profileActions";
 import useUpdateEffect from "../hooks/useUpdateEffect";
-import { setCookie, destroyCookie, parseCookies } from "nookies";
+// import { setCookie, destroyCookie, parseCookies } from "nookies";
 
 /* Redirections
 - Once the the provider runs. If no user from the cookies, redirect to login. 
@@ -25,22 +25,26 @@ export const AuthProvider = ({ children, serverUser = null }) => {
         if (user) {
           setUser(user);
           const token = await user.getIdToken();
-          setCookie(null, "token", token, { path: "none" });
-          console.log(
-            "onIdTokenChanged - user: ",
-            user,
-            "cookies: ",
-            parseCookies()
-          );
+          document.cookie = `token=${token}; Path=/`;
+          console.log("document.cookie: ", document.cookie);
+          // setCookie(null, "token", token, { path: "none" });
+          // console.log(
+          //   "onIdTokenChanged - user: ",
+          //   user,
+          //   "cookies: ",
+          //   parseCookies()
+          // );
         } else {
           setUser(null);
-          setCookie(null, "token", "", { path: "none" });
-          console.log(
-            "onIdTokenChanged - user: ",
-            user,
-            "cookies: ",
-            parseCookies()
-          );
+          document.cookie = `token=; Path=/`;
+          console.log("document.cookie: ", document.cookie);
+          // setCookie(null, "token", "", { path: "none" });
+          // console.log(
+          //   "onIdTokenChanged - user: ",
+          //   user,
+          //   "cookies: ",
+          //   parseCookies()
+          // );
         }
       });
 

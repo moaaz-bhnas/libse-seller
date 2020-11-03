@@ -9,9 +9,10 @@ import { getProfile, getSellerProducts } from "../../api/firebase";
 import { AuthProvider } from "../../contexts/auth";
 import { LocaleProvider } from "../../contexts/locale";
 import { ContentDirectionProvider } from "../../contexts/contentDirection";
-import { parseCookies } from "nookies";
+// import { parseCookies } from "nookies";
 import firebaseAdmin from "../../firebase/admin";
 import { ProfileProvider } from "../../contexts/profile";
+import Cookies from "next-cookies";
 
 export async function getServerSideProps(context) {
   const {
@@ -19,7 +20,7 @@ export async function getServerSideProps(context) {
   } = context;
 
   try {
-    const cookies = parseCookies(context);
+    const cookies = Cookies(context);
     console.log("index - cookies: ", cookies);
     var serverUser = await firebaseAdmin.auth().verifyIdToken(cookies.token);
     var serverProfile = getProfile(serverUser.uid);
