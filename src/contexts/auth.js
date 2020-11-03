@@ -3,7 +3,7 @@ import firebase from "../firebase/clientApp";
 import { useDispatch } from "react-redux";
 import { clearProfile, setProfile } from "../redux/actions/profileActions";
 import useUpdateEffect from "../hooks/useUpdateEffect";
-import { setCookie, destroyCookie } from "nookies";
+import { setCookie, destroyCookie, parseCookies } from "nookies";
 
 /* Redirections
 - Once the the provider runs. If no user from the cookies, redirect to login. 
@@ -13,8 +13,6 @@ import { setCookie, destroyCookie } from "nookies";
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children, serverUser = null }) => {
-  console.log("serverUser:", serverUser);
-
   console.log("AuthProvider");
   const dispatch = useDispatch();
 
@@ -27,10 +25,22 @@ export const AuthProvider = ({ children, serverUser = null }) => {
         if (user) {
           setUser(user);
           const token = await user.getIdToken();
-          setCookie(null, "token", token);
+          setCookie(null, "token", token, { path: "none" });
+          console.log(
+            "onIdTokenChanged - user: ",
+            user,
+            "cookies: ",
+            parseCookies()
+          );
         } else {
           setUser(null);
-          destroyCookie(null, "token");
+          setCookie(null, "token", "", { path: "none" });
+          console.log(
+            "onIdTokenChanged - user: ",
+            user,
+            "cookies: ",
+            parseCookies()
+          );
         }
       });
 
@@ -42,7 +52,7 @@ export const AuthProvider = ({ children, serverUser = null }) => {
     else dispatch(clearProfile());
   }, [user]);
 
-  console.log("(auth) user: ", user);
+  // console.log("(auth) user: ", user);
 
   return (
     <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>

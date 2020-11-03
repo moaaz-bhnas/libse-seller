@@ -12,7 +12,7 @@ export const getSellerProducts = async (sellerId) => {
   // build the array
   const products = [];
   snapshot.forEach((doc) => products.push({ id: doc.id, ...doc.data() }));
-  console.log("getSellerProducts - products: ", products);
+  // console.log("getSellerProducts - products: ", products);
 
   return products;
 };

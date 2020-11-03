@@ -15,6 +15,7 @@ export async function getServerSideProps(context) {
 
   try {
     const cookies = parseCookies(context);
+    console.log("login page - cookies: ", cookies);
     const serverUser = await firebaseAdmin.auth().verifyIdToken(cookies.token);
     const serverProfile = await getProfile(serverUser.uid);
     const destination = serverProfile.isSeller
