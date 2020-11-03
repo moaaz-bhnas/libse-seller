@@ -4,7 +4,6 @@ import Layout from "../../components/Layout/Index";
 import { AuthProvider } from "../../contexts/auth";
 import { ContentDirectionProvider } from "../../contexts/contentDirection";
 import { LocaleProvider } from "../../contexts/locale";
-import Protected from "../../Protected";
 import firebaseAdmin from "../../firebase/admin";
 import { ProfileProvider } from "../../contexts/profile";
 import { getProfile } from "../../api/firebase";
@@ -43,11 +42,9 @@ const AddProduct = ({ lang, serverUser, serverProfile }) => {
       <ProfileProvider serverProfile={serverProfile}>
         <LocaleProvider lang={lang}>
           <ContentDirectionProvider>
-            <Protected>
-              <Layout>
-                <AddProductForm />
-              </Layout>
-            </Protected>
+            <Layout>
+              <AddProductForm />
+            </Layout>
           </ContentDirectionProvider>
         </LocaleProvider>
       </ProfileProvider>

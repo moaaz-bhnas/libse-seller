@@ -1,7 +1,7 @@
 import Layout from "../../components/Layout/Index";
 
 const SponsoredProductsPage = () => {
-  return <Layout>Sponsored page</Layout>;
+  return <div>Sponsored page</div>;
 };
 
 export default SponsoredProductsPage;

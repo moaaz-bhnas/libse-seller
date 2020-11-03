@@ -1,56 +1,55 @@
-import { useContext } from "react";
-import { useRouter } from "next/router";
 import AuthForm from "../../components/AuthForm/Index";
-import { AuthContext } from "../../contexts/auth";
+import { AuthProvider } from "../../contexts/auth";
 import Layout from "../../components/Layout/Index";
 import { LocaleProvider } from "../../contexts/locale";
 import { ContentDirectionProvider } from "../../contexts/contentDirection";
-import { useSelector } from "react-redux";
-import useUpdateEffect from "../../hooks/useUpdateEffect";
+import { ProfileProvider } from "../../contexts/profile";
+import { getProfile } from "../../api/firebase";
+import firebaseAdmin from "../../firebase/admin";
+import { parseCookies } from "nookies";
 
-export const getStaticPaths = async () => {
-  const languages = ["ar", "en"];
-
-  const paths = languages.map((lang) => ({
+export async function getServerSideProps(context) {
+  const {
     params: { lang },
-  }));
+  } = context;
 
-  // fallback: false means pages that don’t have the
-  // correct id will 404.
-  return { paths, fallback: false };
-};
+  try {
+    const cookies = parseCookies(context);
+    const serverUser = await firebaseAdmin.auth().verifyIdToken(cookies.token);
+    const serverProfile = await getProfile(serverUser.uid);
+    const destination = serverProfile.isSeller
+      ? `/${lang}`
+      : `/${lang}/register`;
+    return {
+      redirect: {
+        permanent: false,
+        destination,
+      },
+    };
+  } catch (err) {
+    console.log(err);
+  }
 
-export async function getStaticProps({ params }) {
   return {
     props: {
-      lang: params.lang,
+      lang: lang,
     },
   };
 }
 
 const SignupPage = ({ lang }) => {
-  const { user } = useContext(AuthContext);
-
-  const profile = useSelector((state) => state.profile.profile);
-  const isSeller = profile ? profile.isSeller : null;
-
-  const router = useRouter();
-
-  useUpdateEffect(() => {
-    if (user) {
-      if (isSeller) router.push(`/${lang}`);
-      else router.push(`/${lang}/register`);
-    }
-  }, [user, isSeller]);
-
   return (
-    <LocaleProvider lang={lang}>
-      <ContentDirectionProvider>
-        <Layout>
-          <AuthForm action="signup" />
-        </Layout>
-      </ContentDirectionProvider>
-    </LocaleProvider>
+    <AuthProvider>
+      <ProfileProvider>
+        <LocaleProvider lang={lang}>
+          <ContentDirectionProvider>
+            <Layout>
+              <AuthForm action="signup" />
+            </Layout>
+          </ContentDirectionProvider>
+        </LocaleProvider>
+      </ProfileProvider>
+    </AuthProvider>
   );
 };
 
