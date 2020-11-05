@@ -360,6 +360,7 @@ const ColorsAndSizes = ({
                     type="button"
                     onClick={(event) => removeColor(event, colorIndex)}
                     contentDirection={contentDirection}
+                    title={t(translations, "removeColor")}
                   >
                     <RemoveIcon
                       src={removeIcon}
