@@ -1,4 +1,11 @@
-import { memo, useCallback, useContext, useEffect, useState } from "react";
+import {
+  memo,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import ImageCropper from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import styled from "styled-components";
@@ -13,20 +20,24 @@ import { rectButton } from "../../Button/style";
 import growIcon from "../../../img/grow.svg";
 import shrinkIcon from "../../../img/shrink.svg";
 
-const ImageCropperModal = ({ src, setSrc }) => {
+const ImageCropperModal = ({ src, setSrc, imageInputRef }) => {
+  const closerRef = useRef(null);
+  const resizerRef = useRef(null);
+
   const { t } = useTranslation();
   const contentDirection = useContext(ContentDirectionContext);
   const [crop, setCrop] = useState({
     unit: "%",
     aspect: 5 / 6,
   });
-  console.log("crop: ", crop);
   const [imageIsWide, setImageIsWide] = useState(null);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
+    resizerRef.current.focus();
     return () => {
       document.body.style.overflow = "initial";
+      imageInputRef.current.focus();
     };
   }, []);
 
@@ -61,20 +72,54 @@ const ImageCropperModal = ({ src, setSrc }) => {
       cropCopy.x = 0;
       cropCopy.y = (100 - height) / 2;
     }
-    console.log("cropCopy: ", cropCopy);
 
     setCrop(cropCopy);
 
     return false;
   }, []);
 
+  const handleKeyDown = useCallback(
+    (event, firstInteractive, lastInteractive, close) => {
+      const { target, key, shiftKey } = event;
+
+      if (key === "Tab" && shiftKey && target === firstInteractive) {
+        event.preventDefault();
+        lastInteractive.focus();
+        return;
+      }
+
+      if (key === "Tab" && !shiftKey && target === lastInteractive) {
+        event.preventDefault();
+        firstInteractive.focus();
+      }
+
+      if (key === "Escape") {
+        close();
+      }
+    },
+    []
+  );
+
   return (
     <Container>
       <Overlay aria-hidden="true" onClick={() => setSrc(null)} />
 
-      <Modal role="dialog" aria-modal="true" aria-label="Crop image">
+      <Modal
+        role="dialog"
+        aria-modal="true"
+        aria-label="Crop image"
+        onKeyDown={(event) =>
+          handleKeyDown(event, closerRef.current, resizerRef.current, () =>
+            setSrc(null)
+          )
+        }
+      >
         <Header>
-          <CloseButton type="button" onClick={() => setSrc(null)}>
+          <CloseButton
+            type="button"
+            onClick={() => setSrc(null)}
+            ref={closerRef}
+          >
             <CloseIcon src={closeIcon} alt={t(translations, "closeModal")} />
           </CloseButton>
           <Title contentDirection={contentDirection}>
@@ -115,6 +160,7 @@ const ImageCropperModal = ({ src, setSrc }) => {
                   : crop.width
                 : ""
             }
+            ref={resizerRef}
           />
           <Icon role="presentation" src={growIcon} alt="" />
         </ResizeContainer>
@@ -196,6 +242,10 @@ const CropContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  .ReactCrop:focus {
+    outline: -webkit-focus-ring-color auto 1px;
+  }
 
   .ReactCrop__crop-selection {
     border: 5px solid ${theme.border.accent};

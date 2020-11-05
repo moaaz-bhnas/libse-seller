@@ -1,4 +1,4 @@
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback, useRef, useState } from "react";
 import styled from "styled-components";
 import useTranslation from "../../../hooks/useTranslation";
 import measurements from "../../../shared/measurements";
@@ -8,6 +8,7 @@ import ImageCropperModal from "./ImageCropperModal";
 import translations from "../../../translations/strings/addProductPage";
 
 const ImageUploader = () => {
+  const imageInputRef = useRef(null);
   const { t } = useTranslation();
   const [src, setSrc] = useState(null);
 
@@ -22,15 +23,24 @@ const ImageUploader = () => {
 
   return (
     <Container>
-      <Label htmlFor="imageInput">{t(translations, "chooseImage")}</Label>
       <Input
         id="imageInput"
         type="file"
         accept="image/*"
         multiple={false}
         onChange={handleSelectImage}
+        ref={imageInputRef}
       />
-      {src && <ImageCropperModal src={src} setSrc={setSrc} />}
+      <Label htmlFor="imageInput" className="imageInput__label">
+        {t(translations, "chooseImage")}
+      </Label>
+      {src && (
+        <ImageCropperModal
+          src={src}
+          setSrc={setSrc}
+          imageInputRef={imageInputRef}
+        />
+      )}
     </Container>
   );
 };
@@ -56,6 +66,12 @@ const Label = styled.label`
 const Input = styled.input`
   position: absolute;
   left: -200rem;
+
+  &:focus {
+    & + .imageInput__label {
+      outline: -webkit-focus-ring-color auto 1px;
+    }
+  }
 `;
 
 export default memo(ImageUploader);
