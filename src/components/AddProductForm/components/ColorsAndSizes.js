@@ -2,7 +2,7 @@ import { memo, useCallback, useState, useEffect, useContext } from "react";
 // import Select from "react-select";
 import { ErrorIcon, ErrorMsg, ButtonsContainer } from "../style";
 import { NextButton, PreviousButton } from "../../Button/Index";
-import removeIcon from "../../../img/remove.svg";
+import removeIcon from "../../../img/cross.svg";
 import ImageUploader from "./ImageUploader";
 import { Input } from "../../Input/style";
 import errorIcon from "../../../img/error.svg";
@@ -234,11 +234,7 @@ const ColorsAndSizes = ({
 
   const handleImageChange = useCallback(
     (imageFiles, imageDataURLs, index) => {
-      console.log(
-        "handleImageChange",
-        "imageError.visible: ",
-        imageError.visible
-      );
+      console.log("imageFiles: ", imageFiles, "imageDataURLs: ", imageDataURLs);
       if (imageError.visible) setImageError({ visible: false, index: null });
 
       const images = imageFiles
@@ -419,7 +415,8 @@ const ColorsAndSizes = ({
                 </ErrorMsg>
               )}
 
-              <ImageUploader
+              <ImageUploader />
+              {/* <ImageUploader
                 className="productForm__imageUploader"
                 buttonClassName="productForm__imageUploaderButton"
                 pictures={color.images.map((image) => image.dataURL)}
@@ -432,7 +429,8 @@ const ColorsAndSizes = ({
                 label={t(translations, "imageUploaderLabel")}
                 withIcon={false}
                 buttonText={t(translations, "chooseImage")}
-              />
+                singleImage
+              /> */}
               {imageError.visible && imageError.index === colorIndex && (
                 <ErrorMsg className="inputContainer__errMsg" role="alert">
                   {t(translations, "imageErrorMsg")}
@@ -492,19 +490,7 @@ const InputContainer = styled.div`
   .inputContainer__errMsg {
     margin: -0.2em 0 0.65em;
   }
-
-  .productForm__sizeSelect,
-  .productForm__colorSelect {
-    margin-bottom: 0.65em;
-  }
-
-  .productForm__sizeSelectChild__control,
-  .productForm__colorSelectChild__control {
-    border: 1px solid ${theme.border.grey};
-    border-radius: ${measurements.borderRadius.input};
-  }
-
-  .productForm__imageUploader {
+  /* .productForm__imageUploader {
     margin-bottom: 1.25em;
 
     .fileContainer {
@@ -516,9 +502,9 @@ const InputContainer = styled.div`
     .deleteImage {
       background-color: ${theme.bg.accent};
     }
-  }
+  } */
 
-  .productForm__imageUploaderButton {
+  /* .productForm__imageUploaderButton {
     background-color: ${theme.bg.accent};
     transition-property: box-shadow, background-color;
     transition-duration: 0.15s;
@@ -541,11 +527,7 @@ const InputContainer = styled.div`
       display: inline-block;
       margin-inline-start: 0.75em;
     }
-  }
-
-  .productForm__colorSelectChild__placeholder {
-    color: #686868;
-  }
+  } */
 `;
 
 const ColorsNumber = styled.div`
@@ -616,6 +598,7 @@ const DefaultIcon = styled.img`
 
 const SizesSelectContainer = styled.div`
   display: flex;
+  margin-bottom: 0.8em;
 `;
 
 export default memo(ColorsAndSizes);

@@ -1,0 +1,222 @@
+import { memo, useCallback, useContext, useEffect, useState } from "react";
+import ImageCropper from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
+import styled from "styled-components";
+import measurements from "../../../shared/measurements";
+import theme from "../../../shared/theme";
+import closeIcon from "../../../img/cross.svg";
+import useTranslation from "../../../hooks/useTranslation";
+import translations from "../../../translations/strings/addProductPage";
+import { title3 } from "../../Title/style";
+import { ContentDirectionContext } from "../../../contexts/contentDirection";
+import { rectButton } from "../../Button/style";
+import growIcon from "../../../img/grow.svg";
+import shrinkIcon from "../../../img/shrink.svg";
+
+const ImageCropperModal = ({ src, setSrc }) => {
+  const { t } = useTranslation();
+  const contentDirection = useContext(ContentDirectionContext);
+  const [crop, setCrop] = useState({
+    unit: "%",
+    aspect: 5 / 6,
+  });
+  console.log("crop: ", crop);
+  const [imageIsWide, setImageIsWide] = useState(null);
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "initial";
+    };
+  }, []);
+
+  const handleResizerChange = useCallback(
+    ({ target: { value } }) => {
+      const cropCopy = Object.assign({}, crop);
+      if (imageIsWide) {
+        cropCopy.height = Number(value);
+        delete cropCopy.width;
+      } else {
+        cropCopy.width = Number(value);
+        delete cropCopy.height;
+      }
+      setCrop(cropCopy);
+    },
+    [crop, imageIsWide]
+  );
+
+  const handleImageLoaded = useCallback((img) => {
+    const cropCopy = Object.assign({}, crop);
+    const imageIsWide = img.width / img.height > cropCopy.aspect;
+    setImageIsWide(imageIsWide);
+
+    if (imageIsWide) {
+      cropCopy.height = 100;
+      const width = ((img.height * cropCopy.aspect) / img.width) * 100;
+      cropCopy.y = 0;
+      cropCopy.x = (100 - width) / 2;
+    } else {
+      cropCopy.width = 100;
+      const height = (img.width / cropCopy.aspect / img.height) * 100;
+      cropCopy.x = 0;
+      cropCopy.y = (100 - height) / 2;
+    }
+    console.log("cropCopy: ", cropCopy);
+
+    setCrop(cropCopy);
+
+    return false;
+  }, []);
+
+  return (
+    <Container>
+      <Overlay aria-hidden="true" onClick={() => setSrc(null)} />
+
+      <Modal role="dialog" aria-modal="true" aria-label="Crop image">
+        <Header>
+          <CloseButton type="button" onClick={() => setSrc(null)}>
+            <CloseIcon src={closeIcon} alt={t(translations, "closeModal")} />
+          </CloseButton>
+          <Title contentDirection={contentDirection}>
+            {t(translations, "cropImage")}
+          </Title>
+          <ApplyButton type="button">{t(translations, "apply")}</ApplyButton>
+        </Header>
+
+        <CropContainer>
+          <ImageCropper
+            src={src}
+            crop={crop}
+            imageAlt={t(translations, "productImage")} // to be dynamic
+            locked
+            imageStyle={{
+              maxHeight: "70vh",
+            }}
+            onChange={(c, pc) => {
+              // console.log(pc);
+              setCrop(pc);
+            }}
+            onImageLoaded={handleImageLoaded}
+          />
+        </CropContainer>
+
+        <ResizeContainer>
+          <Icon role="presentation" src={shrinkIcon} alt="" />
+          <Resizer
+            aria-label="resize"
+            type="range"
+            min="80"
+            max="100"
+            onChange={handleResizerChange}
+            value={
+              typeof imageIsWide === "boolean"
+                ? imageIsWide
+                  ? crop.height
+                  : crop.width
+                : ""
+            }
+          />
+          <Icon role="presentation" src={growIcon} alt="" />
+        </ResizeContainer>
+      </Modal>
+    </Container>
+  );
+};
+
+const Container = styled.div`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  background-color: rgba(0, 0, 0, 0.7);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Overlay = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+`;
+
+const Modal = styled.div`
+  position: relative;
+  background-color: #fff;
+  border-radius: ${measurements.borderRadius.modal};
+  width: 37.5em;
+  /* max-height: 90vh; */
+
+  display: flex;
+  flex-direction: column;
+`;
+
+const Header = styled.header`
+  display: flex;
+  align-items: center;
+  padding: 0.2em 0;
+  border-bottom: 1px solid ${theme.border.grey};
+`;
+
+const CloseButton = styled.button`
+  background-color: transparent;
+  width: 3em;
+  border: none;
+  padding: 0.9em;
+
+  &:hover {
+    opacity: 0.6;
+  }
+`;
+
+const CloseIcon = styled.img`
+  width: 100%;
+  vertical-align: middle;
+`;
+
+const Title = styled.h1`
+  ${title3}
+  margin: ${(props) =>
+    props.contentDirection === "ltr" ? "0 auto 0 1em" : "0 1em 0 auto"};
+`;
+
+const ApplyButton = styled.button`
+  ${rectButton};
+  margin: 0 0.9em;
+`;
+
+const CropContainer = styled.div`
+  background-color: ${theme.bg.primary};
+  padding: 1em 0;
+  border-bottom: 1px solid ${theme.bg.grey};
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .ReactCrop__crop-selection {
+    border: 5px solid ${theme.border.accent};
+  }
+`;
+
+const ResizeContainer = styled.div`
+  padding: 0.8em 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Resizer = styled.input`
+  width: 18.75em;
+  margin-left: 1em;
+  margin-right: 1em;
+`;
+
+const Icon = styled.img`
+  width: 1.15em;
+`;
+
+export default memo(ImageCropperModal);

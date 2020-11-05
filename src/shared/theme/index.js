@@ -21,6 +21,7 @@ const theme = {
     darkGrey: "#646463",
   },
   border: {
+    accent: "#C14D33",
     japonica: "#d77e6a",
     grey: "#ddd",
     shuttleGrey: "#494b59",

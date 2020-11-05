@@ -28,6 +28,10 @@ const strings = {
     add: "Add",
     finishPrecedingSteps: "You have to finish the preceding steps",
     finishThisStep: "You have to finish this step first",
+    closeModal: "Close modal",
+    productImage: "Product image",
+    cropImage: "Crop image",
+    apply: "Apply",
   },
   ar: {
     addProduct: "إضافة منتج",
@@ -58,6 +62,10 @@ const strings = {
     add: "إضافة",
     finishPrecedingSteps: "عليك إنهاء الخطوات السابقة أولاً",
     finishThisStep: "عليك إنهاء هذه الخطوة أولاً",
+    closeModal: "اغلق النافذة",
+    productImage: "صورة المنتج",
+    cropImage: "قص الصورة",
+    apply: "موافق",
   },
 };
 

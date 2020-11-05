@@ -10,6 +10,7 @@ const measurements = {
   },
   borderRadius: {
     input: ".1em",
+    modal: ".2em",
   },
   height: {
     sellerHeader: "3em",

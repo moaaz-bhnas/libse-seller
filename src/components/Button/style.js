@@ -9,7 +9,7 @@ export const rectButton = css`
   background-color: ${theme.bg.accent};
   border-radius: ${measurements.borderRadius.input};
   border: none;
-  padding: 1em;
+  padding: 0.8em 1em;
   cursor: pointer;
   transition-property: box-shadow, background-color;
   transition-duration: 0.15s;
@@ -19,11 +19,6 @@ export const rectButton = css`
 
   &:hover {
     background-color: #ae452e;
-  }
-
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 0.2rem rgba(215, 126, 106, 0.5);
   }
 
   &[data-disabled="true"] {
