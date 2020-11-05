@@ -1,11 +1,14 @@
 import { memo, useCallback, useState } from "react";
 import styled from "styled-components";
+import useTranslation from "../../../hooks/useTranslation";
 import measurements from "../../../shared/measurements";
 import theme from "../../../shared/theme";
 import { rectButton } from "../../Button/style";
 import ImageCropperModal from "./ImageCropperModal";
+import translations from "../../../translations/strings/addProductPage";
 
 const ImageUploader = () => {
+  const { t } = useTranslation();
   const [src, setSrc] = useState(null);
 
   const handleSelectImage = useCallback((event) => {
@@ -19,7 +22,7 @@ const ImageUploader = () => {
 
   return (
     <Container>
-      <Label htmlFor="imageInput">Choose image</Label>
+      <Label htmlFor="imageInput">{t(translations, "chooseImage")}</Label>
       <Input
         id="imageInput"
         type="file"
