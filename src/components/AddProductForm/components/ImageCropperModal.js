@@ -108,6 +108,7 @@ const ImageCropperModal = ({ src, setSrc, imageInputRef }) => {
         role="dialog"
         aria-modal="true"
         aria-label="Crop image"
+        tabIndex="0"
         onKeyDown={(event) =>
           handleKeyDown(event, closerRef.current, resizerRef.current, () =>
             setSrc(null)
