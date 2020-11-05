@@ -15,7 +15,7 @@ const ProgressBar = ({
   setActiveStep,
   subCategoryHasGroups,
 }) => {
-  const contentDirection = useContext(ContentDirectionContext);
+  const { contentDirection } = useContext(ContentDirectionContext);
 
   const { t } = useTranslation();
 

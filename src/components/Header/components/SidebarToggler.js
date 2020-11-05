@@ -5,7 +5,7 @@ import { headerButtonStyles } from "../../Button/style";
 import { ContentDirectionContext } from "../../../contexts/contentDirection";
 
 const SidebarToggler = ({ onClick }) => {
-  const contentDirection = useContext(ContentDirectionContext);
+  const { contentDirection } = useContext(ContentDirectionContext);
 
   return (
     <StyledSidebarToggler

@@ -71,7 +71,7 @@ const Item = ({ itemObject, expanded, index, locale, contentDirection }) => {
 
 const Sidebar = () => {
   const { locale } = useContext(LocaleContext);
-  const contentDirection = useContext(ContentDirectionContext);
+  const { contentDirection } = useContext(ContentDirectionContext);
 
   const {
     sidebarExpanded: expanded,

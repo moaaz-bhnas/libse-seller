@@ -25,7 +25,7 @@ const ImageCropperModal = ({ src, setSrc, imageInputRef }) => {
   const resizerRef = useRef(null);
 
   const { t } = useTranslation();
-  const contentDirection = useContext(ContentDirectionContext);
+  const { contentDirection } = useContext(ContentDirectionContext);
   const [crop, setCrop] = useState({
     unit: "%",
     aspect: 5 / 6,

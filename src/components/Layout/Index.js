@@ -14,7 +14,7 @@ const Layout = ({ children }) => {
   const isSeller = profile ? profile.isSeller : null;
   const { sidebarExpanded } = useContext(LayoutContext);
 
-  const contentDirection = useContext(ContentDirectionContext);
+  const { contentDirection } = useContext(ContentDirectionContext);
 
   return (
     <StyledLayout dir={contentDirection}>

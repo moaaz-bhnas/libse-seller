@@ -35,7 +35,7 @@ const Product = ({ product, seller, inFavorites }) => {
   const { locale } = useContext(LocaleContext);
 
   // content direction
-  const contentDirection = useContext(ContentDirectionContext);
+  const { contentDirection } = useContext(ContentDirectionContext);
 
   const defaultColor =
     product.colors.find((color) => color.default) || colors[0];

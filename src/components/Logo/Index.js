@@ -8,7 +8,7 @@ import { LocaleContext } from "../../contexts/locale";
 
 const Logo = ({ fontSize, color }) => {
   const { locale } = useContext(LocaleContext);
-  const contentDirection = useContext(ContentDirectionContext);
+  const { contentDirection } = useContext(ContentDirectionContext);
 
   return (
     <Link passHref href={`/${locale}`}>

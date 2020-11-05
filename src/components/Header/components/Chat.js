@@ -5,7 +5,7 @@ import { headerButtonStyles } from "../../Button/style";
 import { ContentDirectionContext } from "../../../contexts/contentDirection";
 
 const Chat = (props, ref) => {
-  const contentDirection = useContext(ContentDirectionContext);
+  const { contentDirection } = useContext(ContentDirectionContext);
 
   return (
     <ChatContainer>

@@ -23,7 +23,7 @@ import { ContentDirectionContext } from "../../contexts/contentDirection";
 
 const AddProductForm = () => {
   const { locale } = useContext(LocaleContext);
-  const contentDirection = useContext(ContentDirectionContext);
+  const { contentDirection } = useContext(ContentDirectionContext);
 
   // translations
   const { t } = useTranslation();

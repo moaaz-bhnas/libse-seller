@@ -19,7 +19,7 @@ const TopBar = () => {
   const router = useRouter();
   const { locale } = useContext(LocaleContext);
 
-  const contentDirection = useContext(ContentDirectionContext);
+  const { contentDirection } = useContext(ContentDirectionContext);
 
   const setLocale = useCallback(() => {
     router.push(

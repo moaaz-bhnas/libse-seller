@@ -13,7 +13,7 @@ import { ContentDirectionContext } from "../../contexts/contentDirection";
 export const AddProductButton = () => {
   const { t } = useTranslation();
   const { locale } = useContext(LocaleContext);
-  const contentDirection = useContext(ContentDirectionContext);
+  const { contentDirection } = useContext(ContentDirectionContext);
 
   return (
     <Link href={`/${locale}/add-product`} passHref>
@@ -30,7 +30,7 @@ export const NextButton = ({
   disabled = false,
   positionedAbsolutely,
 }) => {
-  const contentDirection = useContext(ContentDirectionContext);
+  const { contentDirection } = useContext(ContentDirectionContext);
   const { t } = useTranslation();
 
   return (
@@ -48,7 +48,7 @@ export const NextButton = ({
 };
 
 export const PreviousButton = ({ onClick }) => {
-  const contentDirection = useContext(ContentDirectionContext);
+  const { contentDirection } = useContext(ContentDirectionContext);
   const { t } = useTranslation();
 
   return (

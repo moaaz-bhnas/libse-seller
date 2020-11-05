@@ -41,7 +41,7 @@ export const RadioInput = ({
   width,
   required,
 }) => {
-  const contentDirection = useContext(ContentDirectionContext);
+  const { contentDirection } = useContext(ContentDirectionContext);
 
   return (
     <Label width={width} contentDirection={contentDirection}>
@@ -68,7 +68,7 @@ export const CheckboxInput = ({
   width,
   required,
 }) => {
-  const contentDirection = useContext(ContentDirectionContext);
+  const { contentDirection } = useContext(ContentDirectionContext);
 
   return (
     <Label width={width} contentDirection={contentDirection}>

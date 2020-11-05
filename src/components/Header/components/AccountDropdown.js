@@ -68,7 +68,7 @@ const AccountDropdown = ({ previousInteractiveElement }) => {
   const { t } = useTranslation();
 
   // content direction
-  const contentDirection = useContext(ContentDirectionContext);
+  const { contentDirection } = useContext(ContentDirectionContext);
 
   // profile
   const dispatch = useDispatch();
