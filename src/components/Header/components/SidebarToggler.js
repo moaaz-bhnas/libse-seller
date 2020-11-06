@@ -3,9 +3,12 @@ import hamburgerIcon from "../../../img/menu.svg";
 import styled from "styled-components";
 import { headerButtonStyles } from "../../Button/style";
 import { ContentDirectionContext } from "../../../contexts/contentDirection";
+import useTranslation from "../../../hooks/useTranslation";
+import translations from "../../../translations/strings/header";
 
 const SidebarToggler = ({ onClick }) => {
   const { contentDirection } = useContext(ContentDirectionContext);
+  const { t } = useTranslation();
 
   return (
     <StyledSidebarToggler
@@ -16,7 +19,7 @@ const SidebarToggler = ({ onClick }) => {
       <HamburgerIcon
         className="sidebar__hamburgerIcon"
         src={hamburgerIcon}
-        alt="Toggle sidebar"
+        alt={t(translations, "toggleSidebar")}
       />
     </StyledSidebarToggler>
   );

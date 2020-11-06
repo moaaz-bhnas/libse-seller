@@ -50,13 +50,15 @@ export const AddProduct = styled.a`
   text-decoration: none;
   ${rectButton}
   margin-bottom: 1em;
-`;
 
-export const AddIcon = styled.img`
-  width: 1em;
-  margin-right: ${(props) =>
-    props.contentDirection === "ltr" ? ".55em" : "0"};
-  margin-left: ${(props) => (props.contentDirection === "ltr" ? "0" : ".55em")};
+  .addSvg {
+    fill: #fff;
+    width: 1em;
+    margin-right: ${(props) =>
+      props.contentDirection === "ltr" ? ".55em" : "0"};
+    margin-left: ${(props) =>
+      props.contentDirection === "ltr" ? "0" : ".55em"};
+  }
 `;
 
 export const NextIcon = styled.img`

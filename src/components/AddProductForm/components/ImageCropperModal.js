@@ -20,7 +20,7 @@ import { rectButton } from "../../Button/style";
 import growIcon from "../../../img/grow.svg";
 import shrinkIcon from "../../../img/shrink.svg";
 
-const ImageCropperModal = ({ src, setSrc, imageInputRef, AddImageToColor }) => {
+const ImageCropperModal = ({ src, setSrc, imageInputRef, addImage }) => {
   const closerRef = useRef(null);
   const resizerRef = useRef(null);
   const imageRef = useRef(null);
@@ -121,7 +121,7 @@ const ImageCropperModal = ({ src, setSrc, imageInputRef, AddImageToColor }) => {
       crop,
       "product-image.jpeg"
     );
-    AddImageToColor(croppedImage);
+    addImage(croppedImage);
     setSrc(null);
   }, []);
 

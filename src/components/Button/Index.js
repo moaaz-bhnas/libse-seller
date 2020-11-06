@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { AddProduct, AddIcon, Button, NextIcon, PreviousIcon } from "./style";
-import addIcon from "../../img/add.svg";
+import { AddProduct, Button, NextIcon, PreviousIcon } from "./style";
 import nextIcon from "../../img/next.svg";
 import previousIcon from "../../img/previous.svg";
 import useTranslation from "../../hooks/useTranslation";
@@ -9,6 +8,7 @@ import addProductPageStrings from "../../translations/strings/addProductPage";
 import { useContext } from "react";
 import { LocaleContext } from "../../contexts/locale";
 import { ContentDirectionContext } from "../../contexts/contentDirection";
+import AddIcon from "../../svgs/Add";
 
 export const AddProductButton = () => {
   const { t } = useTranslation();
@@ -17,8 +17,8 @@ export const AddProductButton = () => {
 
   return (
     <Link href={`/${locale}/add-product`} passHref>
-      <AddProduct>
-        <AddIcon contentDirection={contentDirection} src={addIcon} alt="" />
+      <AddProduct contentDirection={contentDirection}>
+        <AddIcon />
         {t(productsPageStrings, "addProduct")}
       </AddProduct>
     </Link>
@@ -62,14 +62,3 @@ export const PreviousButton = ({ onClick }) => {
     </Button>
   );
 };
-
-// export const Button = ({ type, value, onClick }) => {
-//   return (
-//     <Button
-//       type={type}
-//       onClick={onClick}
-//     >
-//       {value}
-//     </Button>
-//   );
-// }

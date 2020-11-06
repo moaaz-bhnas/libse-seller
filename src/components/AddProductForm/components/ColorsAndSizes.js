@@ -144,9 +144,9 @@ const ColorsAndSizes = ({
     [colors, colorsNumber]
   );
 
-  const AddImageToColor = useCallback(
+  const addImage = useCallback(
     (image, index) => {
-      console.log("AddImageToColor - image: ", image, "index: ", index);
+      console.log("addImage - image: ", image, "index: ", index);
       if (imageError.visible) setImageError({ visible: false, index: null });
 
       const updatedColors = colors.map((color, i) => {
@@ -188,6 +188,19 @@ const ColorsAndSizes = ({
     [colors]
   );
 
+  const removeImage = useCallback(
+    (colorIndex, imageIndex) => {
+      const updatedColors = colors.map((color, i) => {
+        if (i === colorIndex) {
+          color.images.splice(imageIndex, 1);
+        }
+        return color;
+      });
+      setColors(updatedColors);
+    },
+    [colors]
+  );
+
   console.log("colors: ", colors);
   return (
     <>
@@ -218,7 +231,8 @@ const ColorsAndSizes = ({
               sizeOptions={sizeOptions}
               handleSizeChange={handleSizeChange}
               sizeError={sizeError}
-              AddImageToColor={AddImageToColor}
+              addImage={addImage}
+              removeImage={removeImage}
               imageError={imageError}
             />
           );

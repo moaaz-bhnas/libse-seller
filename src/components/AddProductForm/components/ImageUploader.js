@@ -6,8 +6,10 @@ import theme from "../../../shared/theme";
 import { rectButton } from "../../Button/style";
 import ImageCropperModal from "./ImageCropperModal";
 import translations from "../../../translations/strings/addProductPage";
+import removeIcon from "../../../img/minus.svg";
+import Add from "../../../svgs/Add";
 
-const ImageUploader = ({ gallery, AddImageToColor }) => {
+const ImageUploader = ({ gallery, addImage, removeImage }) => {
   const imageInputRef = useRef(null);
   const { t } = useTranslation();
   const [src, setSrc] = useState(null);
@@ -32,24 +34,34 @@ const ImageUploader = ({ gallery, AddImageToColor }) => {
         onChange={handleSelectImage}
         ref={imageInputRef}
       />
-      <Label htmlFor="imageInput" className="imageInput__label">
+      <TextLabel htmlFor="imageInput" className="imageInput__label">
         {t(translations, "chooseImage")}
-      </Label>
+      </TextLabel>
       {src && (
         <ImageCropperModal
           src={src}
           setSrc={setSrc}
           imageInputRef={imageInputRef}
-          AddImageToColor={AddImageToColor}
+          addImage={addImage}
         />
       )}
 
       <Gallery>
         {gallery.map((item, index) => (
           <Item key={index}>
-            <Image src={item.url} alt="product image" />
+            <Image src={item.url} alt={t(translations, "productImage")} />
+            <RemoveButton type="button" onClick={() => removeImage(index)}>
+              <Icon src={removeIcon} alt={t(translations, "removeImage")} />
+            </RemoveButton>
           </Item>
         ))}
+        {gallery.length > 0 && (
+          <Item>
+            <IconLabel htmlFor="imageInput">
+              <Add title={t(translations, "addImage")} />
+            </IconLabel>
+          </Item>
+        )}
       </Gallery>
     </Container>
   );
@@ -67,11 +79,26 @@ const Container = styled.div`
   align-items: center;
 `;
 
-const Label = styled.label`
+const TextLabel = styled.label`
   ${rectButton}
   font-weight: normal;
   text-transform: initial;
   margin-bottom: 1em;
+`;
+
+const IconLabel = styled.label`
+  margin: auto;
+  cursor: pointer;
+  width: 2em;
+  height: 2em;
+  border-radius: 50%;
+  border: 2px solid ${theme.text.interactive};
+  padding: 0.15em;
+
+  .addSvg {
+    fill: ${theme.bg.accent};
+    width: 100%;
+  }
 `;
 
 const Input = styled.input`
@@ -92,14 +119,43 @@ const Gallery = styled.ul`
 
   display: flex;
   flex-wrap: wrap;
+
+  width: 100%;
 `;
 
 const Item = styled.li`
   flex: 0 0 25%;
+
+  display: flex;
+
+  position: relative;
+
+  &:last-child {
+    min-height: 4em;
+  }
 `;
 
 const Image = styled.img`
   max-width: 100%;
+`;
+
+const RemoveButton = styled.button`
+  position: absolute;
+  top: 0.375em;
+  right: 0.375em;
+
+  background-color: rgba(0, 0, 0, 0.5);
+  border: none;
+
+  width: 1.75em;
+  height: 1.75em;
+  border-radius: 50%;
+  display: flex;
+`;
+
+const Icon = styled.img`
+  width: 100%;
+  margin: auto;
 `;
 
 export default memo(ImageUploader);

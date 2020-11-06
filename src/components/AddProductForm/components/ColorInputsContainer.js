@@ -26,8 +26,9 @@ const ColorInputsContainer = ({
   sizeOptions,
   handleSizeChange,
   sizeError,
-  AddImageToColor,
+  addImage,
   imageError,
+  removeImage,
 }) => {
   const { t } = useTranslation();
   const { locale } = useContext(LocaleContext);
@@ -127,7 +128,8 @@ const ColorInputsContainer = ({
 
       <ImageUploader
         gallery={color.images}
-        AddImageToColor={(image) => AddImageToColor(image, colorIndex)}
+        addImage={(image) => addImage(image, colorIndex)}
+        removeImage={(imageIndex) => removeImage(colorIndex, imageIndex)}
       />
       {imageError.visible && imageError.index === colorIndex && (
         <ErrorMsg className="inputContainer__errMsg" role="alert">

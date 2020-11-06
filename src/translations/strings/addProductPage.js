@@ -32,6 +32,8 @@ const strings = {
     productImage: "Product image",
     cropImage: "Crop image",
     apply: "Apply",
+    removeImage: "Remove image",
+    addImage: "Add image",
   },
   ar: {
     addProduct: "إضافة منتج",
@@ -66,6 +68,8 @@ const strings = {
     productImage: "صورة المنتج",
     cropImage: "قص الصورة",
     apply: "موافق",
+    removeImage: "امسح الصورة",
+    addImage: "أضف صورة",
   },
 };
 

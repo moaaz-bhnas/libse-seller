@@ -10,8 +10,11 @@ import {
 } from "./style";
 import prevIcon from "../../img/prev-image.svg";
 import nextIcon from "../../img/next-image.svg";
+import useTranslation from "../../hooks/useTranslation";
+import translations from "../../translations/strings/productsPage";
 
 const ImageSlider = ({ images, className, height }) => {
+  const { t } = useTranslation();
   const [activeIndex, setActiveIndex] = useState(0);
 
   const handlePrevClick = useCallback(
@@ -58,7 +61,7 @@ const ImageSlider = ({ images, className, height }) => {
         onClick={handlePrevClick}
         onMouseDown={(e) => e.preventDefault()}
       >
-        <Icon src={prevIcon} alt="Go to previous slide" />
+        <Icon src={prevIcon} alt={t(translations, "prevSlide")} />
       </PreviousButton>
 
       <NextButton
@@ -66,7 +69,7 @@ const ImageSlider = ({ images, className, height }) => {
         onClick={handleNextClick}
         onMouseDown={(e) => e.preventDefault()}
       >
-        <Icon src={nextIcon} alt="Go to previous slide" />
+        <Icon src={nextIcon} alt={t(translations, "nextSlide")} />
       </NextButton>
     </Slider>
   );

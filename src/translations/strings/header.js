@@ -5,6 +5,7 @@ const strings = {
     addProduct: "Add Product",
     sponsoredProducts: "Sponsored Products",
     logout: "Log out",
+    toggleSidebar: "Toggle sidebar",
   },
   ar: {
     hi: "أهلاً، ",
@@ -12,6 +13,7 @@ const strings = {
     addProduct: "إضافة منتج",
     sponsoredProducts: "المنتجات المدعومة",
     logout: "تسجيل الخروج",
+    toggleSidebar: "فتح/غلق الشريط الجانبي",
   },
 };
 export default strings;
