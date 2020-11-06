@@ -20,7 +20,7 @@ import { rectButton } from "../../Button/style";
 import growIcon from "../../../img/grow.svg";
 import shrinkIcon from "../../../img/shrink.svg";
 
-const ImageCropperModal = ({ src, setSrc, imageInputRef, setCroppedImage }) => {
+const ImageCropperModal = ({ src, setSrc, imageInputRef, AddImageToColor }) => {
   const closerRef = useRef(null);
   const resizerRef = useRef(null);
   const imageRef = useRef(null);
@@ -32,6 +32,7 @@ const ImageCropperModal = ({ src, setSrc, imageInputRef, setCroppedImage }) => {
     unit: "%",
     aspect: 5 / 6,
   });
+  const [croppedImage, setCroppedImage] = useState(null);
   const [imageIsWide, setImageIsWide] = useState(null);
 
   useEffect(() => {
@@ -39,7 +40,7 @@ const ImageCropperModal = ({ src, setSrc, imageInputRef, setCroppedImage }) => {
     resizerRef.current.focus();
     return () => {
       document.body.style.overflow = "initial";
-      imageInputRef.current.focus();
+      if (imageInputRef.current) imageInputRef.current.focus();
     };
   }, []);
 
@@ -102,13 +103,26 @@ const ImageCropperModal = ({ src, setSrc, imageInputRef, setCroppedImage }) => {
     []
   );
 
+  const convertToPixelCrop = useCallback((crop, imageWidth, imageHeight) => {
+    return {
+      unit: "px",
+      aspect: crop.aspect,
+      x: (crop.x * imageWidth) / 100,
+      y: (crop.y * imageHeight) / 100,
+      width: (crop.width * imageWidth) / 100,
+      height: (crop.height * imageHeight) / 100,
+    };
+  }, []);
+
   const makeClientCrop = useCallback(async (crop) => {
+    console.log("makeClientCrop - crop: ", crop);
     const croppedImage = await getCroppedImg(
       imageRef.current,
       crop,
-      "cropped-image.jpeg"
+      "product-image.jpeg"
     );
-    setCroppedImage(croppedImage);
+    AddImageToColor(croppedImage);
+    setSrc(null);
   }, []);
 
   const getCroppedImg = useCallback((image, crop, fileName) => {
@@ -146,6 +160,15 @@ const ImageCropperModal = ({ src, setSrc, imageInputRef, setCroppedImage }) => {
     });
   }, []);
 
+  const handleApplyClick = useCallback(() => {
+    const pixelCrop = convertToPixelCrop(
+      crop,
+      imageRef.current.width,
+      imageRef.current.height
+    );
+    makeClientCrop(pixelCrop);
+  }, [crop]);
+
   return (
     <Container>
       <Overlay aria-hidden="true" onClick={() => setSrc(null)} />
@@ -172,7 +195,9 @@ const ImageCropperModal = ({ src, setSrc, imageInputRef, setCroppedImage }) => {
           <Title contentDirection={contentDirection}>
             {t(translations, "cropImage")}
           </Title>
-          <ApplyButton type="button">{t(translations, "apply")}</ApplyButton>
+          <ApplyButton type="button" onClick={handleApplyClick}>
+            {t(translations, "apply")}
+          </ApplyButton>
         </Header>
 
         <CropContainer>
@@ -186,7 +211,7 @@ const ImageCropperModal = ({ src, setSrc, imageInputRef, setCroppedImage }) => {
             }}
             onChange={(c, pc) => setCrop(pc)}
             onImageLoaded={handleImageLoaded}
-            onComplete={makeClientCrop}
+            // onComplete={makeClientCrop}
           />
         </CropContainer>
 

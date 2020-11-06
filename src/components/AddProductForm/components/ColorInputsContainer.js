@@ -26,7 +26,7 @@ const ColorInputsContainer = ({
   sizeOptions,
   handleSizeChange,
   sizeError,
-  handleImageChange,
+  AddImageToColor,
   imageError,
 }) => {
   const { t } = useTranslation();
@@ -46,10 +46,7 @@ const ColorInputsContainer = ({
   );
 
   return (
-    <InputContainer
-      key={colorIndex}
-      data-default-styles={color.default && colors.length >= 2}
-    >
+    <InputContainer data-default-styles={color.default && colors.length >= 2}>
       <LabelContainer>
         <SubTitle>
           {t(translations, "color")} #{colorIndex + 1}
@@ -128,7 +125,10 @@ const ColorInputsContainer = ({
         </ErrorMsg>
       )}
 
-      <ImageUploader />
+      <ImageUploader
+        gallery={color.images}
+        AddImageToColor={(image) => AddImageToColor(image, colorIndex)}
+      />
       {imageError.visible && imageError.index === colorIndex && (
         <ErrorMsg className="inputContainer__errMsg" role="alert">
           {t(translations, "imageErrorMsg")}

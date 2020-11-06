@@ -7,12 +7,10 @@ import { rectButton } from "../../Button/style";
 import ImageCropperModal from "./ImageCropperModal";
 import translations from "../../../translations/strings/addProductPage";
 
-const ImageUploader = () => {
+const ImageUploader = ({ gallery, AddImageToColor }) => {
   const imageInputRef = useRef(null);
   const { t } = useTranslation();
   const [src, setSrc] = useState(null);
-  const [croppedImage, setCroppedImage] = useState(null);
-  console.log("croppedImage: ", croppedImage);
 
   const handleSelectImage = useCallback((event) => {
     if (!event.target.files || event.target.files.length === 0) return;
@@ -42,9 +40,17 @@ const ImageUploader = () => {
           src={src}
           setSrc={setSrc}
           imageInputRef={imageInputRef}
-          setCroppedImage={setCroppedImage}
+          AddImageToColor={AddImageToColor}
         />
       )}
+
+      <Gallery>
+        {gallery.map((item, index) => (
+          <Item key={index}>
+            <Image src={item.url} alt="product image" />
+          </Item>
+        ))}
+      </Gallery>
     </Container>
   );
 };
@@ -65,6 +71,7 @@ const Label = styled.label`
   ${rectButton}
   font-weight: normal;
   text-transform: initial;
+  margin-bottom: 1em;
 `;
 
 const Input = styled.input`
@@ -76,6 +83,23 @@ const Input = styled.input`
       outline: -webkit-focus-ring-color auto 1px;
     }
   }
+`;
+
+const Gallery = styled.ul`
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  flex-wrap: wrap;
+`;
+
+const Item = styled.li`
+  flex: 0 0 25%;
+`;
+
+const Image = styled.img`
+  max-width: 100%;
 `;
 
 export default memo(ImageUploader);

@@ -144,20 +144,14 @@ const ColorsAndSizes = ({
     [colors, colorsNumber]
   );
 
-  const handleImageChange = useCallback(
-    (imageFiles, imageDataURLs, index) => {
-      console.log("imageFiles: ", imageFiles, "imageDataURLs: ", imageDataURLs);
+  const AddImageToColor = useCallback(
+    (image, index) => {
+      console.log("AddImageToColor - image: ", image, "index: ", index);
       if (imageError.visible) setImageError({ visible: false, index: null });
-
-      const images = imageFiles
-        ? imageFiles.map((file, index) => {
-            return { file, dataURL: imageDataURLs[index] };
-          })
-        : [];
 
       const updatedColors = colors.map((color, i) => {
         if (i === index) {
-          color.images = images;
+          color.images.push(image);
         }
         return color;
       });
@@ -224,7 +218,7 @@ const ColorsAndSizes = ({
               sizeOptions={sizeOptions}
               handleSizeChange={handleSizeChange}
               sizeError={sizeError}
-              handleImageChange={handleImageChange}
+              AddImageToColor={AddImageToColor}
               imageError={imageError}
             />
           );
