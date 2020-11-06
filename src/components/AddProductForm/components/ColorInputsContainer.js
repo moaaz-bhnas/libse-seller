@@ -6,7 +6,7 @@ import translations from "../../../translations/strings/addProductPage";
 import defaultIcon from "../../../img/default.svg";
 import removeIcon from "../../../img/cross.svg";
 import errorIcon from "../../../img/error.svg";
-import { title4 } from "../../Title/style";
+import { title3, title4 } from "../../Title/style";
 import { ErrorIcon, ErrorMsg } from "../style";
 import theme from "../../../shared/theme";
 import { MultiLanguageSelect } from "../../Input/Index";
@@ -144,7 +144,7 @@ const ColorInputsContainer = ({
 };
 
 const SubTitle = styled.h4`
-  ${title4}
+  ${title4};
   margin: 0;
 `;
 

@@ -20,9 +20,11 @@ import { rectButton } from "../../Button/style";
 import growIcon from "../../../img/grow.svg";
 import shrinkIcon from "../../../img/shrink.svg";
 
-const ImageCropperModal = ({ src, setSrc, imageInputRef }) => {
+const ImageCropperModal = ({ src, setSrc, imageInputRef, setCroppedImage }) => {
   const closerRef = useRef(null);
   const resizerRef = useRef(null);
+  const imageRef = useRef(null);
+  const url = useRef(null);
 
   const { t } = useTranslation();
   const { contentDirection } = useContext(ContentDirectionContext);
@@ -57,6 +59,7 @@ const ImageCropperModal = ({ src, setSrc, imageInputRef }) => {
   );
 
   const handleImageLoaded = useCallback((img) => {
+    imageRef.current = img;
     const cropCopy = Object.assign({}, crop);
     const imageIsWide = img.width / img.height > cropCopy.aspect;
     setImageIsWide(imageIsWide);
@@ -85,7 +88,6 @@ const ImageCropperModal = ({ src, setSrc, imageInputRef }) => {
       if (key === "Tab" && shiftKey && target === firstInteractive) {
         event.preventDefault();
         lastInteractive.focus();
-        return;
       }
 
       if (key === "Tab" && !shiftKey && target === lastInteractive) {
@@ -99,6 +101,50 @@ const ImageCropperModal = ({ src, setSrc, imageInputRef }) => {
     },
     []
   );
+
+  const makeClientCrop = useCallback(async (crop) => {
+    const croppedImage = await getCroppedImg(
+      imageRef.current,
+      crop,
+      "cropped-image.jpeg"
+    );
+    setCroppedImage(croppedImage);
+  }, []);
+
+  const getCroppedImg = useCallback((image, crop, fileName) => {
+    const canvas = document.createElement("canvas");
+    const scaleX = image.naturalWidth / image.width;
+    const scaleY = image.naturalHeight / image.height;
+    canvas.width = crop.width;
+    canvas.height = crop.height;
+    const ctx = canvas.getContext("2d");
+
+    ctx.drawImage(
+      image,
+      crop.x * scaleX,
+      crop.y * scaleY,
+      crop.width * scaleX,
+      crop.height * scaleY,
+      0,
+      0,
+      crop.width,
+      crop.height
+    );
+
+    return new Promise((resolve, reject) => {
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          console.error("Canvas is empty");
+          return;
+        }
+        console.log("blob: ", blob);
+        blob.name = fileName;
+        window.URL.revokeObjectURL(url.current);
+        url.current = window.URL.createObjectURL(blob);
+        resolve({ file: blob, url: url.current });
+      }, "image/jpeg");
+    });
+  }, []);
 
   return (
     <Container>
@@ -138,22 +184,20 @@ const ImageCropperModal = ({ src, setSrc, imageInputRef }) => {
             imageStyle={{
               maxHeight: "70vh",
             }}
-            onChange={(c, pc) => {
-              // console.log(pc);
-              setCrop(pc);
-            }}
+            onChange={(c, pc) => setCrop(pc)}
             onImageLoaded={handleImageLoaded}
+            onComplete={makeClientCrop}
           />
         </CropContainer>
 
         <ResizeContainer>
           <Icon role="presentation" src={shrinkIcon} alt="" />
           <Resizer
+            ref={resizerRef}
             aria-label="resize"
             type="range"
             min="80"
             max="100"
-            onChange={handleResizerChange}
             value={
               typeof imageIsWide === "boolean"
                 ? imageIsWide
@@ -161,7 +205,7 @@ const ImageCropperModal = ({ src, setSrc, imageInputRef }) => {
                   : crop.width
                 : ""
             }
-            ref={resizerRef}
+            onChange={handleResizerChange}
           />
           <Icon role="presentation" src={growIcon} alt="" />
         </ResizeContainer>

@@ -11,11 +11,14 @@ const ImageUploader = () => {
   const imageInputRef = useRef(null);
   const { t } = useTranslation();
   const [src, setSrc] = useState(null);
+  const [croppedImage, setCroppedImage] = useState(null);
+  console.log("croppedImage: ", croppedImage);
 
   const handleSelectImage = useCallback((event) => {
     if (!event.target.files || event.target.files.length === 0) return;
 
     const file = event.target.files[0];
+    console.log("file: ", file);
     const reader = new FileReader();
     reader.addEventListener("load", () => setSrc(reader.result));
     reader.readAsDataURL(file);
@@ -39,6 +42,7 @@ const ImageUploader = () => {
           src={src}
           setSrc={setSrc}
           imageInputRef={imageInputRef}
+          setCroppedImage={setCroppedImage}
         />
       )}
     </Container>
