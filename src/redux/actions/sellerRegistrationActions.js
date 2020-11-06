@@ -26,14 +26,12 @@ export const registerSeller = ({ seller, callback }) => {
         closingHour,
       })
       .then(() => {
-        console.log(1);
         return firestore
           .collection("users")
           .doc(uid)
           .update({ isSeller: true });
       })
       .then(() => {
-        console.log(2);
         dispatch({ type: "SELLER_REGISTRATION_SUCCESS" });
         callback();
       })

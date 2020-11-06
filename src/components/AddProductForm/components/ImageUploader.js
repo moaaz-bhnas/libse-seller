@@ -18,7 +18,6 @@ const ImageUploader = ({ gallery, addImage, removeImage }) => {
     if (!event.target.files || event.target.files.length === 0) return;
 
     const file = event.target.files[0];
-    console.log("file: ", file);
     const reader = new FileReader();
     reader.addEventListener("load", () => setSrc(reader.result));
     reader.readAsDataURL(file);
@@ -37,6 +36,7 @@ const ImageUploader = ({ gallery, addImage, removeImage }) => {
       <TextLabel htmlFor="imageInput" className="imageInput__label">
         {t(translations, "chooseImage")}
       </TextLabel>
+
       {src && (
         <ImageCropperModal
           src={src}

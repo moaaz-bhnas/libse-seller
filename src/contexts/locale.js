@@ -7,12 +7,10 @@ export const LocaleContext = createContext({ locale: "ar" });
 
 export const LocaleProvider = ({ children, lang }) => {
   const [locale, setLocale] = useState(lang);
-  console.log("LocaleProvider - locale: ", locale);
 
   const { query } = useRouter();
   useEffect(
     function updateLocaleOnQueryChange() {
-      console.log("updateLocaleOnQueryChange - query.lang: ", query.lang);
       if (
         typeof query.lang === "string" &&
         isLocale(query.lang) &&
@@ -26,7 +24,6 @@ export const LocaleProvider = ({ children, lang }) => {
 
   useEffect(
     function setLocalStorageLocale() {
-      console.log("setLocalStorageLocale - locale: ", locale);
       if (locale !== localStorage.getItem("locale")) {
         localStorage.setItem("locale", locale);
       }

@@ -62,7 +62,6 @@ export const addProduct = (sellerId, product, router) => {
         function progress(snapshot) {
           const percentage =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log(percentage);
         },
         function error(err) {
           console.log(err);

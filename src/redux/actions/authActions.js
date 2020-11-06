@@ -26,7 +26,6 @@ export const logIn = ({ credentials, callback }) => {
       .auth()
       .signInWithEmailAndPassword(credentials.email, credentials.password)
       .then(() => {
-        console.log("callback");
         callback();
         dispatch({ type: "LOGIN_SUCCESS" });
       })

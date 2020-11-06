@@ -21,6 +21,7 @@ import growIcon from "../../../img/grow.svg";
 import shrinkIcon from "../../../img/shrink.svg";
 
 const ImageCropperModal = ({ src, setSrc, imageInputRef, addImage }) => {
+  console.dir(addImage);
   const closerRef = useRef(null);
   const resizerRef = useRef(null);
   const imageRef = useRef(null);
@@ -32,7 +33,6 @@ const ImageCropperModal = ({ src, setSrc, imageInputRef, addImage }) => {
     unit: "%",
     aspect: 5 / 6,
   });
-  const [croppedImage, setCroppedImage] = useState(null);
   const [imageIsWide, setImageIsWide] = useState(null);
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const ImageCropperModal = ({ src, setSrc, imageInputRef, addImage }) => {
     resizerRef.current.focus();
     return () => {
       document.body.style.overflow = "initial";
-      if (imageInputRef.current) imageInputRef.current.focus();
+      imageInputRef.current.focus();
     };
   }, []);
 
@@ -115,7 +115,6 @@ const ImageCropperModal = ({ src, setSrc, imageInputRef, addImage }) => {
   }, []);
 
   const makeClientCrop = useCallback(async (crop) => {
-    console.log("makeClientCrop - crop: ", crop);
     const croppedImage = await getCroppedImg(
       imageRef.current,
       crop,
@@ -151,7 +150,6 @@ const ImageCropperModal = ({ src, setSrc, imageInputRef, addImage }) => {
           console.error("Canvas is empty");
           return;
         }
-        console.log("blob: ", blob);
         blob.name = fileName;
         window.URL.revokeObjectURL(url.current);
         url.current = window.URL.createObjectURL(blob);
@@ -211,7 +209,6 @@ const ImageCropperModal = ({ src, setSrc, imageInputRef, addImage }) => {
             }}
             onChange={(c, pc) => setCrop(pc)}
             onImageLoaded={handleImageLoaded}
-            // onComplete={makeClientCrop}
           />
         </CropContainer>
 

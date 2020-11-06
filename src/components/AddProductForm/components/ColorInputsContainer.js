@@ -6,7 +6,7 @@ import translations from "../../../translations/strings/addProductPage";
 import defaultIcon from "../../../img/default.svg";
 import removeIcon from "../../../img/cross.svg";
 import errorIcon from "../../../img/error.svg";
-import { title3, title4 } from "../../Title/style";
+import { title4 } from "../../Title/style";
 import { ErrorIcon, ErrorMsg } from "../style";
 import theme from "../../../shared/theme";
 import { MultiLanguageSelect } from "../../Input/Index";
@@ -128,7 +128,7 @@ const ColorInputsContainer = ({
 
       <ImageUploader
         gallery={color.images}
-        addImage={(image) => addImage(image, colorIndex)}
+        addImage={(image) => addImage(colorIndex, image)}
         removeImage={(imageIndex) => removeImage(colorIndex, imageIndex)}
       />
       {imageError.visible && imageError.index === colorIndex && (

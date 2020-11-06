@@ -55,16 +55,6 @@ const ColorsAndSizes = ({
   const [colorError, setColorError] = useState({ visible: false, index: null });
   const [sizeError, setSizeError] = useState({ visible: false, index: null });
   const [imageError, setImageError] = useState({ visible: false, index: null });
-  console.log(
-    "colors: ",
-    colors,
-    "colorError: ",
-    colorError,
-    "sizeError: ",
-    sizeError,
-    "imageError: ",
-    imageError
-  );
 
   useEffect(
     function checkColorsStateAndSetDefaultColor() {
@@ -145,12 +135,12 @@ const ColorsAndSizes = ({
   );
 
   const addImage = useCallback(
-    (image, index) => {
-      console.log("addImage - image: ", image, "index: ", index);
+    (colorIndex, image) => {
+      console.log("addImage - image: ", image, "colorIndex: ", colorIndex);
       if (imageError.visible) setImageError({ visible: false, index: null });
 
       const updatedColors = colors.map((color, i) => {
-        if (i === index) {
+        if (i === colorIndex) {
           color.images.push(image);
         }
         return color;
@@ -158,6 +148,19 @@ const ColorsAndSizes = ({
       setColors(updatedColors);
     },
     [colors, imageError.visible]
+  );
+
+  const removeImage = useCallback(
+    (colorIndex, imageIndex) => {
+      const updatedColors = colors.map((color, i) => {
+        if (i === colorIndex) {
+          color.images.splice(imageIndex, 1);
+        }
+        return color;
+      });
+      setColors(updatedColors);
+    },
+    [colors]
   );
 
   const handleSubmit = useCallback(
@@ -181,19 +184,6 @@ const ColorsAndSizes = ({
     (index) => {
       const updatedColors = colors.map((color, i) => {
         color.default = i === index;
-        return color;
-      });
-      setColors(updatedColors);
-    },
-    [colors]
-  );
-
-  const removeImage = useCallback(
-    (colorIndex, imageIndex) => {
-      const updatedColors = colors.map((color, i) => {
-        if (i === colorIndex) {
-          color.images.splice(imageIndex, 1);
-        }
         return color;
       });
       setColors(updatedColors);

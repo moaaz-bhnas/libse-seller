@@ -204,13 +204,10 @@ const AddProductForm = () => {
   };
   const [steps, stepsDispatch] = useReducer(stepsReducer, initSteps);
 
-  const [activeStep, setActiveStep] = useState(1);
-  console.log("activeStep: ", activeStep);
+  const [activeStep, setActiveStep] = useState(3);
 
   const handleStepSubmit = useCallback(
     (event, disabled = false) => {
-      console.log("handleStepSubmit");
-      console.log("disabled: ", disabled);
       if (!disabled) {
         event.preventDefault();
         setActiveStep(activeStep + 1);
@@ -220,7 +217,6 @@ const AddProductForm = () => {
   );
 
   const goToPreviousStep = useCallback(() => {
-    console.log("goToPreviousStep");
     setActiveStep(activeStep - 1);
   }, [activeStep]);
 
@@ -228,7 +224,6 @@ const AddProductForm = () => {
     (event) => {
       event.preventDefault();
       const allStepsFinished = steps.every((step) => step.finished);
-      console.log("allStepsFinished: ", allStepsFinished, "steps: ", steps);
       if (!allStepsFinished) return;
       // Naming login goes here ..
 
