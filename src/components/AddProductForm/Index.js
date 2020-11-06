@@ -204,7 +204,7 @@ const AddProductForm = () => {
   };
   const [steps, stepsDispatch] = useReducer(stepsReducer, initSteps);
 
-  const [activeStep, setActiveStep] = useState(3);
+  const [activeStep, setActiveStep] = useState(1);
   console.log("activeStep: ", activeStep);
 
   const handleStepSubmit = useCallback(
