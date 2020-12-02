@@ -9,7 +9,7 @@ import translations from "../../../translations/strings/addProductPage";
 import removeIcon from "../../../img/minus.svg";
 import Add from "../../../svgs/Add";
 
-const ImageUploader = ({ gallery, addImage, removeImage }) => {
+const ImageUploader = ({ gallery, addImage, removeImage, colorIndex }) => {
   const imageInputRef = useRef(null);
   const { t } = useTranslation();
   const [src, setSrc] = useState(null);
@@ -26,14 +26,17 @@ const ImageUploader = ({ gallery, addImage, removeImage }) => {
   return (
     <Container>
       <Input
-        id="imageInput"
+        id={`imageInput${colorIndex}`}
         type="file"
         accept="image/*"
         multiple={false}
         onChange={handleSelectImage}
         ref={imageInputRef}
       />
-      <TextLabel htmlFor="imageInput" className="imageInput__label">
+      <TextLabel
+        htmlFor={`imageInput${colorIndex}`}
+        className="imageInput__label"
+      >
         {t(translations, "chooseImage")}
       </TextLabel>
 
@@ -57,7 +60,7 @@ const ImageUploader = ({ gallery, addImage, removeImage }) => {
         ))}
         {gallery.length > 0 && (
           <Item>
-            <IconLabel htmlFor="imageInput">
+            <IconLabel htmlFor={`imageInput${colorIndex}`}>
               <Add title={t(translations, "addImage")} />
             </IconLabel>
           </Item>

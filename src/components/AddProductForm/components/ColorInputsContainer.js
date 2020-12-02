@@ -130,6 +130,7 @@ const ColorInputsContainer = ({
         gallery={color.images}
         addImage={(image) => addImage(colorIndex, image)}
         removeImage={(imageIndex) => removeImage(colorIndex, imageIndex)}
+        colorIndex={colorIndex}
       />
       {imageError.visible && imageError.index === colorIndex && (
         <ErrorMsg className="inputContainer__errMsg" role="alert">
