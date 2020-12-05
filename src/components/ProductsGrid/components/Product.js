@@ -73,14 +73,14 @@ const Product = ({ product, seller, inFavorites }) => {
 
         {product.colors.length > 1 && (
           <Colors>
-            {product.colors.map(({ value: color }, index, colors) => (
-              <Color key={color}>
+            {product.colors.map((color, index, colors) => (
+              <Color key={color[`name_${locale}`]}>
                 <ColorButton
-                  aria-label={color}
-                  color={color}
+                  aria-label={color[`name_${locale}`]}
+                  color={color.name_en}
                   onClick={() => setActiveColor(colors[index])}
-                  title={color}
-                  data-active={color === activeColor.value}
+                  title={color[`name_${locale}`]}
+                  data-active={color.name_en === activeColor.name_en}
                   onMouseDown={(e) => e.preventDefault()}
                 />
               </Color>

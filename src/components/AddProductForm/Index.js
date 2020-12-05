@@ -111,7 +111,7 @@ const AddProductForm = () => {
   const [description, setDescription] = useState("Description"); // Not sure about removing this option yet
 
   const [colors, setColors] = useState([
-    { name_en: "", name_en: "", sizes: [], images: [], default: false },
+    { name_ar: "", name_en: "", sizes: [], images: [], default: false },
   ]);
   useUpdateEffect(
     function updateColorsStepFinishState() {
