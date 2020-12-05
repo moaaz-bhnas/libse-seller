@@ -83,7 +83,7 @@ const ImageCropperModal = ({ src, setSrc, imageInputRef, addImage }) => {
   }, []);
 
   const handleKeyDown = useCallback(
-    (event, firstInteractive, lastInteractive, close) => {
+    (event, firstInteractive, lastInteractive, close, handleSubmit) => {
       const { target, key, shiftKey } = event;
 
       if (key === "Tab" && shiftKey && target === firstInteractive) {
@@ -98,6 +98,11 @@ const ImageCropperModal = ({ src, setSrc, imageInputRef, addImage }) => {
 
       if (key === "Escape") {
         close();
+      }
+
+      if (key === "Enter") {
+        event.preventDefault();
+        handleSubmit();
       }
     },
     []
@@ -122,6 +127,7 @@ const ImageCropperModal = ({ src, setSrc, imageInputRef, addImage }) => {
     );
     addImage(croppedImage);
     setSrc(null);
+    imageInputRef.current.focus();
   }, []);
 
   const getCroppedImg = useCallback((image, crop, fileName) => {
@@ -177,8 +183,12 @@ const ImageCropperModal = ({ src, setSrc, imageInputRef, addImage }) => {
         aria-label="Crop image"
         tabIndex="0"
         onKeyDown={(event) =>
-          handleKeyDown(event, closerRef.current, resizerRef.current, () =>
-            setSrc(null)
+          handleKeyDown(
+            event,
+            closerRef.current,
+            resizerRef.current,
+            () => setSrc(null),
+            handleApplyClick
           )
         }
       >

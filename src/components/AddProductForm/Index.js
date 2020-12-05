@@ -28,7 +28,7 @@ const AddProductForm = () => {
   // translations
   const { t } = useTranslation();
 
-  const user = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const sellerId = user && user.uid;
   const dispatch = useDispatch();
   const router = useRouter();
@@ -229,16 +229,20 @@ const AddProductForm = () => {
 
       const category = categories[selectedCategoryIndex];
       const product = {
-        productName,
-        category: category.value,
-        subCategory: category.subCategories[selectedSubCategoryIndex].value,
+        name: productName,
+        category_ar: category.name_ar,
+        category_en: category.name_en,
+        sub_category_ar:
+          category.subCategories[selectedSubCategoryIndex].name_ar,
+        sub_category_en:
+          category.subCategories[selectedSubCategoryIndex].name_en,
         details: selectedDetails,
         description,
         colors,
         price,
       };
       console.log("product: ", product);
-      dispatch(addProduct(sellerId, product, router));
+      dispatch(addProduct(locale, sellerId, product, router));
     },
     [
       steps,

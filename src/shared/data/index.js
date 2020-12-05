@@ -24,7 +24,7 @@ export const categories = [
                   { name_en: "Slim", name_ar: "قصة ضيقة" },
                   { name_en: "Other", name_ar: "أخرى" },
                 ],
-                required: true,
+                required: false,
               },
               {
                 name_en: "Material",

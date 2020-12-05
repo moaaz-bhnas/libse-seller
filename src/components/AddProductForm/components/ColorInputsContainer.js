@@ -64,6 +64,7 @@ const ColorInputsContainer = ({
             </DefaultBadge>
           ) : (
             <DefaultButton
+              type="button"
               contentDirection={contentDirection}
               onClick={() => setDefaultColor(colorIndex)}
             >

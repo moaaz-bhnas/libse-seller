@@ -8,16 +8,19 @@ function uuidGenerator() {
 }
 
 const uploadProductToFirestore = async (
+  locale,
   firestore,
   dispatch,
-  sellerId,
+  seller_id,
   product,
   router
 ) => {
   const {
-    productName,
-    category,
-    subCategory,
+    name,
+    category_ar,
+    category_en,
+    sub_category_ar,
+    sub_category_en,
     details,
     description,
     colors,
@@ -28,10 +31,12 @@ const uploadProductToFirestore = async (
     .collection("products")
     .doc()
     .set({
-      seller_id: sellerId,
-      name: productName,
-      category,
-      sub_category: subCategory,
+      seller_id,
+      name,
+      category_ar,
+      category_en,
+      sub_category_ar,
+      sub_category_en,
       details,
       description,
       colors,
@@ -39,14 +44,14 @@ const uploadProductToFirestore = async (
     })
     .then(() => {
       dispatch({ type: "ADD_PRODUCT_SUCCESS" });
-      router.push("/products");
+      router.push(`/${locale}`);
     })
     .catch((err) => {
       dispatch({ type: "ADD_PRODUCT_ERROR", err });
     });
 };
 
-export const addProduct = (sellerId, product, router) => {
+export const addProduct = (locale, seller_id, product, router) => {
   return (dispatch, getState, { firebase, firestore }) => {
     const { colors } = product;
 
@@ -75,9 +80,10 @@ export const addProduct = (sellerId, product, router) => {
 
             if (allURLsReady) {
               uploadProductToFirestore(
+                locale,
                 firestore,
                 dispatch,
-                sellerId,
+                seller_id,
                 product,
                 router
               );
