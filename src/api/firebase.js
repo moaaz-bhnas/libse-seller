@@ -90,7 +90,6 @@ export const addProduct = ({ seller_id, product, callback }) => {
       }
     );
   };
-
   (function uploadImages() {
     colors.forEach((color) => {
       const { images } = color;

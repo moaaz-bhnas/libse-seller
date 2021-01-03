@@ -11,13 +11,9 @@
     "firebase-admin": "^9.3.0",
     "next": "^10.0.0",
     "next-cookies": "^2.0.3",
-    "next-redux-wrapper": "^6.0.2",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-image-crop": "^8.6.6",
-    "react-redux": "^7.2.1",
-    "redux": "^4.0.5",
-    "redux-thunk": "^2.3.0",
     "styled-components": "^5.2.0"
   },
   "license": "MIT",
