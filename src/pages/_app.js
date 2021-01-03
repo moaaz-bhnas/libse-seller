@@ -5,16 +5,17 @@ import { LayoutProvider } from "../contexts/layout";
 
 function MyApp({ Component, pageProps }) {
   return (
-    <Provider>
-      {/* <AuthProvider> */}
-      <LayoutProvider>
-        <GlobalStyles />
-        <Component {...pageProps} />
-      </LayoutProvider>
-      {/* </AuthProvider> */}
-    </Provider>
+    // <Provider>
+    // {/* <AuthProvider> */}
+    <LayoutProvider>
+      <GlobalStyles />
+      <Component {...pageProps} />
+    </LayoutProvider>
+    //   {/* </AuthProvider> */}
+    // {/* </Provider> */}
   );
 }
 
 //withRedux wrapper that passes the store to the App Component
-export default wrapper.withRedux(MyApp);
+// export default wrapper.withRedux(MyApp);
+export default MyApp;

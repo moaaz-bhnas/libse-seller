@@ -16,20 +16,15 @@ import {
   LikeButton,
 } from "../style";
 import LikeSvg from "../../../svgs/Heart";
-import {
-  addToFavorites,
-  removeFromFavorites,
-} from "../../../redux/actions/productActions";
+import { addToFavorites, removeFromFavorites } from "../../../api/firebase";
 import { AuthContext } from "../../../contexts/auth";
 import { LocaleContext } from "../../../contexts/locale";
-import { useDispatch } from "react-redux";
 import ImageSlider from "../../ImageSlider/Index";
 import formatPrice from "../../../utils/formatPrice";
 import { ContentDirectionContext } from "../../../contexts/contentDirection";
 
 const Product = ({ product, seller, inFavorites }) => {
   const { uid: userId } = useContext(AuthContext);
-  const dispatch = useDispatch();
 
   // language
   const { locale } = useContext(LocaleContext);
@@ -47,11 +42,9 @@ const Product = ({ product, seller, inFavorites }) => {
   };
 
   const handleLikeToggle = useCallback(() => {
-    dispatch(
-      inFavorites
-        ? removeFromFavorites(userId, product.id)
-        : addToFavorites(userId, product.id)
-    );
+    inFavorites
+      ? removeFromFavorites(userId, product.id)
+      : addToFavorites(userId, product.id);
   }, [inFavorites]);
 
   return (

@@ -5,8 +5,7 @@ import ProgressBar from "./components/ProgressBar";
 import ColorsAndSizes from "./components/ColorsAndSizes";
 import Price from "./components/Price";
 import { AuthContext } from "../../contexts/auth";
-import { addProduct } from "../../redux/actions/productActions";
-import { useDispatch } from "react-redux";
+import { addProduct } from "../../api/firebase";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 import { title } from "../Title/style";
@@ -30,7 +29,6 @@ const AddProductForm = () => {
 
   const { user } = useContext(AuthContext);
   const sellerId = user && user.uid;
-  const dispatch = useDispatch();
   const router = useRouter();
 
   // Inputs
@@ -242,7 +240,11 @@ const AddProductForm = () => {
         price,
       };
       console.log("product: ", product);
-      dispatch(addProduct(locale, sellerId, product, router));
+      addProduct({
+        seller_id: sellerId,
+        product,
+        callback: () => router.push(`/${locale}/`),
+      });
     },
     [
       steps,
