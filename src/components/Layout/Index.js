@@ -5,7 +5,6 @@ import { LayoutContext } from "../../contexts/layout";
 import measurements from "../../shared/measurements";
 import time from "../../shared/time";
 import { ContentDirectionContext } from "../../contexts/contentDirection";
-import { useSelector } from "react-redux";
 import { ProfileContext } from "../../contexts/profile";
 import { AuthContext } from "../../contexts/auth";
 
