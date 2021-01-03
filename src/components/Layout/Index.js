@@ -6,9 +6,8 @@ import measurements from "../../shared/measurements";
 import time from "../../shared/time";
 import { ContentDirectionContext } from "../../contexts/contentDirection";
 import { ProfileContext } from "../../contexts/profile";
-import { AuthContext } from "../../contexts/auth";
 
-const Layout = ({ children }) => {
+const Layout = ({ children, fullPage = false }) => {
   const { profile } = useContext(ProfileContext);
   const isSeller = profile ? profile.isSeller : null;
   const { sidebarExpanded } = useContext(LayoutContext);
@@ -22,6 +21,7 @@ const Layout = ({ children }) => {
       <Main>
         <Wrapper
           seller={isSeller}
+          fullPage={fullPage}
           sidebarExpanded={sidebarExpanded}
           contentDirection={contentDirection}
         >
@@ -35,11 +35,13 @@ const Layout = ({ children }) => {
 const StyledLayout = styled.div``;
 
 const Wrapper = styled.div`
-  max-width: ${({ seller }) =>
+  max-width: ${({ seller, fullPage }) =>
     seller
-      ? measurements.maxWidth.wrapper
+      ? fullPage
+        ? "initial"
+        : measurements.maxWidth.wrapper
       : measurements.maxWidth.smallWrapper};
-  margin: 0 auto;
+  margin: ${({ fullPage }) => (fullPage ? "0" : "2em auto 0")};
   padding-left: ${({ seller, sidebarExpanded, contentDirection }) =>
     seller && contentDirection === "ltr"
       ? sidebarExpanded

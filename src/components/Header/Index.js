@@ -27,7 +27,7 @@ const unvisible = css`
 `;
 
 const StyledHeader = styled.header`
-  margin-bottom: 2em;
+  /* margin-bottom: 2em; */
   /* padding-top: ${({ seller }) => (seller ? "3em" : null)}; */
   padding-top: 3em;
   position: relative;

@@ -4,7 +4,12 @@ import generateUuid from "../utils/generateUuid";
 /* ------------------
   products 
 --------------------- */
-/* get --- */
+/* get product by id --- */
+export const getProduct = async (id) => {
+  const product = await firestore.collection("products").doc(id).get();
+  return product.data();
+};
+/* get seller products --- */
 export const getSellerProducts = async (sellerId) => {
   // request data
   const snapshot = await firestore
