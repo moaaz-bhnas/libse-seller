@@ -1,14 +1,9 @@
-import { useEffect, useState, createContext } from "react";
-import firebase from "../firebase/clientApp";
-import { useDispatch } from "react-redux";
-import { clearProfile, setProfile } from "../redux/actions/profileActions";
-import useUpdateEffect from "../hooks/useUpdateEffect";
+import { useEffect, useState, createContext, useCallback } from "react";
+import firebase, { firestore } from "../firebase/clientApp";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children, serverUser = null }) => {
-  const dispatch = useDispatch();
-
   const [user, setUser] = useState(serverUser);
 
   useEffect(() => {
@@ -28,12 +23,56 @@ export const AuthProvider = ({ children, serverUser = null }) => {
     return () => cancelAuthListener();
   }, []);
 
-  useUpdateEffect(() => {
-    if (user) dispatch(setProfile(user.uid));
-    else dispatch(clearProfile());
-  }, [user]);
+  // auth actions
+  const logIn = useCallback(({ credentials, callback }) => {
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(credentials.email, credentials.password)
+      .then(() => {
+        callback();
+        console.log("login success :D");
+      })
+      .catch((err) => {
+        console.log("login error!", err);
+      });
+  }, []);
+
+  const signUp = useCallback(({ credentials, callback }) => {
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(credentials.email, credentials.password)
+      .then((response) => {
+        return firestore.collection("users").doc(response.user.uid).set({
+          username: credentials.username,
+          favorites: [],
+          isSeller: false,
+        });
+      })
+      .then(() => {
+        callback();
+        console.log("signup success :D");
+      })
+      .catch((err) => {
+        console.log("signup error!", err);
+      });
+  }, []);
+
+  const signOut = useCallback(({ callback }) => {
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        callback();
+        console.log("signout success :D");
+      })
+      .catch((err) => {
+        console.log("signout error!", err);
+      });
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, signOut, logIn, signUp }}>
+      {children}
+    </AuthContext.Provider>
   );
 };

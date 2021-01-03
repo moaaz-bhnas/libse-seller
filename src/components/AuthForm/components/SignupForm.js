@@ -2,19 +2,20 @@ import { memo, useState, useCallback, useContext } from "react";
 import Link from "next/link";
 import { Form, Title, SubmitButton, P, AuthLink } from "../style";
 import { Input } from "../../Input/style";
-import { useDispatch } from "react-redux";
-import { signUp } from "../../../redux/actions/authActions";
 import translations from "../../../translations/strings/signup";
 import useTranslation from "../../../hooks/useTranslation";
 import { LocaleContext } from "../../../contexts/locale";
 import { useRouter } from "next/router";
+import { AuthContext } from "../../../contexts/auth";
 
 const SignupForm = () => {
+  // auth
+  const { signUp } = useContext(AuthContext);
+
   // locale
   const { locale } = useContext(LocaleContext);
 
   const router = useRouter();
-  const dispatch = useDispatch();
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -25,12 +26,10 @@ const SignupForm = () => {
       event.preventDefault();
 
       const credentials = { username, email, password };
-      dispatch(
-        signUp({
-          credentials,
-          callback: () => router.push(`/${locale}/register`),
-        })
-      );
+      signUp({
+        credentials,
+        callback: () => router.push(`/${locale}/register`),
+      });
     },
     [username, email, password]
   );

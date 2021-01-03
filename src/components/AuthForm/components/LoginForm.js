@@ -9,19 +9,20 @@ import {
   AuthLink,
 } from "../style";
 import { Input } from "../../Input/style";
-import { useDispatch } from "react-redux";
-import { logIn } from "../../../redux/actions/authActions";
 import translations from "../../../translations/strings/login";
 import useTranslation from "../../../hooks/useTranslation";
 import { LocaleContext } from "../../../contexts/locale";
 import { useRouter } from "next/router";
+import { AuthContext } from "../../../contexts/auth";
 
 const LoginForm = () => {
+  // auth
+  const { logIn } = useContext(AuthContext);
+
   // locale
   const { locale } = useContext(LocaleContext);
 
   const router = useRouter();
-  const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -31,9 +32,7 @@ const LoginForm = () => {
       event.preventDefault();
 
       const credentials = { email, password };
-      dispatch(
-        logIn({ credentials, callback: () => router.push(`/${locale}`) })
-      );
+      logIn({ credentials, callback: () => router.push(`/${locale}`) });
     },
     [email, password]
   );

@@ -7,8 +7,6 @@ import {
   useEffect,
 } from "react";
 import Link from "next/link";
-import { useSelector, useDispatch } from "react-redux";
-import { signOut } from "../../../redux/actions/authActions";
 import downArrow from "../../../img/down-arrow.svg";
 import styled from "styled-components";
 import theme from "../../../shared/theme";
@@ -64,6 +62,9 @@ const AccountDropdown = ({ previousInteractiveElement }) => {
   // locale
   const { locale } = useContext(LocaleContext);
 
+  // auth
+  const { signOut } = useContext(AuthContext);
+
   // translation
   const { t } = useTranslation();
 
@@ -71,7 +72,6 @@ const AccountDropdown = ({ previousInteractiveElement }) => {
   const { contentDirection } = useContext(ContentDirectionContext);
 
   // profile
-  const dispatch = useDispatch();
   const { profile } = useContext(ProfileContext);
   const firstName = profile.username.split(" ")[0];
 
@@ -173,7 +173,7 @@ const AccountDropdown = ({ previousInteractiveElement }) => {
       value: t(strings, "logout"),
       link: false,
       handleClick: () =>
-        dispatch(signOut({ callback: () => router.push(`/${locale}/login`) })),
+        signOut({ callback: () => router.push(`/${locale}/login`) }),
     },
   ];
 

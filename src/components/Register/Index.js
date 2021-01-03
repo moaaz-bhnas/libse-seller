@@ -1,8 +1,6 @@
 import { memo, useState, useCallback, useContext } from "react";
 import { useRouter } from "next/router";
 import { Input } from "../Input/style";
-import { useDispatch } from "react-redux";
-import { registerSeller } from "../../redux/actions/sellerRegistrationActions";
 import { AuthContext } from "../../contexts/auth";
 import styled from "styled-components";
 import theme from "../../shared/theme";
@@ -11,7 +9,7 @@ import { title } from "../Title/style";
 import useTranslation from "../../hooks/useTranslation";
 import translations from "../../translations/strings/register";
 import { LocaleContext } from "../../contexts/locale";
-import { setProfile } from "../../redux/actions/profileActions";
+import { registerSeller } from "../../api/firebase";
 
 const Register = () => {
   // locale
@@ -21,7 +19,6 @@ const Register = () => {
   const { t } = useTranslation();
 
   const router = useRouter();
-  const dispatch = useDispatch();
 
   const { user } = useContext(AuthContext);
   const uid = user ? user.uid : null;
@@ -52,11 +49,10 @@ const Register = () => {
       };
 
       const callback = () => {
-        dispatch(setProfile(uid));
         router.push(`/${locale}`);
       };
 
-      dispatch(registerSeller({ seller, callback }));
+      registerSeller({ seller, callback });
     },
     [
       firstName,
