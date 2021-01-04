@@ -1,7 +1,7 @@
 import { memo, forwardRef, useContext } from "react";
 import ChatSvg from "../../../svgs/Chat";
 import styled from "styled-components";
-import { headerButtonStyles } from "../../Button/style";
+import { clearButtonStyles } from "../../Button/style";
 import { ContentDirectionContext } from "../../../contexts/contentDirection";
 
 const Chat = (props, ref) => {
@@ -20,7 +20,7 @@ const Chat = (props, ref) => {
 const ChatContainer = styled.div``;
 
 const ChatToggler = styled.button`
-  ${headerButtonStyles}
+  ${clearButtonStyles}
 
   height: 3rem;
   padding: 0 1.05em;

@@ -20,25 +20,19 @@ const ProductsGrid = ({ products, seller }) => {
 
   return (
     user && (
-      <Container>
-        <Grid>
-          {products.map((product) => (
-            <Product
-              key={product.id}
-              product={product}
-              seller={seller}
-              inFavorites={checkFavorite(product.id)}
-            />
-          ))}
-        </Grid>
-      </Container>
+      <Grid>
+        {products.map((product) => (
+          <Product
+            key={product.id}
+            product={product}
+            seller={seller}
+            inFavorites={checkFavorite(product.id)}
+          />
+        ))}
+      </Grid>
     )
   );
 };
-
-const Container = styled.div`
-  padding: 0 1em;
-`;
 
 const Grid = styled.ul`
   display: flex;

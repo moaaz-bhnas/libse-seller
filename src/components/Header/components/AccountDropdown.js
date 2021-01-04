@@ -10,7 +10,7 @@ import Link from "next/link";
 import downArrow from "../../../img/down-arrow.svg";
 import styled from "styled-components";
 import theme from "../../../shared/theme";
-import { headerButtonStyles } from "../../Button/style";
+import { clearButtonStyles } from "../../Button/style";
 import { useRouter } from "next/router";
 import useTranslation from "../../../hooks/useTranslation";
 import capitalize from "../../../utils/capitalize";
@@ -228,7 +228,7 @@ const DropdownContainer = styled.div`
 `;
 
 const DropdownToggler = styled.button`
-  ${headerButtonStyles}
+  ${clearButtonStyles}
   font-weight: 700;
   color: #fff;
   height: 3rem;
@@ -297,7 +297,7 @@ const MenuitemLink = styled.a`
 `;
 
 const MenuitemButton = styled.button`
-  ${headerButtonStyles}
+  ${clearButtonStyles}
   text-transform: uppercase;
   font-size: 0.9rem;
   font-weight: 700;

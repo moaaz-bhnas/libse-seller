@@ -1,15 +1,17 @@
-import { memo } from "react";
+import { forwardRef, memo, useEffect } from "react";
 import styled from "styled-components";
 import { listStyles } from "../../List/style";
-import Image from "next/image";
 
-const Images = ({ images }) => {
-  console.log(images);
+const Images = ({ images }, imagesRefs) => {
   return (
     <StyledImages>
       {images.map((image, index) => (
         <Item key={index}>
-          <Image src={image} alt="" layout="fill" unsized />
+          <Img
+            ref={(el) => (imagesRefs.current[index] = el)}
+            src={image}
+            alt=""
+          />
         </Item>
       ))}
     </StyledImages>
@@ -22,4 +24,9 @@ const StyledImages = styled.ul`
 
 const Item = styled.li``;
 
-export default memo(Images);
+const Img = styled.img`
+  max-width: 100%;
+  vertical-align: top;
+`;
+
+export default memo(forwardRef(Images));

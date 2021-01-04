@@ -79,9 +79,10 @@ export const PreviousIcon = styled.img`
     props.contentDirection === "rtl" ? "rotate(180deg)" : "initial"};
 `;
 
-export const headerButtonStyles = css`
+export const clearButtonStyles = css`
   border: none;
   background-color: transparent;
+  cursor: pointer;
 
   display: flex;
   justify-content: center;

@@ -96,18 +96,15 @@ const Title = styled.h2`
 
 const Container = styled.div`
   display: flex;
+  /* align-items: flex-start; */
 `;
 
 const Column = styled.div`
-  flex: 1 50%;
+  width: 50%;
 `;
 
-const FirstColumn = styled(Column)`
-  background: pink;
-`;
+const FirstColumn = styled(Column)``;
 
-const SecondColumn = styled(Column)`
-  background: yellow;
-`;
+const SecondColumn = styled(Column)``;
 
 export default ProductPage;

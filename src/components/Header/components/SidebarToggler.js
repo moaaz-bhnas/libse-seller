@@ -1,7 +1,7 @@
 import { memo, useContext } from "react";
 import hamburgerIcon from "../../../img/menu.svg";
 import styled from "styled-components";
-import { headerButtonStyles } from "../../Button/style";
+import { clearButtonStyles } from "../../Button/style";
 import { ContentDirectionContext } from "../../../contexts/contentDirection";
 import useTranslation from "../../../hooks/useTranslation";
 import translations from "../../../translations/strings/header";
@@ -26,7 +26,7 @@ const SidebarToggler = ({ onClick }) => {
 };
 
 export const StyledSidebarToggler = styled.button`
-  ${headerButtonStyles}
+  ${clearButtonStyles}
   height: 3rem;
   padding: 0 1em;
   margin-right: ${(props) =>

@@ -6,7 +6,7 @@ import Logo from "../../Logo/Index";
 import Chat from "./Chat";
 import AccountDropdown from "./AccountDropdown";
 import Sidebar from "./Sidebar";
-import { headerButtonStyles } from "../../Button/style";
+import { clearButtonStyles } from "../../Button/style";
 import { LocaleContext } from "../../../contexts/locale";
 import { useRouter } from "next/router";
 import { ContentDirectionContext } from "../../../contexts/contentDirection";
@@ -60,7 +60,7 @@ const StyledTopBar = styled.div`
 `;
 
 const Button = styled.button`
-  ${headerButtonStyles}
+  ${clearButtonStyles}
 
   color: #fff;
   margin-left: ${(props) => (props.contentDirection === "ltr" ? "1em" : "0")};
