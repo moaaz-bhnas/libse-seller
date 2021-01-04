@@ -11,7 +11,7 @@ import Cookies from "next-cookies";
 import Gallery from "../../../components/gallery/Index";
 import { useContext, useEffect, useState } from "react";
 import { LayoutContext } from "../../../contexts/layout";
-import ProductDetails from "../../../components/ProductDetails";
+import ProductDetails from "../../../components/ProductDetails/Index";
 
 export async function getServerSideProps(context) {
   const {
