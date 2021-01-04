@@ -5,9 +5,11 @@ import { title } from "../../components/Title/style";
 import theme from "../../shared/theme";
 import formatPrice from "../../utils/formatPrice";
 import { LocaleContext } from "../../contexts/locale";
-import AvailableColors from "../AvailableColors";
+import AvailableColors from "../AvailableColors/Index";
 import useTranslation from "../../hooks/useTranslation";
 import strings from "../../translations/strings/productPage";
+import AvailableSizes from "./components/AvailableSizes";
+import Details from "./components/Details";
 
 const ProductDetails = ({ product, activeColor, setActiveColor }) => {
   const { locale } = useContext(LocaleContext);
@@ -29,6 +31,12 @@ const ProductDetails = ({ product, activeColor, setActiveColor }) => {
       <Hr />
 
       <SubTitle>{t(strings, "availableSizes")}</SubTitle>
+      <AvailableSizes sizes={activeColor.sizes} />
+
+      <Hr />
+
+      <SubTitle>{t(strings, "details")}</SubTitle>
+      <Details details={product.details} />
     </StyledProductDetails>
   );
 };

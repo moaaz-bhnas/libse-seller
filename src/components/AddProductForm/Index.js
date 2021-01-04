@@ -234,6 +234,8 @@ const AddProductForm = () => {
           category.subCategories[selectedSubCategoryIndex].name_ar,
         sub_category_en:
           category.subCategories[selectedSubCategoryIndex].name_en,
+        group_ar: selectedGroup.name_ar,
+        group_en: selectedGroup.name_en,
         details: selectedDetails,
         description,
         colors,
@@ -251,6 +253,7 @@ const AddProductForm = () => {
       productName,
       selectedCategoryIndex,
       selectedSubCategoryIndex,
+      selectedGroupIndex,
       description,
       colors,
       price,

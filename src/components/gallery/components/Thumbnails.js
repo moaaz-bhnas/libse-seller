@@ -2,7 +2,6 @@ import { memo, useCallback, useContext, useEffect } from "react";
 import styled from "styled-components";
 import { ContentDirectionContext } from "../../../contexts/contentDirection";
 import { LayoutContext } from "../../../contexts/layout";
-import usePrevious from "../../../hooks/usePrevious";
 import measurements from "../../../shared/measurements";
 import time from "../../../shared/time";
 import { clearButtonStyles } from "../../Button/style";
@@ -35,7 +34,6 @@ const Thumbnails = ({
   const setActiveThumbnail = useCallback(() => {
     const scrollDirection = detectScrollDirection();
     const index = getThumbnailIndexInView(scrollDirection);
-    console.log("index: ", index);
     setActiveImageIndex(index);
     imagesRefs.current[index].focus();
   }, []);
@@ -50,20 +48,14 @@ const Thumbnails = ({
     let index;
     const windowBottomPosition = window.innerHeight + window.scrollY;
     if (scrollDirection === "down") {
-      console.log("down");
-      const pointInView = middlePoints.reverse().find((point) => {
-        console.log(windowBottomPosition, point.position);
-        return windowBottomPosition > point.position;
-      });
-      console.log("pointInView: ", pointInView);
+      const pointInView = middlePoints
+        .reverse()
+        .find((point) => windowBottomPosition > point.position);
       index = pointInView ? pointInView.index : 0;
     } else {
-      console.log("up");
-      const pointInView = middlePoints.find((point) => {
-        console.log(window.scrollY, point.position);
-        return window.scrollY < point.position;
-      });
-      console.log("pointInView: ", pointInView);
+      const pointInView = middlePoints.find(
+        (point) => window.scrollY < point.position
+      );
       index = pointInView ? pointInView.index : images.length - 1;
     }
 

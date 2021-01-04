@@ -24,6 +24,7 @@ const theme = {
     accent: "#C14D33",
     japonica: "#d77e6a",
     grey: "#ddd",
+    darkGrey: "#aaa",
     shuttleGrey: "#494b59",
     success: "#357f2f",
   },
