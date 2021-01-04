@@ -9,8 +9,10 @@ import formatPrice from "../../../utils/formatPrice";
 import { ContentDirectionContext } from "../../../contexts/contentDirection";
 import styled from "styled-components";
 import theme from "../../../shared/theme";
+import AvailableColors from "../../AvailableColors/Index";
 
 const Product = ({ product, seller, inFavorites }) => {
+  const { colors } = product;
   const { uid: userId } = useContext(AuthContext);
 
   // language
@@ -43,21 +45,17 @@ const Product = ({ product, seller, inFavorites }) => {
           </ProductLink>
         </Link>
 
-        {product.colors.length > 1 && (
-          <Colors>
-            {product.colors.map((color, index, colors) => (
-              <Color key={color[`name_${locale}`]}>
-                <ColorButton
-                  aria-label={color[`name_${locale}`]}
-                  color={color.name_en}
-                  onClick={() => setActiveColor(colors[index])}
-                  title={color[`name_${locale}`]}
-                  data-active={color.name_en === activeColor.name_en}
-                  onMouseDown={(e) => e.preventDefault()}
-                />
-              </Color>
-            ))}
-          </Colors>
+        {colors.length > 1 && (
+          <AvailableColors
+            colors={colors}
+            activeColor={activeColor}
+            onClick={({ index }) => setActiveColor(colors[index])}
+            styles={{
+              justifyContent: "center",
+              margin: "0 auto 0.65em",
+              maxWidth: "15em",
+            }}
+          />
         )}
 
         <Link href={href}>
@@ -94,7 +92,7 @@ const StyledProduct = styled.li`
   display: flex;
 `;
 
-const ProductContainer = styled.div`
+const ProductContainer = styled.article`
   flex: 1;
 
   display: flex;
@@ -111,48 +109,6 @@ const ProductName = styled.p`
   text-align: center;
   max-width: 15em;
   line-height: 1.25;
-`;
-
-const Colors = styled.ul`
-  list-style: none;
-  padding-left: 0;
-  padding-right: 0;
-  display: flex;
-  justify-content: center;
-  margin: 0 auto 0.65em;
-  max-width: 15em;
-`;
-
-const Color = styled.li`
-  margin: 0 0.5em;
-`;
-
-const ColorButton = styled.button`
-  display: block;
-  width: 2em;
-  height: 2em;
-  border-radius: 50%;
-  border: 1px solid #bbb;
-  border: #e2e2e2 1px solid;
-  background-color: ${(props) => props.color};
-  position: relative;
-
-  &::after {
-    content: "";
-    position: absolute;
-    top: -4px;
-    left: -4px;
-    bottom: -4px;
-    right: -4px;
-    border-radius: 50%;
-    border: #bbb 1px solid;
-  }
-
-  &[data-active="true"] {
-    &::after {
-      border-color: #222;
-    }
-  }
 `;
 
 const PriceContainer = styled.div`

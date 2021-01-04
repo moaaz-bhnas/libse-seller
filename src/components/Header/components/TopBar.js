@@ -48,7 +48,7 @@ const TopBar = () => {
 // Styles
 const StyledTopBar = styled.div`
   background-color: ${theme.bg.secondary};
-  height: ${measurements.height.sellerHeader};
+  height: ${measurements.height.header};
   display: flex;
   padding: 0 1.05em;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.15);

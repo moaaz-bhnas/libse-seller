@@ -13,7 +13,7 @@ const measurements = {
     modal: ".2em",
   },
   height: {
-    sellerHeader: "3em",
+    header: "3em",
   },
 };
 

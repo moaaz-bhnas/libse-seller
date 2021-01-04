@@ -18,7 +18,11 @@ const Thumbnails = ({ images, setActiveImageIndex }) => {
     >
       {images.map((image, index) => (
         <Item key={index}>
-          <Button onClick={() => setActiveImageIndex(index)} type="button">
+          <Button
+            onClick={() => setActiveImageIndex(index)}
+            onMouseDown={(e) => e.preventDefault()}
+            type="button"
+          >
             <Img src={image} alt="" />
           </Button>
         </Item>

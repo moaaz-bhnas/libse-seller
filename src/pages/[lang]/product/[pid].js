@@ -1,7 +1,5 @@
 import styled from "styled-components";
-import { title } from "../../../components/Title/style";
 import useTranslation from "../../../hooks/useTranslation";
-import strings from "../../../translations/strings/productPage";
 import Layout from "../../../components/Layout/Index";
 import { getProduct, getProfile } from "../../../api/firebase";
 import { AuthProvider } from "../../../contexts/auth";
@@ -11,7 +9,9 @@ import firebaseAdmin from "../../../firebase/admin";
 import { ProfileProvider } from "../../../contexts/profile";
 import Cookies from "next-cookies";
 import Gallery from "../../../components/gallery/Index";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { LayoutContext } from "../../../contexts/layout";
+import ProductDetails from "../../../components/ProductDetails";
 
 export async function getServerSideProps(context) {
   const {
@@ -60,11 +60,16 @@ const ProductPage = ({
   serverProfile,
   product,
 }) => {
-  console.log(product);
-  const { name, colors } = product;
+  const { colors } = product;
   const [activeColor, setActiveColor] = useState(
     colors.find((color) => color.name_en === activeColorName)
   );
+
+  const { setSidebarExpanded } = useContext(LayoutContext);
+  useEffect(() => {
+    setSidebarExpanded(false);
+    return () => setSidebarExpanded(true);
+  }, []);
 
   const { t } = useTranslation(lang);
 
@@ -78,8 +83,12 @@ const ProductPage = ({
                 <FirstColumn>
                   <Gallery activeColor={activeColor} />
                 </FirstColumn>
-                <SecondColumn setActiveColor={setActiveColor}>
-                  <Title>{name}</Title>
+                <SecondColumn>
+                  <ProductDetails
+                    setActiveColor={setActiveColor}
+                    product={product}
+                    activeColor={activeColor}
+                  />
                 </SecondColumn>
               </Container>
             </Layout>
@@ -90,13 +99,8 @@ const ProductPage = ({
   );
 };
 
-const Title = styled.h2`
-  ${title}
-`;
-
-const Container = styled.div`
+const Container = styled.article`
   display: flex;
-  /* align-items: flex-start; */
 `;
 
 const Column = styled.div`

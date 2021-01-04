@@ -22,7 +22,9 @@ const StyledImages = styled.ul`
   ${listStyles}
 `;
 
-const Item = styled.li``;
+const Item = styled.li`
+  border-bottom: 1px solid #aaa;
+`;
 
 const Img = styled.img`
   max-width: 100%;

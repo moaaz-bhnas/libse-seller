@@ -126,7 +126,7 @@ const List = styled.ul`
   ${listStyles}
 
   position: fixed;
-  top: ${measurements.height.sellerHeader};
+  top: ${measurements.height.header};
   left: ${(props) => (props.contentDirection === "ltr" ? "0" : "initial")};
   right: ${(props) => (props.contentDirection === "ltr" ? "initial" : "0")};
   bottom: 0;
