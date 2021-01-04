@@ -125,6 +125,7 @@ const ImageCropperModal = ({ src, setSrc, imageInputRef, addImage }) => {
       crop,
       "product-image.jpeg"
     );
+    console.log("crop: ", crop, "croppedImage: ", croppedImage);
     addImage(croppedImage);
     setSrc(null);
     imageInputRef.current.focus();
@@ -134,9 +135,18 @@ const ImageCropperModal = ({ src, setSrc, imageInputRef, addImage }) => {
     const canvas = document.createElement("canvas");
     const scaleX = image.naturalWidth / image.width;
     const scaleY = image.naturalHeight / image.height;
-    canvas.width = crop.width;
-    canvas.height = crop.height;
+    canvas.width = crop.width * scaleX;
+    canvas.height = crop.height * scaleY;
     const ctx = canvas.getContext("2d");
+
+    console.log(
+      "crop.width: ",
+      crop.width,
+      "scaleX: ",
+      scaleX,
+      "crop.width * scaleX: ",
+      crop.width * scaleX
+    );
 
     ctx.drawImage(
       image,
@@ -146,21 +156,25 @@ const ImageCropperModal = ({ src, setSrc, imageInputRef, addImage }) => {
       crop.height * scaleY,
       0,
       0,
-      crop.width,
-      crop.height
+      crop.width * scaleX,
+      crop.height * scaleY
     );
 
     return new Promise((resolve, reject) => {
-      canvas.toBlob((blob) => {
-        if (!blob) {
-          console.error("Canvas is empty");
-          return;
-        }
-        blob.name = fileName;
-        window.URL.revokeObjectURL(url.current);
-        url.current = window.URL.createObjectURL(blob);
-        resolve({ file: blob, url: url.current });
-      }, "image/jpeg");
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) {
+            console.error("Canvas is empty");
+            return;
+          }
+          blob.name = fileName;
+          window.URL.revokeObjectURL(url.current);
+          url.current = window.URL.createObjectURL(blob);
+          resolve({ file: blob, url: url.current });
+        },
+        "image/png",
+        1
+      );
     });
   }, []);
 
