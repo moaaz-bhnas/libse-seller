@@ -103,12 +103,12 @@ const Container = styled.article`
   display: flex;
 `;
 
-const Column = styled.div`
-  width: 50%;
-`;
+const Column = styled.div``;
 
 const FirstColumn = styled(Column)``;
 
-const SecondColumn = styled(Column)``;
+const SecondColumn = styled(Column)`
+  flex: 1 0 50%;
+`;
 
 export default ProductPage;

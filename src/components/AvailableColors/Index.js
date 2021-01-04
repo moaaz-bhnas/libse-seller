@@ -1,10 +1,16 @@
 import { memo, useContext } from "react";
 import styled from "styled-components";
 import { LocaleContext } from "../../contexts/locale";
+import theme from "../../shared/theme";
 
-const AvailableColors = ({ colors, activeColor, onClick, styles }) => {
+const AvailableColors = ({
+  colors,
+  activeColor,
+  onClick,
+  styles,
+  namesVisible = false,
+}) => {
   const { locale } = useContext(LocaleContext);
-  console.log(styles);
 
   return (
     <Colors style={styles}>
@@ -14,10 +20,11 @@ const AvailableColors = ({ colors, activeColor, onClick, styles }) => {
             aria-label={color[`name_${locale}`]}
             color={color.name_en}
             onClick={() => onClick({ index })}
-            title={color[`name_${locale}`]}
+            title={!namesVisible ? color[`name_${locale}`] : null}
             data-active={color.name_en === activeColor.name_en}
             onMouseDown={(e) => e.preventDefault()}
           />
+          {namesVisible && <ColorName>{color[`name_${locale}`]}</ColorName>}
         </Color>
       ))}
     </Colors>
@@ -35,12 +42,15 @@ const Colors = styled.ul`
 
 const Color = styled.li`
   margin: 0 0.5em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const ColorButton = styled.button`
   display: block;
-  width: 2em;
-  height: 2em;
+  width: 2rem;
+  height: 2rem;
   border-radius: 50%;
   border: 1px solid #bbb;
   border: #e2e2e2 1px solid;
@@ -63,6 +73,12 @@ const ColorButton = styled.button`
       border-color: #222;
     }
   }
+`;
+
+const ColorName = styled.p`
+  margin: 0.6em 0 0;
+  font-size: 0.95rem;
+  color: ${theme.text.grey};
 `;
 
 export default memo(AvailableColors);

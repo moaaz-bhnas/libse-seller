@@ -6,9 +6,13 @@ import theme from "../../shared/theme";
 import formatPrice from "../../utils/formatPrice";
 import { LocaleContext } from "../../contexts/locale";
 import AvailableColors from "../AvailableColors";
+import useTranslation from "../../hooks/useTranslation";
+import strings from "../../translations/strings/productPage";
 
 const ProductDetails = ({ product, activeColor, setActiveColor }) => {
   const { locale } = useContext(LocaleContext);
+  const { t } = useTranslation(locale);
+
   console.log(product);
   const { name, price, colors } = product;
   return (
@@ -19,7 +23,12 @@ const ProductDetails = ({ product, activeColor, setActiveColor }) => {
         colors={colors}
         activeColor={activeColor}
         onClick={({ index }) => setActiveColor(colors[index])}
+        namesVisible={true}
       />
+
+      <Hr />
+
+      <SubTitle>{t(strings, "availableSizes")}</SubTitle>
     </StyledProductDetails>
   );
 };
@@ -27,7 +36,7 @@ const ProductDetails = ({ product, activeColor, setActiveColor }) => {
 const StyledProductDetails = styled.div`
   position: sticky;
   top: ${measurements.height.header};
-  padding: 2em;
+  padding: 2em 2em 2em 8%;
 `;
 
 const Title = styled.h2`
@@ -40,5 +49,14 @@ const Price = styled.p`
   font-size: 1.05rem;
   margin: 0.25em 0 2.5em;
 `;
+
+const Hr = styled.hr`
+  border: none;
+  height: 1px;
+  background-color: ${theme.border.grey};
+  margin: 1.5em 0;
+`;
+
+const SubTitle = styled.h3``;
 
 export default memo(ProductDetails);

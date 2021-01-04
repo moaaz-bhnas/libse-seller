@@ -1,15 +1,81 @@
-import { memo, useContext } from "react";
+import { memo, useCallback, useContext, useEffect } from "react";
 import styled from "styled-components";
 import { ContentDirectionContext } from "../../../contexts/contentDirection";
 import { LayoutContext } from "../../../contexts/layout";
+import usePrevious from "../../../hooks/usePrevious";
 import measurements from "../../../shared/measurements";
 import time from "../../../shared/time";
 import { clearButtonStyles } from "../../Button/style";
 import { listStyles } from "../../List/style";
 
-const Thumbnails = ({ images, setActiveImageIndex }) => {
+const Thumbnails = ({
+  images,
+  activeImageIndex,
+  setActiveImageIndex,
+  imagesRefs,
+  onClick,
+}) => {
   const { sidebarExpanded } = useContext(LayoutContext);
   const { contentDirection } = useContext(ContentDirectionContext);
+
+  if (typeof window !== "undefined") {
+    var prevScrollY = window.scrollY;
+  }
+  const detectScrollDirection = useCallback(() => {
+    const { scrollY } = window;
+    if (scrollY > prevScrollY) {
+      prevScrollY = scrollY;
+      return "down";
+    } else {
+      prevScrollY = scrollY;
+      return "up";
+    }
+  }, []);
+
+  const setActiveThumbnail = useCallback(() => {
+    const scrollDirection = detectScrollDirection();
+    const index = getThumbnailIndexInView(scrollDirection);
+    console.log("index: ", index);
+    setActiveImageIndex(index);
+    imagesRefs.current[index].focus();
+  }, []);
+
+  const getThumbnailIndexInView = useCallback((scrollDirection) => {
+    const middlePoints = imagesRefs.current.map((ref, index) => {
+      const topPosition = ref.offsetTop;
+      const middlePosition = ref.height / 2 + topPosition;
+      return { index, position: middlePosition };
+    });
+
+    let index;
+    const windowBottomPosition = window.innerHeight + window.scrollY;
+    if (scrollDirection === "down") {
+      console.log("down");
+      const pointInView = middlePoints.reverse().find((point) => {
+        console.log(windowBottomPosition, point.position);
+        return windowBottomPosition > point.position;
+      });
+      console.log("pointInView: ", pointInView);
+      index = pointInView ? pointInView.index : 0;
+    } else {
+      console.log("up");
+      const pointInView = middlePoints.find((point) => {
+        console.log(window.scrollY, point.position);
+        return window.scrollY < point.position;
+      });
+      console.log("pointInView: ", pointInView);
+      index = pointInView ? pointInView.index : images.length - 1;
+    }
+
+    return index;
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("scroll", setActiveThumbnail);
+    return () => {
+      window.removeEventListener("scroll", setActiveThumbnail);
+    };
+  }, []);
 
   return (
     <StyledThumbnails
@@ -19,9 +85,9 @@ const Thumbnails = ({ images, setActiveImageIndex }) => {
       {images.map((image, index) => (
         <Item key={index}>
           <Button
-            onClick={() => setActiveImageIndex(index)}
-            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => onClick(index)}
             type="button"
+            active={index === activeImageIndex}
           >
             <Img src={image} alt="" />
           </Button>
@@ -62,6 +128,8 @@ const Item = styled.li`
 
 const Button = styled.button`
   ${clearButtonStyles}
+  outline: ${(props) =>
+    props.active ? "rgb(16, 16, 16) auto 1px;" : "initial"};
 `;
 
 const Img = styled.img`

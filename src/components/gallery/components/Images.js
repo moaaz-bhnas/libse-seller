@@ -1,5 +1,6 @@
 import { forwardRef, memo, useEffect } from "react";
 import styled from "styled-components";
+import measurements from "../../../shared/measurements";
 import { listStyles } from "../../List/style";
 
 const Images = ({ images }, imagesRefs) => {
@@ -28,6 +29,7 @@ const Item = styled.li`
 
 const Img = styled.img`
   max-width: 100%;
+  max-height: calc(100vh - ${measurements.height.header});
   vertical-align: top;
 `;
 
