@@ -40,7 +40,6 @@ const Product = ({ product, seller, inFavorites }) => {
             <ImageSlider
               className="productsGrid__imageSlider"
               images={activeColor.images}
-              height="22em"
             />
           </ProductLink>
         </Link>
