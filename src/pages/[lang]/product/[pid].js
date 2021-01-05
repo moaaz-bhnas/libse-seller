@@ -9,7 +9,7 @@ import firebaseAdmin from "../../../firebase/admin";
 import { ProfileProvider } from "../../../contexts/profile";
 import Cookies from "next-cookies";
 import Gallery from "../../../components/gallery/Index";
-import ImageSlider from "../../../components/ImageSlider";
+import ImageSlider from "../../../components/ImageSlider/Index";
 import { useContext, useEffect, useState } from "react";
 import { LayoutContext } from "../../../contexts/layout";
 import ProductDetails from "../../../components/ProductDetails/Index";
