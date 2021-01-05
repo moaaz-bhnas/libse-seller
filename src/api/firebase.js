@@ -56,6 +56,9 @@ const uploadProductToFirestore = async (seller_id, product, callback) => {
       description,
       colors,
       price,
+      rating: 0, // to be added
+      reviews: [], // to be added
+      complete_look: [], // to be added
     })
     .then(() => {
       callback();
