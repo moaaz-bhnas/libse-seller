@@ -1,4 +1,4 @@
-import { memo, useState, useCallback } from "react";
+import { memo, useState, useCallback, useEffect } from "react";
 import prevIcon from "../../img/prev-image.svg";
 import nextIcon from "../../img/next-image.svg";
 import useTranslation from "../../hooks/useTranslation";
@@ -9,12 +9,20 @@ import Indicators from "./components/Indicators";
 const ImageSlider = ({
   images,
   className,
+  imageClassName,
   styles,
   arrowsVisible = true,
   indicatorsVisible = true,
 }) => {
   const { t } = useTranslation();
   const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    document.body.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [activeIndex]);
 
   const handleKeyDown = useCallback(
     (event) => {
@@ -29,28 +37,27 @@ const ImageSlider = ({
   );
 
   const goNext = useCallback(() => {
-    if (activeIndex !== images.length - 1) {
+    if (activeIndex === images.length - 1) {
+      setActiveIndex(0);
+    } else {
       setActiveIndex(activeIndex + 1);
     }
   }, [activeIndex]);
 
   const goPrev = useCallback(() => {
-    if (activeIndex !== 0) {
+    if (activeIndex === 0) {
+      setActiveIndex(images.length - 1);
+    } else {
       setActiveIndex(activeIndex - 1);
     }
   }, [activeIndex]);
 
   return (
-    <Slider
-      style={styles}
-      className={className}
-      tabIndex={0}
-      onKeyDown={handleKeyDown}
-    >
+    <Slider style={styles} className={className}>
       <List>
         {images.map((image) => (
           <Slide key={image} activeIndex={activeIndex}>
-            <Image src={image} alt="" />
+            <Image className={imageClassName} src={image} alt="" />
           </Slide>
         ))}
       </List>

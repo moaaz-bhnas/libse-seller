@@ -9,9 +9,11 @@ import firebaseAdmin from "../../../firebase/admin";
 import { ProfileProvider } from "../../../contexts/profile";
 import Cookies from "next-cookies";
 import Gallery from "../../../components/gallery/Index";
+import ImageSlider from "../../../components/ImageSlider";
 import { useContext, useEffect, useState } from "react";
 import { LayoutContext } from "../../../contexts/layout";
 import ProductDetails from "../../../components/ProductDetails/Index";
+import measurements from "../../../shared/measurements";
 
 export async function getServerSideProps(context) {
   const {
@@ -81,7 +83,12 @@ const ProductPage = ({
             <Layout fullPage>
               <Container>
                 <FirstColumn>
-                  <Gallery activeColor={activeColor} />
+                  {/* <Gallery activeColor={activeColor} /> */}
+                  <ImageSlider
+                    images={activeColor.images}
+                    className="productPage__slider"
+                    imageClassName="productPage__sliderImage"
+                  />
                 </FirstColumn>
                 <SecondColumn>
                   <ProductDetails
@@ -101,11 +108,21 @@ const ProductPage = ({
 
 const Container = styled.article`
   display: flex;
+
+  .productPage__sliderImage {
+    max-height: calc(100vh - ${measurements.height.header});
+  }
 `;
 
 const Column = styled.div``;
 
-const FirstColumn = styled(Column)``;
+const FirstColumn = styled(Column)`
+  flex: 0 0
+    calc(
+      (100vh - ${measurements.height.header}) *
+        ${measurements.ratio.productImage}
+    );
+`;
 
 const SecondColumn = styled(Column)`
   flex: 1 0 50%;

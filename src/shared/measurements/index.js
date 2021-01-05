@@ -15,6 +15,9 @@ const measurements = {
   height: {
     header: "3em",
   },
+  ratio: {
+    productImage: 5 / 6,
+  },
 };
 
 export default measurements;

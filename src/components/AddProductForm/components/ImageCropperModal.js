@@ -31,7 +31,7 @@ const ImageCropperModal = ({ src, setSrc, imageInputRef, addImage }) => {
   const { contentDirection } = useContext(ContentDirectionContext);
   const [crop, setCrop] = useState({
     unit: "%",
-    aspect: 5 / 6,
+    aspect: measurements.ratio.productImage,
   });
   const [imageIsWide, setImageIsWide] = useState(null);
 

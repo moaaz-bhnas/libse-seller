@@ -10,6 +10,7 @@ import { ContentDirectionContext } from "../../../contexts/contentDirection";
 import styled from "styled-components";
 import theme from "../../../shared/theme";
 import AvailableColors from "../../AvailableColors/Index";
+import Preview from "./Preview";
 
 const Product = ({ product, seller, inFavorites }) => {
   const { colors } = product;
@@ -37,10 +38,7 @@ const Product = ({ product, seller, inFavorites }) => {
       <ProductContainer>
         <Link passHref href={href}>
           <ProductLink>
-            <ImageSlider
-              className="productsGrid__imageSlider"
-              images={activeColor.images}
-            />
+            <Preview images={activeColor.images.slice(1)} />
           </ProductLink>
         </Link>
 
@@ -101,6 +99,7 @@ const ProductContainer = styled.article`
 const ProductLink = styled.a`
   text-decoration: none;
   color: inherit;
+  margin-bottom: 1em;
 `;
 
 const ProductName = styled.p`
