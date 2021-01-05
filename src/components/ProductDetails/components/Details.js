@@ -1,7 +1,6 @@
 import { memo, useContext } from "react";
 import styled from "styled-components";
 import { LocaleContext } from "../../../contexts/locale";
-import { listStyles } from "../../List/style";
 
 const Details = ({ details }) => {
   const { locale } = useContext(LocaleContext);
