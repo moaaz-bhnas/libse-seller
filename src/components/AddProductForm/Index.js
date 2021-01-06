@@ -61,22 +61,6 @@ const AddProductForm = () => {
     },
     [selectedCategoryIndex, selectedSubCategoryIndex, selectedGroupIndex]
   ); // re-render
-  useUpdateEffect(
-    function updateDetailsStepVisibilityState() {
-      if (!groups.length) {
-        stepsDispatch({
-          type: "updateFinishAndVisibilityStates",
-          payload: { stepId: 2, visible: false, finished: true },
-        });
-      } else {
-        stepsDispatch({
-          type: "updateVisibilityState",
-          payload: { stepId: 2, visible: true },
-        });
-      }
-    },
-    [groups] // try groups.length if u face an error
-  );
 
   const { details } = selectedGroup;
   const [selectedDetails, setSelectedDetails] = useState(
@@ -90,14 +74,6 @@ const AddProductForm = () => {
         .filter((detail) => detail.required)
         .every((detail) => detail.value_ar && detail.value_en);
 
-      console.log(
-        "stepFinished: ",
-        stepFinished,
-        "details: ",
-        details,
-        "selectedDetails: ",
-        selectedDetails
-      );
       stepsDispatch({
         type: "updateFinishState",
         payload: { stepId: 2, finished: stepFinished },
@@ -146,7 +122,6 @@ const AddProductForm = () => {
       translationKey: "category",
       Icon: CategorySvg,
       finished: true,
-      visible: true, // true due to the default values
     },
     {
       id: 2,
@@ -154,25 +129,22 @@ const AddProductForm = () => {
       Icon: DetailsSvg,
       finished: Object.keys(selectedDetails).length !== 0, // to be improved
       finished: false,
-      visible: true,
     },
     {
       id: 3,
       translationKey: "colorsSizes",
       Icon: ColorsSvg,
       finished: false,
-      visible: true,
     },
     {
       id: 4,
       translationKey: "price",
       Icon: PriceSvg,
       finished: false,
-      visible: true,
     },
   ];
   const stepsReducer = (steps, action) => {
-    const { stepId: id, finished, visible } = action.payload;
+    const { stepId: id, finished, inProgress } = action.payload;
     switch (action.type) {
       case "updateFinishState":
         return steps.map((step) => {
@@ -181,18 +153,11 @@ const AddProductForm = () => {
           }
           return step;
         });
-      case "updateVisibilityState":
+      case "update":
         return steps.map((step) => {
           if (step.id === id) {
-            step.visible = visible;
-          }
-          return step;
-        });
-      case "updateFinishAndVisibilityStates":
-        return steps.map((step) => {
-          if (step.id === id) {
-            step.visible = visible;
             step.finished = finished;
+            step.inProgress = inProgress;
           }
           return step;
         });
@@ -236,7 +201,7 @@ const AddProductForm = () => {
           category.subCategories[selectedSubCategoryIndex].name_en,
         group_ar: selectedGroup.name_ar,
         group_en: selectedGroup.name_en,
-        details: selectedDetails,
+        details: selectedDetails.map((detail) => detail.value_en !== "Other"),
         description,
         colors,
         price,

@@ -8,6 +8,7 @@ import { ContentDirectionContext } from "../../../contexts/contentDirection";
 import strings from "../../../translations/strings/addProductPage";
 import useTranslation from "../../../hooks/useTranslation";
 import translations from "../../../translations/strings/addProductPage";
+import measurements from "../../../shared/measurements";
 
 const ProgressBar = ({
   steps,
@@ -49,23 +50,21 @@ const ProgressBar = ({
     <ProgressBarContainer>
       <StyledProgressBar>
         {steps &&
-          steps
-            .filter((step) => step.visible)
-            .map(({ translationKey, Icon, id }) => (
-              <Step key={id} data-opened={activeStep >= id}>
-                <StepIconButton
-                  type="button"
-                  onClick={(event) => handleStepClick(event, id)}
-                  className="progressbar__iconContainer"
-                  onMouseDown={(event) => event.preventDefault()}
-                  shortLine={subCategoryHasGroups}
-                  contentDirection={contentDirection}
-                >
-                  <Icon />
-                </StepIconButton>
-                <StepText>{t(strings, translationKey)}</StepText>
-              </Step>
-            ))}
+          steps.map(({ translationKey, finished, id }) => (
+            <Step key={id} data-opened={activeStep >= id}>
+              <StepButton
+                className="progressbar__button"
+                type="button"
+                onClick={(event) => handleStepClick(event, id)}
+                onMouseDown={(event) => event.preventDefault()}
+                contentDirection={contentDirection}
+                finished={finished}
+                inProgress={!finished && activeStep === id}
+              >
+                {t(strings, translationKey)}
+              </StepButton>
+            </Step>
+          ))}
       </StyledProgressBar>
 
       {error && (
@@ -85,77 +84,108 @@ const ProgressBar = ({
 };
 
 // styles
-export const ProgressBarContainer = styled.div`
-  width: 36em;
+const ProgressBarContainer = styled.div`
+  /* width: 36em; */
   margin-bottom: 2.5em;
 `;
 
-export const StyledProgressBar = styled.div`
-  display: flex;
+const StyledProgressBar = styled.div`
+  display: inline-flex;
   justify-content: space-between;
 `;
 
-export const Step = styled.div`
-  flex: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+const Step = styled.div`
+  margin-right: 1px;
 
-  &:last-child {
-    .progressbar__iconContainer::after {
-      display: none;
-    }
-  }
+  &:first-child {
+    .progressbar__button {
+      border-top-left-radius: ${({ contentDirection }) =>
+        contentDirection === "ltr"
+          ? measurements.borderRadius.subtle
+          : "initial"};
+      border-bottom-left-radius: ${({ contentDirection }) =>
+        contentDirection === "ltr"
+          ? measurements.borderRadius.subtle
+          : "initial"};
+      border-top-right-radius: ${({ contentDirection }) =>
+        contentDirection === "rtl"
+          ? measurements.borderRadius.subtle
+          : "initial"};
+      border-bottom-right-radius: ${({ contentDirection }) =>
+        contentDirection === "rtl"
+          ? measurements.borderRadius.subtle
+          : "initial"};
 
-  &[data-opened="true"] {
-    .progressbar__iconContainer {
-      border-color: ${theme.bg.darkGrey};
-      background-color: ${theme.bg.darkGrey};
-    }
-
-    .svg {
-      fill: #fff;
+      ::before {
+        border: none;
+      }
     }
   }
 `;
 
-const borderColor = "#afaead";
-
-export const StepIconButton = styled.button`
-  width: 3em;
-  height: 3em;
-  padding: 0.6em;
-  border-radius: 50%;
-  background-color: #f0f0ef;
-  border: 2px solid ${borderColor};
+const StepButton = styled.button`
+  color: ${({ finished, inProgress }) =>
+    finished ? "#fff" : theme.text.darkGrey};
+  background-color: ${({ finished, inProgress }) =>
+    finished
+      ? theme.bg.accent
+      : inProgress
+      ? theme.bg.accentLight
+      : theme.bg.grey};
+  border: none;
+  padding: 0.5em 1.75em;
   position: relative;
-  transition-property: border-color, background-color;
-  transition-duration: 0.2s;
 
-  .svg {
-    width: 100%;
-    fill: #646463;
+  &::before,
+  &::after {
+    position: absolute;
+    top: 0;
+    width: 0;
+    height: 0;
+    border-top: 19px solid transparent;
+    border-bottom: 17px solid transparent;
+  }
+
+  &::before {
+    content: "";
+    left: ${({ contentDirection }) =>
+      contentDirection === "ltr" ? 0 : "initial"};
+    right: ${({ contentDirection }) =>
+      contentDirection === "rtl" ? 0 : "initial"};
+    border-left: ${({ contentDirection }) =>
+      contentDirection === "ltr" ? "17px solid #fff" : "initial"};
+    border-right: ${({ contentDirection }) =>
+      contentDirection === "rtl" ? "17px solid #fff" : "initial"};
   }
 
   &::after {
     content: "";
-    position: absolute;
-    z-index: -1;
-    width: ${(props) => (props.shortLine ? "10em" : "15em")};
-    height: 2px;
-    background-color: ${borderColor};
-    top: 50%;
-    left: ${(props) =>
-      props.contentDirection === "ltr" ? "2.5em" : "initial"};
-    right: ${(props) =>
-      props.contentDirection === "ltr" ? "initial" : "2.5em"};
-    transform: translate(0, -50%);
-    transition: background-color 0.2s;
+    right: ${({ contentDirection }) =>
+      contentDirection === "ltr" ? "-17px" : "initial"};
+    left: ${({ contentDirection }) =>
+      contentDirection === "rtl" ? "-17px" : "initial"};
+    border-left: ${({ contentDirection, finished, inProgress }) =>
+      contentDirection === "ltr"
+        ? `17px solid ${
+            finished
+              ? theme.bg.accent
+              : inProgress
+              ? theme.bg.accentLight
+              : theme.bg.grey
+          }`
+        : "initial"};
+    border-right: ${({ contentDirection, finished, inProgress }) =>
+      contentDirection === "rtl"
+        ? `17px solid ${
+            finished
+              ? theme.bg.accent
+              : inProgress
+              ? theme.bg.accentLight
+              : theme.bg.grey
+          }`
+        : "initial"};
+    z-index: 1;
   }
-`;
-
-export const StepText = styled.p`
-  text-transform: capitalize;
 `;
 
 export default memo(ProgressBar);

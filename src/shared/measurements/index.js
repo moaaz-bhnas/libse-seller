@@ -11,6 +11,7 @@ const measurements = {
   borderRadius: {
     input: ".1em",
     modal: ".2em",
+    subtle: ".4em",
   },
   height: {
     header: "3em",

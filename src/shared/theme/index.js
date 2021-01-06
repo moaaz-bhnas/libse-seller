@@ -1,7 +1,8 @@
 const theme = {
   text: {
     default: "#1b1e2f",
-    grey: "#676767",
+    grey: "#565656",
+    darkGrey: "#343434",
     interactive: "#C14D33",
     secondaryLightOpposite: "#766852",
     manatee: "#8D8F97",
@@ -12,9 +13,10 @@ const theme = {
     primary: "#FAF9F7",
     secondary: "#1B1E2F",
     accent: "#C14D33",
+    accentLight: "#da9485",
     secondaryLight: "#bbbcc1",
     secondaryLightOpposite: "#766852",
-    grey: "#EDEDED",
+    grey: "#ddd",
     manatee: "#8D8F97",
     tuna: "#323544",
     success: "#357f2f",
