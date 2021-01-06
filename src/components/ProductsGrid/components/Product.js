@@ -4,7 +4,7 @@ import LikeSvg from "../../../svgs/Heart";
 import { addToFavorites, removeFromFavorites } from "../../../api/firebase";
 import { AuthContext } from "../../../contexts/auth";
 import { LocaleContext } from "../../../contexts/locale";
-import ImageSlider from "../../ImageSlider/Index";
+// import ImageSlider from "../../ImageSlider/Index";
 import formatPrice from "../../../utils/formatPrice";
 import { ContentDirectionContext } from "../../../contexts/contentDirection";
 import styled from "styled-components";
@@ -14,7 +14,9 @@ import Preview from "./Preview";
 
 const Product = ({ product, seller, inFavorites }) => {
   const { colors } = product;
-  const { uid: userId } = useContext(AuthContext);
+  const {
+    user: { uid: userId },
+  } = useContext(AuthContext);
 
   // language
   const { locale } = useContext(LocaleContext);
@@ -28,6 +30,7 @@ const Product = ({ product, seller, inFavorites }) => {
   const href = `/${locale}/product/${product.id}?color=${activeColor.name_en}`;
 
   const handleLikeToggle = useCallback(() => {
+    console.log("userId: ", userId);
     inFavorites
       ? removeFromFavorites(userId, product.id)
       : addToFavorites(userId, product.id);
@@ -37,9 +40,9 @@ const Product = ({ product, seller, inFavorites }) => {
     <StyledProduct key={product.id}>
       <ProductContainer>
         <Link passHref href={href}>
-          <ProductLink>
+          <PreviewLink>
             <Preview images={activeColor.images.slice(1)} />
-          </ProductLink>
+          </PreviewLink>
         </Link>
 
         {colors.length > 1 && (
@@ -55,10 +58,10 @@ const Product = ({ product, seller, inFavorites }) => {
           />
         )}
 
-        <Link href={href}>
-          <ProductLink>
+        <Link passHref href={href}>
+          <NameLink>
             <ProductName>{product.name}</ProductName>
-          </ProductLink>
+          </NameLink>
         </Link>
 
         <PriceContainer>
@@ -96,14 +99,17 @@ const ProductContainer = styled.article`
   flex-direction: column;
 `;
 
-const ProductLink = styled.a`
+const PreviewLink = styled.a`
+  margin-bottom: 0.5em;
+`;
+
+const NameLink = styled.a`
   text-decoration: none;
   color: inherit;
-  margin-bottom: 1em;
 `;
 
 const ProductName = styled.p`
-  margin: 0.2em auto 0.2em;
+  margin: 0.2em auto;
   text-align: center;
   max-width: 15em;
   line-height: 1.25;
