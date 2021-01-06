@@ -8,7 +8,7 @@ import { ContentDirectionProvider } from "../../../contexts/contentDirection";
 import firebaseAdmin from "../../../firebase/admin";
 import { ProfileProvider } from "../../../contexts/profile";
 import Cookies from "next-cookies";
-import Gallery from "../../../components/gallery/Index";
+// import Gallery from "../../../components/gallery/Index";
 import ImageSlider from "../../../components/ImageSlider/Index";
 import { useContext, useEffect, useState } from "react";
 import { LayoutContext } from "../../../contexts/layout";
@@ -67,6 +67,10 @@ const ProductPage = ({
     colors.find((color) => color.name_en === activeColorName)
   );
 
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  const [fullscreenVisible, setFullscreenVisible] = useState(false);
+
   const { setSidebarExpanded } = useContext(LayoutContext);
   useEffect(() => {
     setSidebarExpanded(false);
@@ -85,7 +89,10 @@ const ProductPage = ({
                 <FirstColumn>
                   {/* <Gallery activeColor={activeColor} /> */}
                   <ImageSlider
+                    setFullscreenVisible={setFullscreenVisible}
                     images={activeColor.images}
+                    activeIndex={activeImageIndex}
+                    setActiveIndex={setActiveImageIndex}
                     className="productPage__slider"
                     imageClassName="productPage__sliderImage"
                   />
@@ -98,6 +105,16 @@ const ProductPage = ({
                   />
                 </SecondColumn>
               </Container>
+
+              {fullscreenVisible && (
+                <ImageSlider
+                  fullscreen
+                  images={activeColor.images}
+                  activeIndex={activeImageIndex}
+                  setActiveIndex={setActiveImageIndex}
+                  setFullscreenVisible={setFullscreenVisible}
+                />
+              )}
             </Layout>
           </ContentDirectionProvider>
         </LocaleProvider>
@@ -117,11 +134,9 @@ const Container = styled.article`
 const Column = styled.div``;
 
 const FirstColumn = styled(Column)`
-  flex: 0 0
-    calc(
-      (100vh - ${measurements.height.header}) *
-        ${measurements.ratio.productImage}
-    );
+  width: calc(
+    (100vh - ${measurements.height.header}) * ${measurements.ratio.productImage}
+  );
 `;
 
 const SecondColumn = styled(Column)`

@@ -1,8 +1,11 @@
-import { memo } from "react";
+import { forwardRef, memo } from "react";
 import styled from "styled-components";
 import { listStyles } from "../../List/style";
 
-const Indicators = ({ images, activeIndex, style, className, onClick }) => {
+const Indicators = (
+  { images, activeIndex, style, className, onClick },
+  lastInteractiveRef
+) => {
   return (
     <StyledIndicators className={className} style={style}>
       {images.map((image, index) => (
@@ -12,6 +15,7 @@ const Indicators = ({ images, activeIndex, style, className, onClick }) => {
             active={index === activeIndex}
             onClick={(event) => onClick({ index, event })}
             onMouseDown={(event) => event.preventDefault()}
+            ref={index === images.length - 1 ? lastInteractiveRef : null}
           />
         </Indicator>
       ))}
@@ -32,7 +36,7 @@ const Indicator = styled.li`
 const Button = styled.button`
   border: none;
   background-color: transparent;
-  padding: 1em 0;
+  padding: 1.5em 0;
   width: 100%;
   position: relative;
 
@@ -60,4 +64,4 @@ const Button = styled.button`
   }
 `;
 
-export default memo(Indicators);
+export default memo(forwardRef(Indicators));

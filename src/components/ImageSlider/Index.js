@@ -1,21 +1,37 @@
-import { memo, useState, useCallback, useEffect } from "react";
+import { memo, useState, useCallback, useEffect, useRef } from "react";
 import prevIcon from "../../img/prev-image.svg";
 import nextIcon from "../../img/next-image.svg";
 import useTranslation from "../../hooks/useTranslation";
 import translations from "../../translations/strings/productsPage";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import Indicators from "./components/Indicators";
+import { clearButtonStyles } from "../Button/style";
+import zoomIn from "../../img/zoom-in.png";
+import zoomOut from "../../img/zoom-out.png";
+import measurements from "../../shared/measurements";
 
 const ImageSlider = ({
   images,
+  activeIndex,
+  setActiveIndex,
   className,
   imageClassName,
-  styles,
+  style,
+  imageStyle,
   arrowsVisible = true,
   indicatorsVisible = true,
+  fullscreen = false,
+  setFullscreenVisible,
 }) => {
+  const sliderRef = useRef();
+  const firstInteractive = useRef();
+  const lastInteractive = useRef();
+
   const { t } = useTranslation();
-  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    if (fullscreen) firstInteractive.current.focus();
+  }, []);
 
   useEffect(() => {
     document.body.addEventListener("keydown", handleKeyDown);
@@ -24,13 +40,39 @@ const ImageSlider = ({
     };
   }, [activeIndex]);
 
+  const trapFocus = useCallback((event, firstInteractive, lastInteractive) => {
+    const { target, key, shiftKey } = event;
+
+    if (key === "Tab" && shiftKey && target === firstInteractive) {
+      event.preventDefault();
+      lastInteractive.focus();
+    }
+
+    if (key === "Tab" && !shiftKey && target === lastInteractive) {
+      event.preventDefault();
+      firstInteractive.focus();
+    }
+  }, []);
+
   const handleKeyDown = useCallback(
     (event) => {
       const { key } = event;
       if (key === "ArrowRight") {
         goNext();
-      } else if (key === "ArrowLeft") {
+      }
+      if (key === "ArrowLeft") {
         goPrev();
+      }
+      if (key === "Escape") {
+        setFullscreenVisible(false);
+      }
+      if (fullscreen) {
+        trapFocus(
+          event,
+          firstInteractive.current,
+          lastInteractive.current,
+          () => setFullscreenVisible(false)
+        );
       }
     },
     [activeIndex]
@@ -52,32 +94,66 @@ const ImageSlider = ({
     }
   }, [activeIndex]);
 
+  const handleImageButtonClick = useCallback(() => {
+    if (fullscreen) {
+      setFullscreenVisible(false);
+    } else {
+      setFullscreenVisible(true);
+    }
+  }, [fullscreen]);
+
+  const calculateFullscreenImageTopOffset = useCallback((event) => {
+    const imageHeight = window.innerWidth / measurements.ratio.productImage;
+    const imageOffset = imageHeight - window.innerHeight;
+    const ratio = imageOffset / window.innerHeight;
+    const { pageY } = event;
+    const topOffset = pageY * ratio;
+    return topOffset;
+  }, []);
+
+  const handleMouseMove = useCallback((event) => {
+    const topOffset = calculateFullscreenImageTopOffset(event);
+    sliderRef.current.style.marginTop = `-${topOffset}px`;
+  }, []);
+
+  const handleMouseOver = useCallback((event) => {
+    const topOffset = calculateFullscreenImageTopOffset(event);
+    sliderRef.current.style.marginTop = `-${topOffset}px`;
+  }, []);
+
   return (
-    <Slider style={styles} className={className}>
+    <Slider
+      ref={sliderRef}
+      style={style}
+      className={className}
+      fullscreen={fullscreen}
+      onMouseMove={fullscreen ? handleMouseMove : null}
+      onMouseOver={fullscreen ? handleMouseOver : null}
+    >
       <List>
-        {images.map((image) => (
-          <Slide key={image} activeIndex={activeIndex}>
-            <Image className={imageClassName} src={image} alt="" />
+        {images.map((image, index) => (
+          <Slide key={image} activeIndex={activeIndex} fullscreen={fullscreen}>
+            <ImageButton
+              tabIndex={index === activeIndex ? 0 : -1}
+              onClick={handleImageButtonClick}
+              fullscreen={fullscreen}
+              ref={index === activeIndex ? firstInteractive : null}
+            >
+              <Image
+                style={imageStyle}
+                className={imageClassName}
+                src={image}
+                alt=""
+              />
+            </ImageButton>
           </Slide>
         ))}
       </List>
 
-      {indicatorsVisible && (
-        <Indicators
-          images={images}
-          activeIndex={activeIndex}
-          onClick={({ event, index }) => {
-            event.stopPropagation();
-            event.preventDefault();
-            setActiveIndex(index);
-          }}
-          className="imageSlider__indicators"
-        />
-      )}
-
       {arrowsVisible && (
         <>
           <PreviousButton
+            fullscreen={fullscreen}
             className="slider__arrowButton"
             onClick={(event) => {
               event.preventDefault();
@@ -89,6 +165,7 @@ const ImageSlider = ({
           </PreviousButton>
 
           <NextButton
+            fullscreen={fullscreen}
             className="slider__arrowButton"
             onClick={(event) => {
               event.preventDefault();
@@ -100,31 +177,46 @@ const ImageSlider = ({
           </NextButton>
         </>
       )}
+
+      {indicatorsVisible && (
+        <Indicators
+          fullscreen={fullscreen}
+          images={images}
+          activeIndex={activeIndex}
+          onClick={({ event, index }) => {
+            event.stopPropagation();
+            event.preventDefault();
+            setActiveIndex(index);
+          }}
+          className="imageSlider__indicators"
+          ref={lastInteractive}
+        />
+      )}
     </Slider>
   );
 };
 
+const fullscreenStyles = css`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+`;
+
 const Slider = styled.div`
   position: relative;
+  ${({ fullscreen }) => (fullscreen ? fullscreenStyles : null)}
+  /* transition: margin-top 0.05s; */
 
   .imageSlider__indicators {
-    position: absolute;
+    position: ${({ fullscreen }) => (fullscreen ? "fixed" : "absolute")};
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 65%;
+    width: ${({ fullscreen }) => (fullscreen ? "45%" : "65%")};
     transition: opacity 0.15s;
   }
-
-  /* &:hover,
-  &:focus {
-    .slider__arrowButton {
-      opacity: 0.65;
-    }
-    .imageSlider__indicators {
-      opacity: 1;
-    }
-  } */
 `;
 
 const List = styled.ul`
@@ -143,9 +235,18 @@ const Slide = styled.li`
   display: flex;
 
   &:first-child {
-    transition: margin-left 0.3s;
+    transition: margin-left
+      ${({ fullscreen }) => (fullscreen ? "0.4s" : "0.3s")};
     margin-left: ${(props) => "-" + props.activeIndex + "00%"};
   }
+`;
+
+const ImageButton = styled.button`
+  ${clearButtonStyles}
+  padding: 0;
+  cursor: ${({ fullscreen }) =>
+      fullscreen ? `url(${zoomOut})` : `url(${zoomIn})`},
+    auto;
 `;
 
 const Image = styled.img`
@@ -153,7 +254,7 @@ const Image = styled.img`
 `;
 
 const DirectionButton = styled.button`
-  position: absolute;
+  position: ${({ fullscreen }) => (fullscreen ? "fixed" : "absolute")};
   top: 50%;
   transform: translateY(-50%);
   width: 4em;
