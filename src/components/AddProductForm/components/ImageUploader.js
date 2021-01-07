@@ -18,6 +18,7 @@ const ImageUploader = ({ gallery, addImage, removeImage, colorIndex }) => {
     if (!event.target.files || event.target.files.length === 0) return;
 
     const file = event.target.files[0];
+    console.log(file);
     const reader = new FileReader();
     reader.addEventListener("load", () => setSrc(reader.result));
     reader.readAsDataURL(file);
@@ -31,6 +32,7 @@ const ImageUploader = ({ gallery, addImage, removeImage, colorIndex }) => {
         accept="image/*"
         multiple={false}
         onChange={handleSelectImage}
+        onClick={(event) => (event.target.value = null)}
         ref={imageInputRef}
       />
       <TextLabel

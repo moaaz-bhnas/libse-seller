@@ -136,7 +136,6 @@ const ColorsAndSizes = ({
 
   const addImage = useCallback(
     (colorIndex, image) => {
-      console.log("addImage - image: ", image, "colorIndex: ", colorIndex);
       if (imageError.visible) setImageError({ visible: false, index: null });
 
       const updatedColors = colors.map((color, i) => {

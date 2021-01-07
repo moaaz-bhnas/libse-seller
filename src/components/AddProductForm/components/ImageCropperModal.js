@@ -21,7 +21,6 @@ import growIcon from "../../../img/grow.svg";
 import shrinkIcon from "../../../img/shrink.svg";
 
 const ImageCropperModal = ({ src, setSrc, imageInputRef, addImage }) => {
-  console.dir(addImage);
   const closerRef = useRef(null);
   const resizerRef = useRef(null);
   const imageRef = useRef(null);
@@ -125,7 +124,6 @@ const ImageCropperModal = ({ src, setSrc, imageInputRef, addImage }) => {
       crop,
       "product-image.jpeg"
     );
-    console.log("crop: ", crop, "croppedImage: ", croppedImage);
     addImage(croppedImage);
     setSrc(null);
     imageInputRef.current.focus();
@@ -138,15 +136,6 @@ const ImageCropperModal = ({ src, setSrc, imageInputRef, addImage }) => {
     canvas.width = crop.width * scaleX;
     canvas.height = crop.height * scaleY;
     const ctx = canvas.getContext("2d");
-
-    console.log(
-      "crop.width: ",
-      crop.width,
-      "scaleX: ",
-      scaleX,
-      "crop.width * scaleX: ",
-      crop.width * scaleX
-    );
 
     ctx.drawImage(
       image,
