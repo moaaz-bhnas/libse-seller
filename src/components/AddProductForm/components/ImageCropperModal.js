@@ -266,7 +266,7 @@ const Container = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 1;
+  z-index: 3;
   background-color: rgba(0, 0, 0, 0.7);
 
   display: flex;

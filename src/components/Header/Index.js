@@ -31,7 +31,7 @@ const StyledHeader = styled.header`
   /* padding-top: ${({ seller }) => (seller ? "3em" : null)}; */
   padding-top: 3em;
   position: relative;
-  z-index: 1;
+  z-index: 2;
 `;
 
 const Title = styled.h1`

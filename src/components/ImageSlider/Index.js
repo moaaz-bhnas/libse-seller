@@ -201,7 +201,7 @@ const fullscreenStyles = css`
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1;
+  z-index: 4;
 `;
 
 const Slider = styled.div`
