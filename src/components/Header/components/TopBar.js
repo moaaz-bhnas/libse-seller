@@ -22,9 +22,14 @@ const TopBar = () => {
   const { contentDirection } = useContext(ContentDirectionContext);
 
   const setLocale = useCallback(() => {
+    const { pathname, query } = router;
     router.push(
-      router.pathname,
-      router.asPath.replace(locale, locale === "ar" ? "en" : "ar")
+      {
+        pathname,
+        query: { ...query, lang: locale === "ar" ? "en" : "ar" },
+      },
+      undefined,
+      { shallow: true }
     );
   }, [locale]);
 

@@ -8,8 +8,8 @@ const Preview = ({ images }) => {
     <Image
       src={images[activeImageIndex]}
       alt=""
-      onMouseOver={() => setActiveImageIndex(1)}
-      onMouseOut={() => setActiveImageIndex(0)}
+      onMouseOver={images.length > 1 ? () => setActiveImageIndex(1) : null}
+      onMouseOut={images.length > 1 ? () => setActiveImageIndex(0) : null}
     />
   );
 };

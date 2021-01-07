@@ -68,6 +68,8 @@ const AddProductForm = () => {
       return { name_ar, name_en, value_ar: "", value_en: "", required };
     })
   );
+
+  console.log("selectedDetails: ", selectedDetails);
   useUpdateEffect(
     function updateDetailsStepFinishState() {
       const stepFinished = selectedDetails
@@ -201,7 +203,9 @@ const AddProductForm = () => {
           category.subCategories[selectedSubCategoryIndex].name_en,
         group_ar: selectedGroup.name_ar,
         group_en: selectedGroup.name_en,
-        details: selectedDetails.map((detail) => detail.value_en !== "Other"),
+        details: selectedDetails.filter(
+          (detail) => detail.value_en !== "Other"
+        ),
         description,
         colors,
         price,

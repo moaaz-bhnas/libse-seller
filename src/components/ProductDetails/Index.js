@@ -11,7 +11,7 @@ import strings from "../../translations/strings/productPage";
 import AvailableSizes from "./components/AvailableSizes";
 import Details from "./components/Details";
 
-const ProductDetails = ({ product, activeColor, setActiveColor }) => {
+const ProductDetails = ({ product, activeColor, onColorClick }) => {
   const { locale } = useContext(LocaleContext);
   const { t } = useTranslation(locale);
 
@@ -24,7 +24,7 @@ const ProductDetails = ({ product, activeColor, setActiveColor }) => {
       <AvailableColors
         colors={colors}
         activeColor={activeColor}
-        onClick={({ index }) => setActiveColor(colors[index])}
+        onClick={({ index }) => onColorClick(index)}
         namesVisible={true}
       />
 

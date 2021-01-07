@@ -27,6 +27,7 @@ const Product = ({ product, seller, inFavorites }) => {
   const defaultColor =
     product.colors.find((color) => color.default) || colors[0];
   const [activeColor, setActiveColor] = useState(defaultColor);
+  const { images } = activeColor;
   const href = `/${locale}/product/${product.id}?color=${activeColor.name_en}`;
 
   const handleLikeToggle = useCallback(() => {
@@ -41,7 +42,7 @@ const Product = ({ product, seller, inFavorites }) => {
       <ProductContainer>
         <Link passHref href={href}>
           <PreviewLink>
-            <Preview images={activeColor.images.slice(1)} />
+            <Preview images={images.length > 1 ? images.slice(1) : images} />
           </PreviewLink>
         </Link>
 

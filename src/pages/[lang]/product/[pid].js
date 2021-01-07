@@ -10,10 +10,11 @@ import { ProfileProvider } from "../../../contexts/profile";
 import Cookies from "next-cookies";
 // import Gallery from "../../../components/gallery/Index";
 import ImageSlider from "../../../components/ImageSlider/Index";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { LayoutContext } from "../../../contexts/layout";
 import ProductDetails from "../../../components/ProductDetails/Index";
 import measurements from "../../../shared/measurements";
+import { useRouter } from "next/router";
 
 export async function getServerSideProps(context) {
   const {
@@ -62,10 +63,24 @@ const ProductPage = ({
   serverProfile,
   product,
 }) => {
+  const router = useRouter();
+  const { pathname, query, asPath } = router;
   const { colors } = product;
-  const [activeColor, setActiveColor] = useState(
-    colors.find((color) => color.name_en === activeColorName)
-  );
+  const activeColor = colors.find((color) => color.name_en === query.color);
+  // const [activeColor, setActiveColor] = useState(
+  //   colors.find((color) => color.name_en === activeColorName)
+  // );
+  // useEffect(() => {
+  //   const { pathname, query } = router;
+  // router.push(
+  //   {
+  //     pathname,
+  //     query: { ...query, color: activeColor.name_en },
+  //   },
+  //   undefined,
+  //   { shallow: true }
+  // );
+  // }, [activeColor]);
 
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
@@ -78,6 +93,20 @@ const ProductPage = ({
   }, []);
 
   const { t } = useTranslation(lang);
+
+  const handleColorClick = useCallback((activeIndex) => {
+    router.push(
+      {
+        pathname: pathname,
+        query: {
+          ...query,
+          color: colors[activeIndex].name_en,
+        },
+      },
+      undefined,
+      { shallow: true }
+    );
+  }, []);
 
   return (
     <AuthProvider serverUser={serverUser}>
@@ -99,7 +128,7 @@ const ProductPage = ({
                 </FirstColumn>
                 <SecondColumn>
                   <ProductDetails
-                    setActiveColor={setActiveColor}
+                    onColorClick={handleColorClick}
                     product={product}
                     activeColor={activeColor}
                   />
