@@ -21,13 +21,19 @@ const ProgressBar = ({
   const { t } = useTranslation();
 
   const [error, setError] = useState(false);
+  useEffect(
+    function clearErrorAfterShortPeriod() {
+      if (error) {
+        setTimeout(function hideErrorMsg() {
+          setError(false);
+        }, time.delay.errorMsg);
+      }
+    },
+    [error]
+  );
   useEffect(() => {
-    if (error) {
-      setTimeout(function hideErrorMsg() {
-        setError(false);
-      }, time.delay.errorMsg);
-    }
-  }, [error]);
+    setError(false);
+  }, [activeStep]);
 
   const handleStepClick = useCallback(
     (event, clickedStepId) => {
