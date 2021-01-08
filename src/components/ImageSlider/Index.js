@@ -1,4 +1,11 @@
-import { memo, useState, useCallback, useEffect, useRef } from "react";
+import {
+  memo,
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  useContext,
+} from "react";
 import prevIcon from "../../img/prev-image.svg";
 import nextIcon from "../../img/next-image.svg";
 import useTranslation from "../../hooks/useTranslation";
@@ -9,6 +16,7 @@ import { clearButtonStyles } from "../Button/style";
 import zoomIn from "../../img/zoom-in.png";
 import zoomOut from "../../img/zoom-out.png";
 import measurements from "../../shared/measurements";
+import { ContentDirectionContext } from "../../contexts/contentDirection";
 
 const ImageSlider = ({
   images,
@@ -27,6 +35,7 @@ const ImageSlider = ({
   const firstInteractive = useRef();
   const lastInteractive = useRef();
 
+  const { contentDirection } = useContext(ContentDirectionContext);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -132,7 +141,12 @@ const ImageSlider = ({
     >
       <List>
         {images.map((image, index) => (
-          <Slide key={image} activeIndex={activeIndex} fullscreen={fullscreen}>
+          <Slide
+            key={image}
+            activeIndex={activeIndex}
+            contentDirection={contentDirection}
+            fullscreen={fullscreen}
+          >
             <ImageButton
               tabIndex={index === activeIndex ? 0 : -1}
               onClick={handleImageButtonClick}
@@ -154,6 +168,7 @@ const ImageSlider = ({
         <>
           <PreviousButton
             fullscreen={fullscreen}
+            contentDirection={contentDirection}
             className="slider__arrowButton"
             onClick={(event) => {
               event.preventDefault();
@@ -166,6 +181,7 @@ const ImageSlider = ({
 
           <NextButton
             fullscreen={fullscreen}
+            contentDirection={contentDirection}
             className="slider__arrowButton"
             onClick={(event) => {
               event.preventDefault();
@@ -226,6 +242,7 @@ const List = styled.ul`
   padding-right: 0;
 
   display: flex;
+  justify-content: flex-start;
   overflow: hidden;
 `;
 
@@ -235,9 +252,12 @@ const Slide = styled.li`
   display: flex;
 
   &:first-child {
-    transition: margin-left
-      ${({ fullscreen }) => (fullscreen ? "0.4s" : "0.3s")};
-    margin-left: ${(props) => "-" + props.activeIndex + "00%"};
+    transition-property: margin-left, margin-right;
+    transition-duration: ${({ fullscreen }) => (fullscreen ? "0.4s" : "0.3s")};
+    margin-left: ${({ activeIndex, contentDirection }) =>
+      contentDirection === "ltr" ? "-" + activeIndex + "00%" : null};
+    margin-right: ${({ activeIndex, contentDirection }) =>
+      contentDirection === "rtl" ? "-" + activeIndex + "00%" : null};
   }
 `;
 
@@ -256,7 +276,7 @@ const Image = styled.img`
 const DirectionButton = styled.button`
   position: ${({ fullscreen }) => (fullscreen ? "fixed" : "absolute")};
   top: 50%;
-  transform: translateY(-50%);
+  /* transform: translateY(-50%); */
   width: 4em;
   height: 4em;
   display: flex;
@@ -264,7 +284,12 @@ const DirectionButton = styled.button`
   background-color: transparent;
   opacity: 0.65;
   transition: opacity 0.15s;
-  padding: 0.85em 0.4em 0.85em 1.3em;
+  padding-top: 0.85em;
+  padding-bottom: 0.85em;
+  transform: ${({ contentDirection }) =>
+    contentDirection === "rtl"
+      ? "rotate(180deg) translateY(50%)"
+      : "translateY(-50%)"};
 
   &:hover,
   &:focus {
@@ -273,13 +298,21 @@ const DirectionButton = styled.button`
 `;
 
 const NextButton = styled(DirectionButton)`
-  right: 0;
-  padding: 0.85em 0.4em 0.85em 1.3em;
+  right: ${({ contentDirection }) => (contentDirection === "ltr" ? 0 : null)};
+  left: ${({ contentDirection }) => (contentDirection === "rtl" ? 0 : null)};
+  padding-right: ${({ contentDirection }) =>
+    contentDirection === "ltr" ? ".4em" : "1.3em"};
+  padding-left: ${({ contentDirection }) =>
+    contentDirection === "ltr" ? "1.3em" : ".4em"};
 `;
 
 const PreviousButton = styled(DirectionButton)`
-  left: 0;
-  padding: 0.85em 1.3em 0.85em 0.4em;
+  left: ${({ contentDirection }) => (contentDirection === "ltr" ? 0 : null)};
+  right: ${({ contentDirection }) => (contentDirection === "rtl" ? 0 : null)};
+  padding-right: ${({ contentDirection }) =>
+    contentDirection === "ltr" ? "1.3em" : ".4em"};
+  padding-left: ${({ contentDirection }) =>
+    contentDirection === "ltr" ? ".4em" : "1.3em"};
 `;
 
 const Icon = styled.img`
