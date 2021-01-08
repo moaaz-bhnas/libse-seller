@@ -26,6 +26,7 @@ const Indicators = (
 const StyledIndicators = styled.ul`
   ${listStyles}
   display: flex;
+  justify-content: flex-start;
 `;
 
 const Indicator = styled.li`

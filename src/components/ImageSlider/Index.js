@@ -47,7 +47,7 @@ const ImageSlider = ({
     return () => {
       document.body.removeEventListener("keydown", handleKeyDown);
     };
-  }, [activeIndex]);
+  }, [activeIndex, contentDirection]);
 
   const trapFocus = useCallback((event, firstInteractive, lastInteractive) => {
     const { target, key, shiftKey } = event;
@@ -67,10 +67,10 @@ const ImageSlider = ({
     (event) => {
       const { key } = event;
       if (key === "ArrowRight") {
-        goNext();
+        contentDirection === "ltr" ? goNext() : goPrev();
       }
       if (key === "ArrowLeft") {
-        goPrev();
+        contentDirection === "ltr" ? goPrev() : goNext();
       }
       if (key === "Escape") {
         setFullscreenVisible(false);
@@ -84,10 +84,11 @@ const ImageSlider = ({
         );
       }
     },
-    [activeIndex]
+    [activeIndex, contentDirection]
   );
 
   const goNext = useCallback(() => {
+    console.log("goNext");
     if (activeIndex === images.length - 1) {
       setActiveIndex(0);
     } else {
@@ -96,6 +97,7 @@ const ImageSlider = ({
   }, [activeIndex]);
 
   const goPrev = useCallback(() => {
+    console.log("goPrev");
     if (activeIndex === 0) {
       setActiveIndex(images.length - 1);
     } else {

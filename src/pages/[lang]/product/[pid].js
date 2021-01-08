@@ -67,22 +67,9 @@ const ProductPage = ({
   const { pathname, query, asPath } = router;
   const { colors } = product;
   const activeColor = colors.find((color) => color.name_en === query.color);
-  // const [activeColor, setActiveColor] = useState(
-  //   colors.find((color) => color.name_en === activeColorName)
-  // );
-  // useEffect(() => {
-  //   const { pathname, query } = router;
-  // router.push(
-  //   {
-  //     pathname,
-  //     query: { ...query, color: activeColor.name_en },
-  //   },
-  //   undefined,
-  //   { shallow: true }
-  // );
-  // }, [activeColor]);
 
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  console.log("activeImageIndex: ", activeImageIndex);
 
   const [fullscreenVisible, setFullscreenVisible] = useState(false);
 

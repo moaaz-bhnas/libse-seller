@@ -15,7 +15,6 @@ const ProductDetails = ({ product, activeColor, onColorClick }) => {
   const { locale } = useContext(LocaleContext);
   const { t } = useTranslation(locale);
 
-  console.log(product);
   const { name, price, colors } = product;
   return (
     <StyledProductDetails>
