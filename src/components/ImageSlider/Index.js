@@ -30,10 +30,13 @@ const ImageSlider = ({
   indicatorsVisible = true,
   fullscreen = false,
   setFullscreenVisible,
+  setFullscreenImageWidth,
 }) => {
   const sliderRef = useRef();
   const firstInteractive = useRef();
   const lastInteractive = useRef();
+
+  const fullscreenImageWidth = useRef(0);
 
   const { contentDirection } = useContext(ContentDirectionContext);
   const { t } = useTranslation();
@@ -113,24 +116,42 @@ const ImageSlider = ({
     }
   }, [fullscreen]);
 
-  const calculateFullscreenImageTopOffset = useCallback((event) => {
-    const imageHeight = window.innerWidth / measurements.ratio.productImage;
-    const imageOffset = imageHeight - window.innerHeight;
-    const ratio = imageOffset / window.innerHeight;
-    const { pageY } = event;
-    const topOffset = pageY * ratio;
-    return topOffset;
-  }, []);
+  const calculateFullscreenImageTopOffset = useCallback(
+    (event) => {
+      const imageHeight =
+        fullscreenImageWidth.current / measurements.ratio.productImage;
+      const imageOffset = imageHeight - window.innerHeight;
+      const ratio = imageOffset / window.innerHeight;
+      const { pageY } = event;
+      const topOffset = pageY * ratio;
+      return topOffset;
+    },
+    [fullscreenImageWidth.current]
+  );
 
-  const handleMouseMove = useCallback((event) => {
-    const topOffset = calculateFullscreenImageTopOffset(event);
-    sliderRef.current.style.marginTop = `-${topOffset}px`;
-  }, []);
+  const handleMouseMove = useCallback(
+    (event) => {
+      const topOffset = calculateFullscreenImageTopOffset(event);
+      sliderRef.current.style.marginTop = `-${topOffset}px`;
+    },
+    [fullscreenImageWidth.current]
+  );
 
-  const handleMouseOver = useCallback((event) => {
-    const topOffset = calculateFullscreenImageTopOffset(event);
-    sliderRef.current.style.marginTop = `-${topOffset}px`;
-  }, []);
+  const handleMouseOver = useCallback(
+    (event) => {
+      const topOffset = calculateFullscreenImageTopOffset(event);
+      sliderRef.current.style.marginTop = `-${topOffset}px`;
+    },
+    [fullscreenImageWidth.current]
+  );
+
+  const handleImageLoad = useCallback(
+    ({ target: { clientWidth: imageWidth } }) => {
+      fullscreenImageWidth.current = imageWidth;
+      setFullscreenImageWidth(imageWidth);
+    },
+    []
+  );
 
   return (
     <Slider
@@ -160,6 +181,7 @@ const ImageSlider = ({
                 className={imageClassName}
                 src={image}
                 alt=""
+                onLoad={fullscreen ? handleImageLoad : null}
               />
             </ImageButton>
           </Slide>
@@ -214,17 +236,17 @@ const ImageSlider = ({
   );
 };
 
-const fullscreenStyles = css`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 4;
-`;
+// const fullscreenStyles = css`
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   right: 0;
+//   z-index: 4;
+// `;
 
 const Slider = styled.div`
   position: relative;
-  ${({ fullscreen }) => (fullscreen ? fullscreenStyles : null)}
+  /* ${({ fullscreen }) => (fullscreen ? fullscreenStyles : null)} */
   /* transition: margin-top 0.05s; */
 
   .imageSlider__indicators {

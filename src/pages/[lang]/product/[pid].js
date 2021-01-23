@@ -15,6 +15,7 @@ import { LayoutContext } from "../../../contexts/layout";
 import ProductDetails from "../../../components/ProductDetails/Index";
 import measurements from "../../../shared/measurements";
 import { useRouter } from "next/router";
+import FullscreenSlider from "../../../components/FullscreenSlider/Index";
 
 export async function getServerSideProps(context) {
   const {
@@ -103,7 +104,6 @@ const ProductPage = ({
             <Layout fullPage>
               <Container>
                 <FirstColumn>
-                  {/* <Gallery activeColor={activeColor} /> */}
                   <ImageSlider
                     setFullscreenVisible={setFullscreenVisible}
                     images={activeColor.images}
@@ -123,8 +123,7 @@ const ProductPage = ({
               </Container>
 
               {fullscreenVisible && (
-                <ImageSlider
-                  fullscreen
+                <FullscreenSlider
                   images={activeColor.images}
                   activeIndex={activeImageIndex}
                   setActiveIndex={setActiveImageIndex}
