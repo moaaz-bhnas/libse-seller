@@ -25,6 +25,7 @@ const FullscreenSlider = ({
           activeIndex={activeIndex}
           setActiveIndex={setActiveIndex}
           setFullscreenVisible={setFullscreenVisible}
+          fullscreenImageWidth={fullscreenImageWidth}
           setFullscreenImageWidth={setFullscreenImageWidth}
         />
       </FullscreenSliderWrapper>

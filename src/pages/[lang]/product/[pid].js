@@ -65,12 +65,11 @@ const ProductPage = ({
   product,
 }) => {
   const router = useRouter();
-  const { pathname, query, asPath } = router;
+  const { pathname, query } = router;
   const { colors } = product;
   const activeColor = colors.find((color) => color.name_en === query.color);
 
   const [activeImageIndex, setActiveImageIndex] = useState(0);
-  console.log("activeImageIndex: ", activeImageIndex);
 
   const [fullscreenVisible, setFullscreenVisible] = useState(false);
 

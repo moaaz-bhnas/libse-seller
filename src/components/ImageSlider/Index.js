@@ -30,13 +30,12 @@ const ImageSlider = ({
   indicatorsVisible = true,
   fullscreen = false,
   setFullscreenVisible,
+  fullscreenImageWidth,
   setFullscreenImageWidth,
 }) => {
   const sliderRef = useRef();
   const firstInteractive = useRef();
   const lastInteractive = useRef();
-
-  const fullscreenImageWidth = useRef(0);
 
   const { contentDirection } = useContext(ContentDirectionContext);
   const { t } = useTranslation();
@@ -119,14 +118,14 @@ const ImageSlider = ({
   const calculateFullscreenImageTopOffset = useCallback(
     (event) => {
       const imageHeight =
-        fullscreenImageWidth.current / measurements.ratio.productImage;
+        fullscreenImageWidth / measurements.ratio.productImage;
       const imageOffset = imageHeight - window.innerHeight;
       const ratio = imageOffset / window.innerHeight;
       const { pageY } = event;
       const topOffset = pageY * ratio;
       return topOffset;
     },
-    [fullscreenImageWidth.current]
+    [fullscreenImageWidth]
   );
 
   const handleMouseMove = useCallback(
@@ -134,7 +133,7 @@ const ImageSlider = ({
       const topOffset = calculateFullscreenImageTopOffset(event);
       sliderRef.current.style.marginTop = `-${topOffset}px`;
     },
-    [fullscreenImageWidth.current]
+    [fullscreenImageWidth]
   );
 
   const handleMouseOver = useCallback(
@@ -142,12 +141,11 @@ const ImageSlider = ({
       const topOffset = calculateFullscreenImageTopOffset(event);
       sliderRef.current.style.marginTop = `-${topOffset}px`;
     },
-    [fullscreenImageWidth.current]
+    [fullscreenImageWidth]
   );
 
   const handleImageLoad = useCallback(
     ({ target: { clientWidth: imageWidth } }) => {
-      fullscreenImageWidth.current = imageWidth;
       setFullscreenImageWidth(imageWidth);
     },
     []
@@ -181,7 +179,9 @@ const ImageSlider = ({
                 className={imageClassName}
                 src={image}
                 alt=""
-                onLoad={fullscreen ? handleImageLoad : null}
+                onLoad={
+                  index === activeIndex && fullscreen ? handleImageLoad : null
+                }
               />
             </ImageButton>
           </Slide>
@@ -192,6 +192,11 @@ const ImageSlider = ({
         <>
           <PreviousButton
             fullscreen={fullscreen}
+            gap={
+              fullscreen && window.innerWidth > fullscreenImageWidth
+                ? (window.innerWidth - fullscreenImageWidth) / 2
+                : 0
+            }
             contentDirection={contentDirection}
             className="slider__arrowButton"
             onClick={(event) => {
@@ -205,6 +210,11 @@ const ImageSlider = ({
 
           <NextButton
             fullscreen={fullscreen}
+            gap={
+              fullscreen && window.innerWidth > fullscreenImageWidth
+                ? (window.innerWidth - fullscreenImageWidth) / 2
+                : 0
+            }
             contentDirection={contentDirection}
             className="slider__arrowButton"
             onClick={(event) => {
@@ -322,8 +332,10 @@ const DirectionButton = styled.button`
 `;
 
 const NextButton = styled(DirectionButton)`
-  right: ${({ contentDirection }) => (contentDirection === "ltr" ? 0 : null)};
-  left: ${({ contentDirection }) => (contentDirection === "rtl" ? 0 : null)};
+  right: ${({ contentDirection, gap }) =>
+    contentDirection === "ltr" ? gap + "px" : null};
+  left: ${({ contentDirection, gap }) =>
+    contentDirection === "rtl" ? gap + "px" : null};
   padding-right: ${({ contentDirection }) =>
     contentDirection === "ltr" ? ".4em" : "1.3em"};
   padding-left: ${({ contentDirection }) =>
@@ -331,8 +343,10 @@ const NextButton = styled(DirectionButton)`
 `;
 
 const PreviousButton = styled(DirectionButton)`
-  left: ${({ contentDirection }) => (contentDirection === "ltr" ? 0 : null)};
-  right: ${({ contentDirection }) => (contentDirection === "rtl" ? 0 : null)};
+  left: ${({ contentDirection, gap }) =>
+    contentDirection === "ltr" ? gap + "px" : null};
+  right: ${({ contentDirection, gap }) =>
+    contentDirection === "rtl" ? gap + "px" : null};
   padding-right: ${({ contentDirection }) =>
     contentDirection === "ltr" ? "1.3em" : ".4em"};
   padding-left: ${({ contentDirection }) =>
