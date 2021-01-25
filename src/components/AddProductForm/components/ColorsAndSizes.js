@@ -171,7 +171,7 @@ const ColorsAndSizes = ({
           setColorError({ visible: true, index });
         } else if (color.sizes.length === 0) {
           setSizeError({ visible: true, index });
-        } else if (color.images.length === 0) {
+        } else if (color.images.length < 3) {
           setImageError({ visible: true, index });
         }
       });

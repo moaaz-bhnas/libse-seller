@@ -93,7 +93,9 @@ const AddProductForm = () => {
     function updateColorsStepFinishState() {
       const stepFinished = colors.every(
         (color) =>
-          color[`name_${locale}`] && color.sizes.length && color.images.length
+          color[`name_${locale}`] &&
+          color.sizes.length &&
+          color.images.length > 2
       );
       stepsDispatch({
         type: "updateFinishState",
