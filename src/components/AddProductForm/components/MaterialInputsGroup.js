@@ -31,28 +31,29 @@ const MaterialInputsGroup = ({
   useEffect(() => {
     setErrorVisible(false);
 
-    const selectedDetailsCopy = selectedDetails.map((detail) =>
-      Object.assign({}, detail)
-    );
-    const materialDetail = selectedDetailsCopy[materialDetailIndex];
-
+    // filter and sort materials that user selected
     const selectedMaterials = materialsProportions.filter(
       (material) => material.proportion
     );
-
     const sortedMaterials = selectedMaterials.sort((materialA, materialB) => {
       return materialB.proportion - materialA.proportion;
     });
 
-    const materialFinalString_en = getMaterialFinalString(
+    // form strings (e.g. 80% cotton, 20% polyster)
+    const materialFinalString_en = formMaterialFinalString(
       sortedMaterials,
       "en"
     );
-    const materialFinalString_ar = getMaterialFinalString(
+    const materialFinalString_ar = formMaterialFinalString(
       sortedMaterials,
       "ar"
     );
 
+    // set details state
+    const selectedDetailsCopy = selectedDetails.map((detail) =>
+      Object.assign({}, detail)
+    );
+    const materialDetail = selectedDetailsCopy[materialDetailIndex];
     const totalOfProportions = calculateTotalOfProportions(
       materialsProportions
     );
@@ -68,7 +69,7 @@ const MaterialInputsGroup = ({
     setSelectedDetails(selectedDetailsCopy);
   }, [materialsProportions]);
 
-  const getMaterialFinalString = useCallback((materials, locale) => {
+  const formMaterialFinalString = useCallback((materials, locale) => {
     const separator = locale === "ar" ? "،" : ",";
 
     const string = materials.reduce(
