@@ -30,15 +30,16 @@ const ImageSlider = ({
   indicatorsVisible = true,
   fullscreen = false,
   setFullscreenVisible,
-  fullscreenImageWidth,
-  setFullscreenImageWidth,
 }) => {
+  console.log("fullscreen: ", fullscreen);
   const sliderRef = useRef();
   const firstInteractive = useRef();
   const lastInteractive = useRef();
 
   const { contentDirection } = useContext(ContentDirectionContext);
   const { t } = useTranslation();
+
+  const [imageOriginalWidth, setImageOriginalWidth] = useState(null);
 
   useEffect(() => {
     if (fullscreen) firstInteractive.current.focus();
@@ -117,15 +118,18 @@ const ImageSlider = ({
 
   const calculateFullscreenImageTopOffset = useCallback(
     (event) => {
-      const imageHeight =
-        fullscreenImageWidth / measurements.ratio.productImage;
+      const imageWidth =
+        imageOriginalWidth > window.innerWidth
+          ? window.innerWidth
+          : imageOriginalWidth;
+      const imageHeight = imageWidth / measurements.ratio.productImage;
       const imageOffset = imageHeight - window.innerHeight;
       const ratio = imageOffset / window.innerHeight;
       const { pageY } = event;
       const topOffset = pageY * ratio;
       return topOffset;
     },
-    [fullscreenImageWidth]
+    [imageOriginalWidth]
   );
 
   const handleMouseMove = useCallback(
@@ -133,7 +137,7 @@ const ImageSlider = ({
       const topOffset = calculateFullscreenImageTopOffset(event);
       sliderRef.current.style.marginTop = `-${topOffset}px`;
     },
-    [fullscreenImageWidth]
+    [imageOriginalWidth]
   );
 
   const handleMouseOver = useCallback(
@@ -141,123 +145,144 @@ const ImageSlider = ({
       const topOffset = calculateFullscreenImageTopOffset(event);
       sliderRef.current.style.marginTop = `-${topOffset}px`;
     },
-    [fullscreenImageWidth]
+    [imageOriginalWidth]
   );
 
-  const handleImageLoad = useCallback(
-    ({ target: { clientWidth: imageWidth } }) => {
-      setFullscreenImageWidth(imageWidth);
-    },
-    []
-  );
+  const handleImageLoad = useCallback(({ target: { naturalWidth } }) => {
+    setImageOriginalWidth(naturalWidth);
+  }, []);
+
+  const innerWrapperWidth =
+    imageOriginalWidth && imageOriginalWidth < window.innerWidth
+      ? imageOriginalWidth
+      : null;
+  console.log("innerWrapperWidth: ", innerWrapperWidth);
 
   return (
-    <Slider
-      ref={sliderRef}
-      style={style}
-      className={className}
-      fullscreen={fullscreen}
-      onMouseMove={fullscreen ? handleMouseMove : null}
-      onMouseOver={fullscreen ? handleMouseOver : null}
-    >
-      <List>
-        {images.map((image, index) => (
-          <Slide
-            key={image}
-            activeIndex={activeIndex}
-            contentDirection={contentDirection}
-            fullscreen={fullscreen}
-          >
-            <ImageButton
-              tabIndex={index === activeIndex ? 0 : -1}
-              onClick={handleImageButtonClick}
-              fullscreen={fullscreen}
-              ref={index === activeIndex ? firstInteractive : null}
-            >
-              <Image
-                style={imageStyle}
-                className={imageClassName}
-                src={image}
-                alt=""
-                onLoad={
-                  index === activeIndex && fullscreen ? handleImageLoad : null
-                }
-              />
-            </ImageButton>
-          </Slide>
-        ))}
-      </List>
-
-      {arrowsVisible && (
-        <>
-          <PreviousButton
-            fullscreen={fullscreen}
-            gap={
-              fullscreen && window.innerWidth > fullscreenImageWidth
-                ? (window.innerWidth - fullscreenImageWidth) / 2
-                : 0
-            }
-            contentDirection={contentDirection}
-            className="slider__arrowButton"
-            onClick={(event) => {
-              event.preventDefault();
-              goPrev();
-            }}
-            onMouseDown={(e) => e.preventDefault()}
-          >
-            <Icon src={prevIcon} alt={t(translations, "prevSlide")} />
-          </PreviousButton>
-
-          <NextButton
-            fullscreen={fullscreen}
-            gap={
-              fullscreen && window.innerWidth > fullscreenImageWidth
-                ? (window.innerWidth - fullscreenImageWidth) / 2
-                : 0
-            }
-            contentDirection={contentDirection}
-            className="slider__arrowButton"
-            onClick={(event) => {
-              event.preventDefault();
-              goNext();
-            }}
-            onMouseDown={(e) => e.preventDefault()}
-          >
-            <Icon src={nextIcon} alt={t(translations, "nextSlide")} />
-          </NextButton>
-        </>
-      )}
-
-      {indicatorsVisible && (
-        <Indicators
+    <Wrapper fullscreen={fullscreen}>
+      <InnerWrapper fullscreen={fullscreen} width={innerWrapperWidth}>
+        <Slider
+          ref={sliderRef}
+          style={style}
+          className={className}
           fullscreen={fullscreen}
-          images={images}
-          activeIndex={activeIndex}
-          onClick={({ event, index }) => {
-            event.stopPropagation();
-            event.preventDefault();
-            setActiveIndex(index);
-          }}
-          className="imageSlider__indicators"
-          ref={lastInteractive}
-        />
-      )}
-    </Slider>
+          onMouseMove={fullscreen ? handleMouseMove : null}
+          onMouseOver={fullscreen ? handleMouseOver : null}
+        >
+          <List>
+            {images.map((image, index) => (
+              <Slide
+                key={image}
+                activeIndex={activeIndex}
+                contentDirection={contentDirection}
+                fullscreen={fullscreen}
+              >
+                <ImageButton
+                  tabIndex={index === activeIndex ? 0 : -1}
+                  onClick={handleImageButtonClick}
+                  fullscreen={fullscreen}
+                  ref={index === activeIndex ? firstInteractive : null}
+                >
+                  <Image
+                    fullscreen={fullscreen}
+                    style={imageStyle}
+                    className={imageClassName}
+                    src={image}
+                    alt=""
+                    onLoad={index === activeIndex ? handleImageLoad : null}
+                  />
+                </ImageButton>
+              </Slide>
+            ))}
+          </List>
+
+          {arrowsVisible && (
+            <>
+              <PreviousButton
+                fullscreen={fullscreen}
+                gap={
+                  fullscreen && window.innerWidth > imageOriginalWidth
+                    ? (window.innerWidth - imageOriginalWidth) / 2
+                    : 0
+                }
+                contentDirection={contentDirection}
+                className="slider__arrowButton"
+                onClick={(event) => {
+                  event.preventDefault();
+                  goPrev();
+                }}
+                onMouseDown={(e) => e.preventDefault()}
+              >
+                <Icon src={prevIcon} alt={t(translations, "prevSlide")} />
+              </PreviousButton>
+
+              <NextButton
+                fullscreen={fullscreen}
+                gap={
+                  fullscreen && window.innerWidth > imageOriginalWidth
+                    ? (window.innerWidth - imageOriginalWidth) / 2
+                    : 0
+                }
+                contentDirection={contentDirection}
+                className="slider__arrowButton"
+                onClick={(event) => {
+                  event.preventDefault();
+                  goNext();
+                }}
+                onMouseDown={(e) => e.preventDefault()}
+              >
+                <Icon src={nextIcon} alt={t(translations, "nextSlide")} />
+              </NextButton>
+            </>
+          )}
+
+          {indicatorsVisible && (
+            <Indicators
+              fullscreen={fullscreen}
+              images={images}
+              activeIndex={activeIndex}
+              onClick={({ event, index }) => {
+                event.stopPropagation();
+                event.preventDefault();
+                setActiveIndex(index);
+              }}
+              className="imageSlider__indicators"
+              ref={lastInteractive}
+            />
+          )}
+        </Slider>
+      </InnerWrapper>
+    </Wrapper>
   );
 };
 
-// const fullscreenStyles = css`
-//   position: fixed;
-//   top: 0;
-//   left: 0;
-//   right: 0;
-//   z-index: 4;
-// `;
+const fullscreenStyles = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 4;
+
+  background-color: #222;
+`;
+
+const Wrapper = styled.div`
+  ${({ fullscreen }) => fullscreen && fullscreenStyles}
+`;
+
+const InnerWrapper = styled.div`
+  width: ${({ fullscreen, width }) => (fullscreen ? width + "px" : null)};
+`;
 
 const Slider = styled.div`
   position: relative;
-  /* ${({ fullscreen }) => (fullscreen ? fullscreenStyles : null)} */
-  /* transition: margin-top 0.05s; */
+  margin-top: ${({ fullscreen }) =>
+    !fullscreen ? "initial !important" : null};
 
   .imageSlider__indicators {
     position: ${({ fullscreen }) => (fullscreen ? "fixed" : "absolute")};
@@ -305,6 +330,8 @@ const ImageButton = styled.button`
 
 const Image = styled.img`
   max-width: 100%;
+  min-height: ${({ fullscreen }) =>
+    fullscreen ? null : `calc(100vh - ${measurements.height.header})`};
 `;
 
 const DirectionButton = styled.button`

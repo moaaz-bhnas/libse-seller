@@ -15,7 +15,6 @@ import { LayoutContext } from "../../../contexts/layout";
 import ProductDetails from "../../../components/ProductDetails/Index";
 import measurements from "../../../shared/measurements";
 import { useRouter } from "next/router";
-import FullscreenSlider from "../../../components/FullscreenSlider/Index";
 
 export async function getServerSideProps(context) {
   const {
@@ -104,12 +103,11 @@ const ProductPage = ({
               <Container>
                 <FirstColumn>
                   <ImageSlider
+                    fullscreen={fullscreenVisible}
                     setFullscreenVisible={setFullscreenVisible}
                     images={activeColor.images}
                     activeIndex={activeImageIndex}
                     setActiveIndex={setActiveImageIndex}
-                    className="productPage__slider"
-                    imageClassName="productPage__sliderImage"
                   />
                 </FirstColumn>
                 <SecondColumn>
@@ -120,15 +118,6 @@ const ProductPage = ({
                   />
                 </SecondColumn>
               </Container>
-
-              {fullscreenVisible && (
-                <FullscreenSlider
-                  images={activeColor.images}
-                  activeIndex={activeImageIndex}
-                  setActiveIndex={setActiveImageIndex}
-                  setFullscreenVisible={setFullscreenVisible}
-                />
-              )}
             </Layout>
           </ContentDirectionProvider>
         </LocaleProvider>
@@ -139,10 +128,6 @@ const ProductPage = ({
 
 const Container = styled.article`
   display: flex;
-
-  .productPage__sliderImage {
-    max-height: calc(100vh - ${measurements.height.header});
-  }
 `;
 
 const Column = styled.div``;
