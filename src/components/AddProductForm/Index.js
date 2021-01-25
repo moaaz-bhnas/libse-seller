@@ -74,6 +74,12 @@ const AddProductForm = () => {
       const stepFinished = selectedDetails
         .filter((detail) => detail.required)
         .every((detail) => detail.value_ar && detail.value_en);
+      console.log(
+        "selectedDetails: ",
+        selectedDetails,
+        "stepFinished: ",
+        stepFinished
+      );
 
       stepsDispatch({
         type: "updateFinishState",
@@ -170,7 +176,7 @@ const AddProductForm = () => {
   };
   const [steps, stepsDispatch] = useReducer(stepsReducer, initSteps);
 
-  const [activeStep, setActiveStep] = useState(2);
+  const [activeStep, setActiveStep] = useState(1);
 
   const handleStepSubmit = useCallback(
     (event, disabled = false) => {

@@ -32,10 +32,10 @@ const MaterialInputsGroup = ({
   useEffect(() => {
     setErrorVisible(false);
 
-    const totalOfProportions = calculateTotalOfProportions(
-      materialsProportions
+    const selectedDetailsCopy = selectedDetails.map((detail) =>
+      Object.assign({}, detail)
     );
-    if (totalOfProportions !== 100) return;
+    const materialDetail = selectedDetailsCopy[materialDetailIndex];
 
     const selectedMaterials = materialsProportions.filter(
       (material) => material.proportion
@@ -54,11 +54,18 @@ const MaterialInputsGroup = ({
       "ar"
     );
 
-    const selectedDetailsCopy = selectedDetails.map((detail) =>
-      Object.assign({}, detail)
+    const totalOfProportions = calculateTotalOfProportions(
+      materialsProportions
     );
-    selectedDetailsCopy[materialDetailIndex].value_en = materialFinalString_en;
-    selectedDetailsCopy[materialDetailIndex].value_ar = materialFinalString_ar;
+
+    if (totalOfProportions !== 100) {
+      materialDetail.value_en = "";
+      materialDetail.value_ar = "";
+    } else {
+      materialDetail.value_en = materialFinalString_en;
+      materialDetail.value_ar = materialFinalString_ar;
+    }
+
     setSelectedDetails(selectedDetailsCopy);
   }, [materialsProportions]);
 
