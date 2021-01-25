@@ -7,7 +7,6 @@ import { ErrorIcon, ErrorMsg } from "../style";
 import errorIcon from "../../../img/error.svg";
 import translations from "../../../translations/strings/addProductPage";
 import useTranslation from "../../../hooks/useTranslation";
-import time from "../../../shared/time";
 
 const MaterialInputsGroup = ({
   items,
@@ -99,9 +98,6 @@ const MaterialInputsGroup = ({
 
       if (totalOfProportions > 100) {
         setErrorVisible(true);
-        setTimeout(function clearError() {
-          setErrorVisible(false);
-        }, time.delay.errorMsg);
         return;
       }
 

@@ -17,6 +17,7 @@ import { LocaleContext } from "../../../contexts/locale";
 import strings from "../../../translations/strings/addProductPage";
 import useTranslation from "../../../hooks/useTranslation";
 import MaterialInputsGroup from "./MaterialInputsGroup";
+import time from "../../../shared/time";
 
 const Details = ({
   selectedCategory,
@@ -36,6 +37,13 @@ const Details = ({
 
   // const [errorVisible, setErrorVisible] = useState(false);
   const [materialErrorVisible, setMaterialErrorVisible] = useState(false);
+  useEffect(() => {
+    if (materialErrorVisible) {
+      setTimeout(function clearError() {
+        setMaterialErrorVisible(false);
+      }, time.delay.errorMsg);
+    }
+  }, [materialErrorVisible]);
 
   const handleSubmit = useCallback(
     (event) => {
