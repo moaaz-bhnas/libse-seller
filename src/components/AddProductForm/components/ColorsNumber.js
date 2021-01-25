@@ -7,6 +7,7 @@ import { ContentDirectionContext } from "../../../contexts/contentDirection";
 import useTranslation from "../../../hooks/useTranslation";
 import translations from "../../../translations/strings/addProductPage";
 import { LocaleContext } from "../../../contexts/locale";
+import time from "../../../shared/time";
 
 const ColorsNumber = ({
   colors,
@@ -76,7 +77,7 @@ const ColorsNumber = ({
         });
         setTimeout(function clearError() {
           setColorsNumberError({ visible: false, colorsToClear: 0 });
-        }, 10000);
+        }, time.delay.errorMsg);
       }
       setColorsNumber(Number(newNumber) + Number(unremovableColors));
       let removedColors = 0;

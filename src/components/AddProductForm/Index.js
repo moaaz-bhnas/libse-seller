@@ -69,7 +69,6 @@ const AddProductForm = () => {
     })
   );
 
-  console.log("selectedDetails: ", selectedDetails);
   useUpdateEffect(
     function updateDetailsStepFinishState() {
       const stepFinished = selectedDetails
@@ -171,7 +170,7 @@ const AddProductForm = () => {
   };
   const [steps, stepsDispatch] = useReducer(stepsReducer, initSteps);
 
-  const [activeStep, setActiveStep] = useState(1);
+  const [activeStep, setActiveStep] = useState(2);
 
   const handleStepSubmit = useCallback(
     (event, disabled = false) => {

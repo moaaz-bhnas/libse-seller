@@ -1,32 +1,35 @@
-import {
-  inputStyles,
-  InputContainer,
-  StyledInputWithPrepending,
-  Prepending,
-} from "./style";
+import { inputStyles } from "./style";
 import styled, { css } from "styled-components";
 import { useContext } from "react";
 import { ContentDirectionContext } from "../../contexts/contentDirection";
 import { LocaleContext } from "../../contexts/locale";
 
-export const InputWithPrepending = ({
-  prependingText,
-  label,
+export const InputWithAffix = ({
+  affixText,
+  position = "prefix",
+  label = null,
   placeholder,
   value,
+  type,
   onChange,
-  required,
+  required = true,
+  min = null,
+  max = null,
+  inputClassname,
 }) => {
   return (
     <InputContainer>
-      <Prepending>{prependingText}</Prepending>
-      <StyledInputWithPrepending
-        type="number"
+      <Affix position={position}>{affixText}</Affix>
+      <StyledInputWithAffix
+        className={inputClassname}
+        type={type}
         aria-label={label}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
         required={required}
+        min={min}
+        max={max}
       />
     </InputContainer>
   );
@@ -140,4 +143,30 @@ const Select = styled.select`
 
 const Option = styled.option`
   text-transform: capitalize;
+`;
+
+const InputContainer = styled.div`
+  display: flex;
+`;
+
+const affixBorderStyle = "1px solid #ddd";
+const Affix = styled.span`
+  color: #666;
+  background-color: #e9ecef;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: ${affixBorderStyle};
+  border-right: ${({ position }) =>
+    position === "prefix" ? "none" : affixBorderStyle};
+  border-left: ${({ position }) =>
+    position === "suffix" ? "none" : affixBorderStyle};
+  flex: 0 0 2.6em;
+  order: ${({ position }) => (position === "prefix" ? 0 : 1)};
+`;
+
+const StyledInputWithAffix = styled.input`
+  ${inputStyles}
+  flex: 1;
+  width: 100%;
 `;

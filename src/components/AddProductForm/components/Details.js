@@ -16,6 +16,7 @@ import theme from "../../../shared/theme";
 import { LocaleContext } from "../../../contexts/locale";
 import strings from "../../../translations/strings/addProductPage";
 import useTranslation from "../../../hooks/useTranslation";
+import MaterialInputsGroup from "./MaterialInputsGroup";
 
 const Details = ({
   selectedCategory,
@@ -34,17 +35,22 @@ const Details = ({
   const { t } = useTranslation();
 
   // const [errorVisible, setErrorVisible] = useState(false);
-  const disabled = Object.keys(selectedDetails).length < 2;
+  const [materialErrorVisible, setMaterialErrorVisible] = useState(false);
 
   const handleSubmit = useCallback(
     (event) => {
-      // if (Object.keys(selectedDetails).length < 2) {
-      //   setErrorVisible(true);
-      // }
+      if (!materialDetailIndex.value_en) {
+        setMaterialErrorVisible(true);
+      }
       onStepSubmit(event, !finished);
     },
     [finished, selectedDetails]
   );
+
+  const materialDetailIndex = details.findIndex(
+    (detail) => detail.name_en === "Material"
+  );
+  const materialDetail = details[materialDetailIndex];
 
   return (
     <>
@@ -73,27 +79,45 @@ const Details = ({
         required={true}
       />
 
-      {details.map((detail, detailIndex) => (
-        <React.Fragment key={detailIndex}>
-          <SubTitle>{detail[`name_${locale}`]}:</SubTitle>
-          <RadioButtonsGroup
-            name={detail[`name_${locale}`]}
-            items={detail.options}
-            selectedItem={selectedDetails[detailIndex][`value_${locale}`]}
-            onChange={({ index: optionIndex }) => {
-              const option = detail.options[optionIndex];
+      {details
+        .filter((detail) => detail.name_en !== "Material")
+        .map((detail, detailIndex) => (
+          <React.Fragment key={detailIndex}>
+            <SubTitle>{detail[`name_${locale}`]}:</SubTitle>
+            <RadioButtonsGroup
+              name={detail[`name_${locale}`]}
+              items={detail.options}
+              selectedItem={selectedDetails[detailIndex][`value_${locale}`]}
+              onChange={({ index: optionIndex }) => {
+                const option = detail.options[optionIndex];
 
-              const selectedDetailsCopy = selectedDetails.slice();
-              selectedDetailsCopy[detailIndex].value_ar = option.name_ar;
-              selectedDetailsCopy[detailIndex].value_en = option.name_en;
+                const selectedDetailsCopy = selectedDetails.map((detail) =>
+                  Object.assign({}, detail)
+                );
+                selectedDetailsCopy[detailIndex].value_ar = option.name_ar;
+                selectedDetailsCopy[detailIndex].value_en = option.name_en;
 
-              setSelectedDetails(selectedDetailsCopy);
-            }}
-            itemsPerRow={4}
-            required={detail.required}
+                setSelectedDetails(selectedDetailsCopy);
+              }}
+              itemsPerRow={4}
+              required={detail.required}
+            />
+          </React.Fragment>
+        ))}
+
+      {materialDetail && (
+        <>
+          <SubTitle>{materialDetail[`name_${locale}`]}:</SubTitle>
+          <MaterialInputsGroup
+            items={materialDetail.options}
+            materialDetailIndex={materialDetailIndex}
+            selectedDetails={selectedDetails}
+            setSelectedDetails={setSelectedDetails}
+            errorVisible={materialErrorVisible}
+            setErrorVisible={setMaterialErrorVisible}
           />
-        </React.Fragment>
-      ))}
+        </>
+      )}
 
       <ButtonsContainer>
         <PreviousButton onClick={goToPreviousStep} />

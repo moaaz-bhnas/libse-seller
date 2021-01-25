@@ -1,6 +1,6 @@
 const time = {
   delay: {
-    errorMsg: 5000,
+    errorMsg: 10000,
   },
   transition: {
     sidebar: 0.3,

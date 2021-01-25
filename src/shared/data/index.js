@@ -38,7 +38,6 @@ export const categories = [
                   { name_en: "Cashmere", name_ar: "كاشمير" },
                   { name_en: "Jersey", name_ar: "جيرزي" },
                   { name_en: "Linen", name_ar: "كتان" },
-                  { name_en: "Other", name_ar: "أخرى" },
                 ],
                 required: true,
               },

@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { ButtonsContainer } from "../style";
-import { InputWithPrepending } from "../../Input/Index";
+import { InputWithAffix } from "../../Input/Index";
 import { PreviousButton } from "../../Button/Index";
 import styled from "styled-components";
 import { title3 } from "../../Title/style";
@@ -15,15 +15,14 @@ const Information = ({ price, setPrice, onSubmit, goToPreviousStep }) => {
     <>
       <Title>{t(translations, "price")}</Title>
 
-      <InputWithPrepending
-        half
-        prependingText={t(translations, "egp")}
+      <InputWithAffix
+        affixText={t(translations, "egp")}
         label="Price"
         placeholder={t(translations, "pricePlaceholder")}
+        type="number"
         min="1"
         value={price}
         onChange={(event) => setPrice(Number(event.target.value))}
-        required
       />
 
       <ButtonsContainer>

@@ -32,25 +32,3 @@ export const TextArea = styled.textarea`
   width: 100%;
   border-radius: ${measurements.borderRadius.input};
 `;
-
-export const InputContainer = styled.div`
-  display: flex;
-  margin-bottom: 0.8em;
-`;
-
-export const StyledInputWithPrepending = styled.input`
-  ${inputStyles}
-  flex: 1;
-  width: 100%;
-`;
-
-export const Prepending = styled.span`
-  color: #666;
-  background-color: #e9ecef;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid #ddd;
-  border-right: none;
-  flex: 0 0 2.6em;
-`;

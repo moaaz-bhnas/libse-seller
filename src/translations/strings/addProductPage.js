@@ -34,6 +34,7 @@ const strings = {
     apply: "Apply",
     removeImage: "Remove image",
     addImage: "Add image",
+    materialsErrorMsg: "The total of materials proportions must be 100%",
   },
   ar: {
     addProduct: "إضافة منتج",
@@ -70,6 +71,7 @@ const strings = {
     apply: "موافق",
     removeImage: "امسح الصورة",
     addImage: "أضف صورة",
+    materialsErrorMsg: "مجموع نسب المواد لازم يكون 100%",
   },
 };
 
