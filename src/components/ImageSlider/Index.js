@@ -152,7 +152,7 @@ const ImageSlider = ({
   }, []);
 
   const innerWrapperWidth =
-    imageOriginalWidth && imageOriginalWidth < window.innerWidth
+    fullscreen && imageOriginalWidth && imageOriginalWidth < window.innerWidth
       ? imageOriginalWidth + "px"
       : null;
 
