@@ -22,16 +22,11 @@ const ImageSlider = ({
   images,
   activeIndex,
   setActiveIndex,
-  className,
-  imageClassName,
-  style,
-  imageStyle,
   arrowsVisible = true,
   indicatorsVisible = true,
   fullscreen = false,
-  setFullscreenVisible,
+  setFullscreen,
 }) => {
-  console.log("fullscreen: ", fullscreen);
   const sliderRef = useRef();
   const firstInteractive = useRef();
   const lastInteractive = useRef();
@@ -43,7 +38,8 @@ const ImageSlider = ({
 
   useEffect(() => {
     if (fullscreen) firstInteractive.current.focus();
-  }, []);
+    else setTopOffset(0);
+  }, [fullscreen]);
 
   useEffect(() => {
     document.body.addEventListener("keydown", handleKeyDown);
@@ -76,14 +72,14 @@ const ImageSlider = ({
         contentDirection === "ltr" ? goPrev() : goNext();
       }
       if (key === "Escape") {
-        setFullscreenVisible(false);
+        setFullscreen(false);
       }
       if (fullscreen) {
         trapFocus(
           event,
           firstInteractive.current,
           lastInteractive.current,
-          () => setFullscreenVisible(false)
+          () => setFullscreen(false)
         );
       }
     },
@@ -108,15 +104,19 @@ const ImageSlider = ({
     }
   }, [activeIndex]);
 
-  const handleImageButtonClick = useCallback(() => {
-    if (fullscreen) {
-      setFullscreenVisible(false);
-    } else {
-      setFullscreenVisible(true);
-    }
-  }, [fullscreen]);
+  const handleImageButtonClick = useCallback(
+    (event) => {
+      if (fullscreen) {
+        setFullscreen(false);
+      } else {
+        setFullscreen(true);
+        calculateAndSetTopOffset(event);
+      }
+    },
+    [fullscreen, imageOriginalWidth]
+  );
 
-  const calculateFullscreenImageTopOffset = useCallback(
+  const calculateTopOffset = useCallback(
     (event) => {
       const imageWidth =
         imageOriginalWidth > window.innerWidth
@@ -132,18 +132,17 @@ const ImageSlider = ({
     [imageOriginalWidth]
   );
 
-  const handleMouseMove = useCallback(
-    (event) => {
-      const topOffset = calculateFullscreenImageTopOffset(event);
+  const setTopOffset = useCallback(
+    (topOffset) => {
       sliderRef.current.style.marginTop = `-${topOffset}px`;
     },
-    [imageOriginalWidth]
+    [sliderRef.current]
   );
 
-  const handleMouseOver = useCallback(
+  const calculateAndSetTopOffset = useCallback(
     (event) => {
-      const topOffset = calculateFullscreenImageTopOffset(event);
-      sliderRef.current.style.marginTop = `-${topOffset}px`;
+      const topOffset = calculateTopOffset(event);
+      setTopOffset(topOffset);
     },
     [imageOriginalWidth]
   );
@@ -154,39 +153,33 @@ const ImageSlider = ({
 
   const innerWrapperWidth =
     imageOriginalWidth && imageOriginalWidth < window.innerWidth
-      ? imageOriginalWidth
+      ? imageOriginalWidth + "px"
       : null;
-  console.log("innerWrapperWidth: ", innerWrapperWidth);
 
   return (
     <Wrapper fullscreen={fullscreen}>
       <InnerWrapper fullscreen={fullscreen} width={innerWrapperWidth}>
         <Slider
-          ref={sliderRef}
-          style={style}
-          className={className}
           fullscreen={fullscreen}
-          onMouseMove={fullscreen ? handleMouseMove : null}
-          onMouseOver={fullscreen ? handleMouseOver : null}
+          ref={sliderRef}
+          onMouseMove={fullscreen ? calculateAndSetTopOffset : null}
         >
           <List>
             {images.map((image, index) => (
               <Slide
+                fullscreen={fullscreen}
                 key={image}
                 activeIndex={activeIndex}
                 contentDirection={contentDirection}
-                fullscreen={fullscreen}
               >
                 <ImageButton
+                  fullscreen={fullscreen}
                   tabIndex={index === activeIndex ? 0 : -1}
                   onClick={handleImageButtonClick}
-                  fullscreen={fullscreen}
                   ref={index === activeIndex ? firstInteractive : null}
                 >
                   <Image
                     fullscreen={fullscreen}
-                    style={imageStyle}
-                    className={imageClassName}
                     src={image}
                     alt=""
                     onLoad={index === activeIndex ? handleImageLoad : null}
@@ -199,7 +192,6 @@ const ImageSlider = ({
           {arrowsVisible && (
             <>
               <PreviousButton
-                fullscreen={fullscreen}
                 gap={
                   fullscreen && window.innerWidth > imageOriginalWidth
                     ? (window.innerWidth - imageOriginalWidth) / 2
@@ -217,7 +209,6 @@ const ImageSlider = ({
               </PreviousButton>
 
               <NextButton
-                fullscreen={fullscreen}
                 gap={
                   fullscreen && window.innerWidth > imageOriginalWidth
                     ? (window.innerWidth - imageOriginalWidth) / 2
@@ -238,7 +229,6 @@ const ImageSlider = ({
 
           {indicatorsVisible && (
             <Indicators
-              fullscreen={fullscreen}
               images={images}
               activeIndex={activeIndex}
               onClick={({ event, index }) => {
@@ -256,10 +246,9 @@ const ImageSlider = ({
   );
 };
 
-const fullscreenStyles = css`
+const wrapperFullscreenStyles = css`
   display: flex;
   justify-content: center;
-  align-items: center;
 
   position: fixed;
   top: 0;
@@ -272,20 +261,17 @@ const fullscreenStyles = css`
 `;
 
 const Wrapper = styled.div`
-  ${({ fullscreen }) => fullscreen && fullscreenStyles}
+  ${({ fullscreen }) => fullscreen && wrapperFullscreenStyles}
 `;
 
 const InnerWrapper = styled.div`
-  width: ${({ fullscreen, width }) => (fullscreen ? width + "px" : null)};
+  position: relative;
+  width: ${({ width }) => width};
 `;
 
 const Slider = styled.div`
-  position: relative;
-  margin-top: ${({ fullscreen }) =>
-    !fullscreen ? "initial !important" : null};
-
   .imageSlider__indicators {
-    position: ${({ fullscreen }) => (fullscreen ? "fixed" : "absolute")};
+    position: absolute;
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
@@ -335,7 +321,7 @@ const Image = styled.img`
 `;
 
 const DirectionButton = styled.button`
-  position: ${({ fullscreen }) => (fullscreen ? "fixed" : "absolute")};
+  position: absolute;
   top: 50%;
   /* transform: translateY(-50%); */
   width: 4em;

@@ -104,7 +104,7 @@ const ProductPage = ({
                 <FirstColumn>
                   <ImageSlider
                     fullscreen={fullscreenVisible}
-                    setFullscreenVisible={setFullscreenVisible}
+                    setFullscreen={setFullscreenVisible}
                     images={activeColor.images}
                     activeIndex={activeImageIndex}
                     setActiveIndex={setActiveImageIndex}
