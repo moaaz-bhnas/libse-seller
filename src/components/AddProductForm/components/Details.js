@@ -19,6 +19,7 @@ import useTranslation from "../../../hooks/useTranslation";
 import MaterialInputsGroup from "./MaterialInputsGroup";
 import time from "../../../shared/time";
 import calculateProportionsTotal from "../../../utils/calculateMaterialsProportionsTotal";
+import cloneArrayOfObjects from "../../../utils/cloneArrayOfObjects";
 
 const Details = ({
   selectedCategory,
@@ -97,9 +98,7 @@ const Details = ({
             onChange={({ index: optionIndex }) => {
               const option = detail.options[optionIndex];
 
-              const selectedDetailsCopy = selectedDetails.map((detail) =>
-                Object.assign({}, detail)
-              );
+              const selectedDetailsCopy = cloneArrayOfObjects(selectedDetails);
               selectedDetailsCopy[detailIndex].value_ar = option.name_ar;
               selectedDetailsCopy[detailIndex].value_en = option.name_en;
 
