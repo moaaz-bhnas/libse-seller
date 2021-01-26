@@ -44,7 +44,7 @@ const Product = ({ product, seller, inFavorites }) => {
       <ProductContainer>
         <Link passHref href={href}>
           <PreviewLink>
-            <Preview images={sortedImages.slice(1)} />
+            <Preview images={sortedImages.slice(0, 2)} />
           </PreviewLink>
         </Link>
 
