@@ -70,6 +70,7 @@ const ImageUploader = ({
               <Icon src={removeIcon} alt={t(translations, "removeImage")} />
             </RemoveButton>
             <OrderInput
+              aria-label="image order"
               type="number"
               min={1}
               max={4}
