@@ -8,12 +8,12 @@ import errorIcon from "../../../img/error.svg";
 import translations from "../../../translations/strings/addProductPage";
 import useTranslation from "../../../hooks/useTranslation";
 import deepClone from "../../../utils/deepClone";
+import cloneArrayOfObjects from "../../../utils/cloneArrayOfObjects";
+import calculateProportionsTotal from "../../../utils/calculateMaterialsProportionsTotal";
 
 const MaterialInputsGroup = ({
-  items,
-  materialDetailIndex,
-  selectedDetails,
-  setSelectedDetails,
+  selectedMaterials,
+  setSelectedMaterials,
   errorVisible,
   setErrorVisible,
 }) => {
@@ -25,38 +25,24 @@ const MaterialInputsGroup = ({
     (event, index) => {
       const proportion = Number(event.target.value);
 
-      const selectedDetailsCopy = deepClone(selectedDetails);
-      const materialDetail = selectedDetailsCopy[materialDetailIndex];
-      materialDetail.value[index].proportion = proportion;
+      const selectedMaterialsCopy = cloneArrayOfObjects(selectedMaterials);
+      selectedMaterialsCopy[index].proportion = proportion;
 
-      const totalOfProportions = calculateTotalOfProportions(
-        materialDetail.value
-      );
-      if (totalOfProportions > 100) {
+      const proportionsTotal = calculateProportionsTotal(selectedMaterialsCopy);
+      if (proportionsTotal > 100) {
         setErrorVisible(true);
         return;
       }
 
-      setSelectedDetails(selectedDetailsCopy);
+      setSelectedMaterials(selectedMaterialsCopy);
     },
-    [selectedDetails]
+    [selectedMaterials]
   );
-
-  const calculateTotalOfProportions = useCallback((materials) => {
-    return materials.reduce((accumulator, currentMaterial) => {
-      const { proportion } = currentMaterial;
-      return accumulator + (proportion ? proportion : 0);
-    }, 0);
-  }, []);
 
   return (
     <>
       <InputsGroup>
-        {items.map((item, index) => {
-          const { proportion } = selectedDetails[materialDetailIndex].value[
-            index
-          ];
-
+        {selectedMaterials.map((material, index) => {
           return (
             <Label key={index} contentDirection={contentDirection}>
               <InputContainer>
@@ -67,13 +53,13 @@ const MaterialInputsGroup = ({
                   type="number"
                   min="0"
                   max="100"
-                  value={proportion || ""}
+                  value={material.proportion}
                   onChange={(event) => handleChange(event, index)}
                   inputClassname="addProduct__materialInput"
                   required={false}
                 />
               </InputContainer>
-              {item[`name_${locale}`]}
+              {material[`name_${locale}`]}
             </Label>
           );
         })}

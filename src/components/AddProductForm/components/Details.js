@@ -18,6 +18,7 @@ import strings from "../../../translations/strings/addProductPage";
 import useTranslation from "../../../hooks/useTranslation";
 import MaterialInputsGroup from "./MaterialInputsGroup";
 import time from "../../../shared/time";
+import calculateProportionsTotal from "../../../utils/calculateMaterialsProportionsTotal";
 
 const Details = ({
   selectedCategory,
@@ -28,6 +29,8 @@ const Details = ({
   details,
   selectedDetails,
   setSelectedDetails,
+  selectedMaterials,
+  setSelectedMaterials,
   goToPreviousStep,
   onStepSubmit,
   finished,
@@ -39,27 +42,23 @@ const Details = ({
   const [materialErrorVisible, setMaterialErrorVisible] = useState(false);
   useEffect(() => {
     if (materialErrorVisible) {
-      setTimeout(function clearError() {
+      var errorTimer = setTimeout(function clearError() {
         setMaterialErrorVisible(false);
       }, time.delay.errorMsg);
     }
+
+    return () => clearTimeout(errorTimer);
   }, [materialErrorVisible]);
 
   const handleSubmit = useCallback(
     (event) => {
-      if (!materialDetailIndex.value_en) {
+      if (calculateProportionsTotal(selectedMaterials) !== 100) {
         setMaterialErrorVisible(true);
       }
       onStepSubmit(event, !finished);
     },
-    [finished, selectedDetails]
+    [finished, selectedDetails, selectedMaterials]
   );
-
-  const materialDetailIndex = selectedDetails.findIndex(
-    (detail) => detail.name_en === "Material"
-  );
-  const materialDetail =
-    materialDetailIndex && selectedDetails[materialDetailIndex];
 
   return (
     <>
@@ -88,40 +87,36 @@ const Details = ({
         required={true}
       />
 
-      {details
-        .filter((detail) => detail.name_en !== "Material")
-        .map((detail, detailIndex) => (
-          <React.Fragment key={detailIndex}>
-            <SubTitle>{detail[`name_${locale}`]}:</SubTitle>
-            <RadioButtonsGroup
-              name={detail[`name_${locale}`]}
-              items={detail.options}
-              selectedItem={selectedDetails[detailIndex][`value_${locale}`]}
-              onChange={({ index: optionIndex }) => {
-                const option = detail.options[optionIndex];
+      {details.map((detail, detailIndex) => (
+        <React.Fragment key={detailIndex}>
+          <SubTitle>{detail[`name_${locale}`]}:</SubTitle>
+          <RadioButtonsGroup
+            name={detail[`name_${locale}`]}
+            items={detail.options}
+            selectedItem={selectedDetails[detailIndex][`value_${locale}`]}
+            onChange={({ index: optionIndex }) => {
+              const option = detail.options[optionIndex];
 
-                const selectedDetailsCopy = selectedDetails.map((detail) =>
-                  Object.assign({}, detail)
-                );
-                selectedDetailsCopy[detailIndex].value_ar = option.name_ar;
-                selectedDetailsCopy[detailIndex].value_en = option.name_en;
+              const selectedDetailsCopy = selectedDetails.map((detail) =>
+                Object.assign({}, detail)
+              );
+              selectedDetailsCopy[detailIndex].value_ar = option.name_ar;
+              selectedDetailsCopy[detailIndex].value_en = option.name_en;
 
-                setSelectedDetails(selectedDetailsCopy);
-              }}
-              itemsPerRow={4}
-              required={detail.required}
-            />
-          </React.Fragment>
-        ))}
+              setSelectedDetails(selectedDetailsCopy);
+            }}
+            itemsPerRow={4}
+            required={detail.required}
+          />
+        </React.Fragment>
+      ))}
 
-      {materialDetail && (
+      {selectedMaterials && (
         <>
-          <SubTitle>{materialDetail[`name_${locale}`]}:</SubTitle>
+          <SubTitle>{t(strings, "materials")}:</SubTitle>
           <MaterialInputsGroup
-            items={materialDetail.value}
-            materialDetailIndex={materialDetailIndex}
-            selectedDetails={selectedDetails}
-            setSelectedDetails={setSelectedDetails}
+            selectedMaterials={selectedMaterials}
+            setSelectedMaterials={setSelectedMaterials}
             errorVisible={materialErrorVisible}
             setErrorVisible={setMaterialErrorVisible}
           />

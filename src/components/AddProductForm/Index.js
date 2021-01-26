@@ -20,6 +20,8 @@ import useTranslation from "../../hooks/useTranslation";
 import strings from "../../translations/strings/addProductPage";
 import { ContentDirectionContext } from "../../contexts/contentDirection";
 import deepClone from "../../utils/deepClone";
+import cloneArrayOfObjects from "../../utils/cloneArrayOfObjects";
+import calculateProportionsTotal from "../../utils/calculateMaterialsProportionsTotal";
 
 const AddProductForm = () => {
   const { locale } = useContext(LocaleContext);
@@ -55,43 +57,53 @@ const AddProductForm = () => {
   useUpdateEffect(
     function clearSelectedDetails() {
       setSelectedDetails(
-        selectedDetails.map((detail) => {
-          return { ...detail, value_ar: "", value_en: "" };
-        })
+        selectedDetails.map((detail) => ({
+          ...detail,
+          value_ar: "",
+          value_en: "",
+        }))
+      );
+      setSelectedMaterials(
+        selectedMaterials.map((material) => ({
+          ...material,
+          proportion: "",
+        }))
       );
     },
     [selectedCategoryIndex, selectedSubCategoryIndex, selectedGroupIndex]
   ); // re-render
 
   const { details } = selectedGroup;
-  const initialDetailsState = details.map(
-    ({ name_ar, name_en, options, required }) => {
-      if (name_en === "Material") {
-        return {
-          name_ar,
-          name_en,
-          value: deepClone(options),
-          required,
-        };
-      }
-
-      return { name_ar, name_en, value_ar: "", value_en: "", required };
-    }
-  );
+  const initialDetailsState = details.map(({ name_ar, name_en, required }) => ({
+    name_ar,
+    name_en,
+    value_ar: "",
+    value_en: "",
+    required,
+  }));
   const [selectedDetails, setSelectedDetails] = useState(initialDetailsState);
+
+  const { materials } = selectedGroup;
+  const [selectedMaterials, setSelectedMaterials] = useState(
+    materials ? cloneArrayOfObjects(materials) : null
+  );
 
   useUpdateEffect(
     function updateDetailsStepFinishState() {
-      const stepFinished = selectedDetails
+      const detailsFinished = selectedDetails
         .filter((detail) => detail.required)
         .every((detail) => detail.value_ar && detail.value_en);
+      const materialsFinished = materials
+        ? calculateProportionsTotal(selectedMaterials) === 100
+        : true;
+      const stepFinished = detailsFinished && materialsFinished;
 
       stepsDispatch({
         type: "updateFinishState",
         payload: { stepId: 2, finished: stepFinished },
       });
     },
-    [selectedDetails, details]
+    [selectedDetails, selectedMaterials]
   );
 
   const [description, setDescription] = useState("Description"); // Not sure about removing this option yet
@@ -218,6 +230,9 @@ const AddProductForm = () => {
         details: selectedDetails.filter(
           (detail) => detail.value_en !== "Other"
         ),
+        materials:
+          selectedMaterials &&
+          selectedMaterials.filter((material) => material.proportion),
         description,
         colors,
         price,
@@ -277,6 +292,8 @@ const AddProductForm = () => {
             setSelectedGroupIndex={setSelectedGroupIndex}
             selectedDetails={selectedDetails}
             setSelectedDetails={setSelectedDetails}
+            selectedMaterials={selectedMaterials}
+            setSelectedMaterials={setSelectedMaterials}
             goToPreviousStep={goToPreviousStep}
             onStepSubmit={handleStepSubmit}
             finished={steps[1].finished}

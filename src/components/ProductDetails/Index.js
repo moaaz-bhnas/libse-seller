@@ -35,7 +35,7 @@ const ProductDetails = ({ product, activeColor, onColorClick }) => {
       <Hr />
 
       <SubTitle>{t(strings, "details")}</SubTitle>
-      <Details details={product.details} />
+      <Details details={product.details} materials={product.materials} />
     </StyledProductDetails>
   );
 };
