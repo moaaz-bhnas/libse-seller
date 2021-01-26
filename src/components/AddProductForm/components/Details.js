@@ -55,10 +55,11 @@ const Details = ({
     [finished, selectedDetails]
   );
 
-  const materialDetailIndex = details.findIndex(
+  const materialDetailIndex = selectedDetails.findIndex(
     (detail) => detail.name_en === "Material"
   );
-  const materialDetail = details[materialDetailIndex];
+  const materialDetail =
+    materialDetailIndex && selectedDetails[materialDetailIndex];
 
   return (
     <>
@@ -117,7 +118,7 @@ const Details = ({
         <>
           <SubTitle>{materialDetail[`name_${locale}`]}:</SubTitle>
           <MaterialInputsGroup
-            items={materialDetail.options}
+            items={materialDetail.value}
             materialDetailIndex={materialDetailIndex}
             selectedDetails={selectedDetails}
             setSelectedDetails={setSelectedDetails}

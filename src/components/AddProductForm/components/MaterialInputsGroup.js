@@ -1,4 +1,4 @@
-import { memo, useCallback, useContext, useEffect, useState } from "react";
+import { memo, useCallback, useContext } from "react";
 import styled from "styled-components";
 import { InputWithAffix } from "../../Input/Index";
 import { LocaleContext } from "../../../contexts/locale";
@@ -7,11 +7,12 @@ import { ErrorIcon, ErrorMsg } from "../style";
 import errorIcon from "../../../img/error.svg";
 import translations from "../../../translations/strings/addProductPage";
 import useTranslation from "../../../hooks/useTranslation";
+import deepClone from "../../../utils/deepClone";
 
 const MaterialInputsGroup = ({
   items,
-  selectedDetails,
   materialDetailIndex,
+  selectedDetails,
   setSelectedDetails,
   errorVisible,
   setErrorVisible,
@@ -20,79 +21,31 @@ const MaterialInputsGroup = ({
   const { contentDirection } = useContext(ContentDirectionContext);
   const { t } = useTranslation();
 
-  const [materialsProportions, setMaterialsProportions] = useState(
-    items.map((detail) => ({
-      name_en: detail.name_en,
-      name_ar: detail.name_ar,
-      proportion: "",
-    }))
-  );
-
-  useEffect(() => {
-    setErrorVisible(false);
-
-    // filter and sort materials that user selected
-    const selectedMaterials = materialsProportions.filter(
-      (material) => material.proportion
-    );
-    const sortedMaterials = selectedMaterials.sort((materialA, materialB) => {
-      return materialB.proportion - materialA.proportion;
-    });
-
-    // set details state
-    const selectedDetailsCopy = selectedDetails.map((detail) =>
-      Object.assign({}, detail)
-    );
-    const materialDetail = selectedDetailsCopy[materialDetailIndex];
-
-    const totalOfProportions = calculateTotalOfProportions(
-      materialsProportions
-    );
-    if (totalOfProportions === 100) {
-      materialDetail.value_en = sortedMaterials.map((material) => ({
-        material: material.name_en,
-        proportion: material.proportion,
-      }));
-      materialDetail.value_ar = sortedMaterials.map((material) => ({
-        material: material.name_ar,
-        proportion: material.proportion,
-      }));
-    } else {
-      materialDetail.value_en = "";
-      materialDetail.value_ar = "";
-    }
-
-    console.log("selectedDetailsCopy: ", selectedDetailsCopy);
-
-    setSelectedDetails(selectedDetailsCopy);
-  }, [materialsProportions]);
-
   const handleChange = useCallback(
     (event, index) => {
       const proportion = Number(event.target.value);
 
-      const materialsProportionsCopy = materialsProportions.map((material) =>
-        Object.assign({}, material)
-      );
-      materialsProportionsCopy[index].proportion = proportion;
+      const selectedDetailsCopy = deepClone(selectedDetails);
+      const materialDetail = selectedDetailsCopy[materialDetailIndex];
+      materialDetail.value[index].proportion = proportion;
 
       const totalOfProportions = calculateTotalOfProportions(
-        materialsProportionsCopy
+        materialDetail.value
       );
-
       if (totalOfProportions > 100) {
         setErrorVisible(true);
         return;
       }
 
-      setMaterialsProportions(materialsProportionsCopy);
+      setSelectedDetails(selectedDetailsCopy);
     },
-    [materialsProportions]
+    [selectedDetails]
   );
 
   const calculateTotalOfProportions = useCallback((materials) => {
     return materials.reduce((accumulator, currentMaterial) => {
-      return accumulator + Number(currentMaterial.proportion);
+      const { proportion } = currentMaterial;
+      return accumulator + (proportion ? proportion : 0);
     }, 0);
   }, []);
 
@@ -100,7 +53,9 @@ const MaterialInputsGroup = ({
     <>
       <InputsGroup>
         {items.map((item, index) => {
-          const label = item[`name_${locale}`];
+          const { proportion } = selectedDetails[materialDetailIndex].value[
+            index
+          ];
 
           return (
             <Label key={index} contentDirection={contentDirection}>
@@ -112,13 +67,13 @@ const MaterialInputsGroup = ({
                   type="number"
                   min="0"
                   max="100"
-                  value={materialsProportions[index].proportion}
+                  value={proportion || ""}
                   onChange={(event) => handleChange(event, index)}
                   inputClassname="addProduct__materialInput"
                   required={false}
                 />
               </InputContainer>
-              {label}
+              {item[`name_${locale}`]}
             </Label>
           );
         })}

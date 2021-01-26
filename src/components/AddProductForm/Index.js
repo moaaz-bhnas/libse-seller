@@ -19,6 +19,7 @@ import { LocaleContext } from "../../contexts/locale";
 import useTranslation from "../../hooks/useTranslation";
 import strings from "../../translations/strings/addProductPage";
 import { ContentDirectionContext } from "../../contexts/contentDirection";
+import deepClone from "../../utils/deepClone";
 
 const AddProductForm = () => {
   const { locale } = useContext(LocaleContext);
@@ -63,17 +64,27 @@ const AddProductForm = () => {
   ); // re-render
 
   const { details } = selectedGroup;
-  const [selectedDetails, setSelectedDetails] = useState(
-    details.map(({ name_ar, name_en, required }) => {
+  const initialDetailsState = details.map(
+    ({ name_ar, name_en, options, required }) => {
+      if (name_en === "Material") {
+        return {
+          name_ar,
+          name_en,
+          value: deepClone(options),
+          required,
+        };
+      }
+
       return { name_ar, name_en, value_ar: "", value_en: "", required };
-    })
+    }
   );
+  const [selectedDetails, setSelectedDetails] = useState(initialDetailsState);
 
   useUpdateEffect(
     function updateDetailsStepFinishState() {
-      const stepFinished = selectedDetails.every(
-        (detail) => detail.value_ar && detail.value_en
-      );
+      const stepFinished = selectedDetails
+        .filter((detail) => detail.required)
+        .every((detail) => detail.value_ar && detail.value_en);
 
       stepsDispatch({
         type: "updateFinishState",
