@@ -9,7 +9,7 @@ const Indicators = (
   return (
     <StyledIndicators className={className} style={style}>
       {images.map((image, index) => (
-        <Indicator key={image}>
+        <Indicator key={index}>
           <Button
             data-active={index === activeIndex}
             active={index === activeIndex}

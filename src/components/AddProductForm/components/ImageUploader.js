@@ -8,9 +8,18 @@ import ImageCropperModal from "./ImageCropperModal";
 import translations from "../../../translations/strings/addProductPage";
 import removeIcon from "../../../img/minus.svg";
 import Add from "../../../svgs/Add";
+import { inputStyles } from "../../Input/style";
+import sortByOrder from "../../../utils/sortByOrder";
 
-const ImageUploader = ({ gallery, addImage, removeImage, colorIndex }) => {
+const ImageUploader = ({
+  gallery,
+  addImage,
+  removeImage,
+  colorIndex,
+  onOrderChange,
+}) => {
   const imageInputRef = useRef(null);
+  const orderInputs = useRef([]);
   const { t } = useTranslation();
   const [src, setSrc] = useState(null);
 
@@ -24,9 +33,11 @@ const ImageUploader = ({ gallery, addImage, removeImage, colorIndex }) => {
     reader.readAsDataURL(file);
   }, []);
 
+  const sortedGallery = sortByOrder(gallery);
+
   return (
     <Container>
-      <Input
+      <AddInput
         id={`imageInput${colorIndex}`}
         type="file"
         accept="image/*"
@@ -52,12 +63,25 @@ const ImageUploader = ({ gallery, addImage, removeImage, colorIndex }) => {
       )}
 
       <Gallery>
-        {gallery.map((item, index) => (
-          <Item key={index}>
+        {sortedGallery.map((item, imageIndex) => (
+          <Item key={imageIndex}>
             <Image src={item.url} alt={t(translations, "productImage")} />
-            <RemoveButton type="button" onClick={() => removeImage(index)}>
+            <RemoveButton type="button" onClick={() => removeImage(imageIndex)}>
               <Icon src={removeIcon} alt={t(translations, "removeImage")} />
             </RemoveButton>
+            <OrderInput
+              type="number"
+              min={1}
+              max={4}
+              value={item.order}
+              onChange={({ target: { value } }) => {
+                orderInputs.current[value - 1].focus();
+                onOrderChange(colorIndex, imageIndex, Number(value));
+              }}
+              ref={(el) => {
+                orderInputs.current[imageIndex] = el;
+              }}
+            />
           </Item>
         ))}
         {gallery.length > 0 && (
@@ -106,7 +130,7 @@ const IconLabel = styled.label`
   }
 `;
 
-const Input = styled.input`
+const AddInput = styled.input`
   position: absolute;
   left: -200rem;
 
@@ -161,6 +185,17 @@ const RemoveButton = styled.button`
 const Icon = styled.img`
   width: 100%;
   margin: auto;
+`;
+
+const OrderInput = styled.input`
+  ${inputStyles}
+  width: 2em;
+  height: 1.5em;
+  text-align: center;
+  padding: 0;
+  position: absolute;
+  bottom: 0.375em;
+  right: 0.375em;
 `;
 
 export default memo(ImageUploader);

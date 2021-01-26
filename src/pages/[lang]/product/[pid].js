@@ -15,6 +15,7 @@ import { LayoutContext } from "../../../contexts/layout";
 import ProductDetails from "../../../components/ProductDetails/Index";
 import measurements from "../../../shared/measurements";
 import { useRouter } from "next/router";
+import sortByOrder from "../../../utils/sortByOrder";
 
 export async function getServerSideProps(context) {
   const {
@@ -105,7 +106,7 @@ const ProductPage = ({
                   <ImageSlider
                     fullscreen={fullscreenVisible}
                     setFullscreen={setFullscreenVisible}
-                    images={activeColor.images}
+                    images={sortByOrder(activeColor.images)}
                     activeIndex={activeImageIndex}
                     setActiveIndex={setActiveImageIndex}
                   />

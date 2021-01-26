@@ -140,7 +140,7 @@ const ColorsAndSizes = ({
 
       const updatedColors = colors.map((color, i) => {
         if (i === colorIndex) {
-          color.images.push(image);
+          color.images.push({ ...image, order: color.images.length + 1 });
         }
         return color;
       });
@@ -154,6 +154,25 @@ const ColorsAndSizes = ({
       const updatedColors = colors.map((color, i) => {
         if (i === colorIndex) {
           color.images.splice(imageIndex, 1);
+        }
+        return color;
+      });
+      setColors(updatedColors);
+    },
+    [colors]
+  );
+
+  const handleImageOrderChange = useCallback(
+    (colorIndex, imageIndex, newOrder) => {
+      const updatedColors = colors.map((color, index) => {
+        if (index === colorIndex) {
+          const oldOrder = color.images[imageIndex].order;
+          color.images.forEach((image) => {
+            if (image.order === newOrder) {
+              image.order = oldOrder;
+            }
+          });
+          color.images[imageIndex].order = newOrder;
         }
         return color;
       });
@@ -222,6 +241,7 @@ const ColorsAndSizes = ({
               sizeError={sizeError}
               addImage={addImage}
               removeImage={removeImage}
+              onImageOrderChange={handleImageOrderChange}
               imageError={imageError}
             />
           );

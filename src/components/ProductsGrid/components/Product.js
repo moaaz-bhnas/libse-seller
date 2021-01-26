@@ -11,6 +11,7 @@ import styled from "styled-components";
 import theme from "../../../shared/theme";
 import AvailableColors from "../../AvailableColors/Index";
 import Preview from "./Preview";
+import sortByOrder from "../../../utils/sortByOrder";
 
 const Product = ({ product, seller, inFavorites }) => {
   const { colors } = product;
@@ -28,6 +29,7 @@ const Product = ({ product, seller, inFavorites }) => {
     product.colors.find((color) => color.default) || colors[0];
   const [activeColor, setActiveColor] = useState(defaultColor);
   const { images } = activeColor;
+  const sortedImages = sortByOrder(images);
   const href = `/${locale}/product/${product.id}?color=${activeColor.name_en}`;
 
   const handleLikeToggle = useCallback(() => {
@@ -42,7 +44,7 @@ const Product = ({ product, seller, inFavorites }) => {
       <ProductContainer>
         <Link passHref href={href}>
           <PreviewLink>
-            <Preview images={images.length > 1 ? images.slice(1) : images} />
+            <Preview images={sortedImages.slice(1)} />
           </PreviewLink>
         </Link>
 

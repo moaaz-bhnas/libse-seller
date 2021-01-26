@@ -12,6 +12,7 @@ import AvailableSizes from "./components/AvailableSizes";
 import Details from "./components/Details";
 
 const ProductDetails = ({ product, activeColor, onColorClick }) => {
+  console.log("product: ", product);
   const { locale } = useContext(LocaleContext);
   const { t } = useTranslation(locale);
 

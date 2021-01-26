@@ -6,10 +6,10 @@ const Preview = ({ images }) => {
 
   return (
     <Image
-      src={images[activeImageIndex]}
+      src={images[activeImageIndex].url}
       alt=""
-      onMouseOver={images.length > 1 ? () => setActiveImageIndex(1) : null}
-      onMouseOut={images.length > 1 ? () => setActiveImageIndex(0) : null}
+      onMouseOver={() => setActiveImageIndex(1)}
+      onMouseOut={() => setActiveImageIndex(0)}
     />
   );
 };

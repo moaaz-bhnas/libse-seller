@@ -70,7 +70,8 @@ const uploadProductToFirestore = async (seller_id, product, callback) => {
 export const addProduct = ({ seller_id, product, callback }) => {
   const { colors } = product;
 
-  const uploadImage = (imagesArray, imageIndex, file) => {
+  const uploadImage = (image, imageIndex, imagesArray) => {
+    const { file, order } = image;
     const uuid = generateUuid();
     const fileExtenstion = file.name.split(".")[1];
     const storageRef = firebase
@@ -89,9 +90,9 @@ export const addProduct = ({ seller_id, product, callback }) => {
       },
       function complete() {
         storageRef.getDownloadURL().then((url) => {
-          imagesArray[imageIndex] = url;
+          imagesArray[imageIndex] = { url, order };
           const allURLsReady = colors.every((color) => {
-            return color.images.every((image) => typeof image === "string");
+            return color.images.every((image) => !image.file);
           });
 
           if (allURLsReady) {
@@ -106,8 +107,7 @@ export const addProduct = ({ seller_id, product, callback }) => {
       const { images } = color;
 
       images.forEach((image, imageIndex, imagesArray) => {
-        const { file } = image;
-        uploadImage(imagesArray, imageIndex, file);
+        uploadImage(image, imageIndex, imagesArray);
       });
     });
   })();

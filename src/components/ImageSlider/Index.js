@@ -168,7 +168,7 @@ const ImageSlider = ({
             {images.map((image, index) => (
               <Slide
                 fullscreen={fullscreen}
-                key={image}
+                key={image.url}
                 activeIndex={activeIndex}
                 contentDirection={contentDirection}
               >
@@ -180,7 +180,7 @@ const ImageSlider = ({
                 >
                   <Image
                     fullscreen={fullscreen}
-                    src={image}
+                    src={image.url}
                     alt=""
                     onLoad={index === activeIndex ? handleImageLoad : null}
                   />

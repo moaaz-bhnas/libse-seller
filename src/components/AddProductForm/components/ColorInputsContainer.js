@@ -29,6 +29,7 @@ const ColorInputsContainer = ({
   addImage,
   imageError,
   removeImage,
+  onImageOrderChange,
 }) => {
   const { t } = useTranslation();
   const { locale } = useContext(LocaleContext);
@@ -132,6 +133,7 @@ const ColorInputsContainer = ({
         addImage={(image) => addImage(colorIndex, image)}
         removeImage={(imageIndex) => removeImage(colorIndex, imageIndex)}
         colorIndex={colorIndex}
+        onOrderChange={onImageOrderChange}
       />
       {imageError.visible && imageError.index === colorIndex && (
         <ErrorMsg className="inputContainer__errMsg" role="alert">
