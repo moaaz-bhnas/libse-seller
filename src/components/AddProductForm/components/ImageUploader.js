@@ -73,7 +73,7 @@ const ImageUploader = ({
               aria-label="image order"
               type="number"
               min={1}
-              max={4}
+              max={sortedGallery.length}
               value={item.order}
               onChange={({ target: { value } }) => {
                 orderInputs.current[value - 1].focus();

@@ -23,6 +23,7 @@ const MaterialInputsGroup = ({
   const handleChange = useCallback(
     (event, index) => {
       const proportion = Number(event.target.value);
+      // console.log("proportion: ", proportion);
 
       const selectedMaterialsCopy = cloneArrayOfObjects(selectedMaterials);
       selectedMaterialsCopy[index].proportion = proportion;
@@ -52,7 +53,7 @@ const MaterialInputsGroup = ({
                   type="number"
                   min="0"
                   max="100"
-                  value={material.proportion}
+                  value={material.proportion.toString()}
                   onChange={(event) => handleChange(event, index)}
                   inputClassname="addProduct__materialInput"
                   required={false}
