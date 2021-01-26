@@ -39,50 +39,33 @@ const MaterialInputsGroup = ({
       return materialB.proportion - materialA.proportion;
     });
 
-    // form strings (e.g. 80% cotton, 20% polyster)
-    const materialFinalString_en = formMaterialFinalString(
-      sortedMaterials,
-      "en"
-    );
-    const materialFinalString_ar = formMaterialFinalString(
-      sortedMaterials,
-      "ar"
-    );
-
     // set details state
     const selectedDetailsCopy = selectedDetails.map((detail) =>
       Object.assign({}, detail)
     );
     const materialDetail = selectedDetailsCopy[materialDetailIndex];
+
     const totalOfProportions = calculateTotalOfProportions(
       materialsProportions
     );
-
-    if (totalOfProportions !== 100) {
+    if (totalOfProportions === 100) {
+      materialDetail.value_en = sortedMaterials.map((material) => ({
+        material: material.name_en,
+        proportion: material.proportion,
+      }));
+      materialDetail.value_ar = sortedMaterials.map((material) => ({
+        material: material.name_ar,
+        proportion: material.proportion,
+      }));
+    } else {
       materialDetail.value_en = "";
       materialDetail.value_ar = "";
-    } else {
-      materialDetail.value_en = materialFinalString_en;
-      materialDetail.value_ar = materialFinalString_ar;
     }
+
+    console.log("selectedDetailsCopy: ", selectedDetailsCopy);
 
     setSelectedDetails(selectedDetailsCopy);
   }, [materialsProportions]);
-
-  const formMaterialFinalString = useCallback((materials, locale) => {
-    const separator = locale === "ar" ? "،" : ",";
-
-    const string = materials.reduce(
-      (accumulator, currentMaterial, index, array) => {
-        return (accumulator += `${currentMaterial.proportion}% ${
-          currentMaterial[`name_${locale}`]
-        }${index < array.length - 1 ? `${separator} ` : ""}`);
-      },
-      ""
-    );
-
-    return string;
-  }, []);
 
   const handleChange = useCallback(
     (event, index) => {

@@ -9,7 +9,19 @@ const Details = ({ details }) => {
     <StyledDetails>
       {details.map((detail, index) => (
         <Detail key={index}>
-          {detail[`name_${locale}`]}: {detail[`value_${locale}`]}
+          {detail[`name_${locale}`]}:{" "}
+          {detail.name_en === "Material"
+            ? detail[`value_${locale}`].reduce(
+                (accumulator, cuurentMaterial, index, array) => {
+                  const { material, proportion } = cuurentMaterial;
+                  const last = index === array.length - 1;
+                  return (accumulator += `${proportion} ${material}${
+                    !last ? ", " : ""
+                  }`);
+                },
+                ""
+              )
+            : detail[`value_${locale}`]}
         </Detail>
       ))}
     </StyledDetails>

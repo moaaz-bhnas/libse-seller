@@ -71,14 +71,8 @@ const AddProductForm = () => {
 
   useUpdateEffect(
     function updateDetailsStepFinishState() {
-      const stepFinished = selectedDetails
-        .filter((detail) => detail.required)
-        .every((detail) => detail.value_ar && detail.value_en);
-      console.log(
-        "selectedDetails: ",
-        selectedDetails,
-        "stepFinished: ",
-        stepFinished
+      const stepFinished = selectedDetails.every(
+        (detail) => detail.value_ar && detail.value_en
       );
 
       stepsDispatch({
