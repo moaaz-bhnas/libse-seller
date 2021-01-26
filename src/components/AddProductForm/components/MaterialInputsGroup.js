@@ -7,7 +7,6 @@ import { ErrorIcon, ErrorMsg } from "../style";
 import errorIcon from "../../../img/error.svg";
 import translations from "../../../translations/strings/addProductPage";
 import useTranslation from "../../../hooks/useTranslation";
-import deepClone from "../../../utils/deepClone";
 import cloneArrayOfObjects from "../../../utils/cloneArrayOfObjects";
 import calculateProportionsTotal from "../../../utils/calculateMaterialsProportionsTotal";
 

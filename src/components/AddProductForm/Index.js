@@ -19,7 +19,6 @@ import { LocaleContext } from "../../contexts/locale";
 import useTranslation from "../../hooks/useTranslation";
 import strings from "../../translations/strings/addProductPage";
 import { ContentDirectionContext } from "../../contexts/contentDirection";
-import deepClone from "../../utils/deepClone";
 import cloneArrayOfObjects from "../../utils/cloneArrayOfObjects";
 import calculateProportionsTotal from "../../utils/calculateMaterialsProportionsTotal";
 
