@@ -3,8 +3,12 @@ import Product from "./components/Product";
 import { AuthContext } from "../../contexts/auth";
 import styled from "styled-components";
 import { ProfileContext } from "../../contexts/profile";
+import { title } from "../Title/style";
+import useTranslation from "../../hooks/useTranslation";
+import strings from "../../translations/strings/productsPage";
 
 const ProductsGrid = ({ products, seller }) => {
+  const { t } = useTranslation();
   const { user } = useContext(AuthContext);
   const {
     profile: { favorites },
@@ -21,20 +25,27 @@ const ProductsGrid = ({ products, seller }) => {
   );
 
   return (
-    user && (
-      <Grid>
-        {products.map((product) => (
-          <Product
-            key={product.id}
-            product={product}
-            seller={seller}
-            inFavorites={checkFavorite(product.id)}
-          />
-        ))}
-      </Grid>
-    )
+    <>
+      <Title>{t(strings, "myProducts")}</Title>
+      {user && (
+        <Grid>
+          {products.map((product) => (
+            <Product
+              key={product.id}
+              product={product}
+              seller={seller}
+              inFavorites={checkFavorite(product.id)}
+            />
+          ))}
+        </Grid>
+      )}
+    </>
   );
 };
+
+const Title = styled.h2`
+  ${title}
+`;
 
 const Grid = styled.ul`
   display: flex;

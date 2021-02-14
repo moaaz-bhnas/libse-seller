@@ -1,9 +1,5 @@
 import { AddProductButton } from "../../components/Button/Index";
-import styled from "styled-components";
-import { title } from "../../components/Title/style";
 import ProductsGrid from "../../components/ProductsGrid/Index";
-import useTranslation from "../../hooks/useTranslation";
-import strings from "../../translations/strings/productsPage";
 import Layout from "../../components/Layout/Index";
 import { getProfile, getSellerProducts } from "../../api/firebase";
 import { AuthProvider } from "../../contexts/auth";
@@ -53,7 +49,7 @@ export async function getServerSideProps(context) {
 }
 
 const IndexPage = ({ lang, serverUser, serverProfile, products }) => {
-  const { t } = useTranslation(lang);
+  console.log("lang: ", lang);
 
   return (
     <AuthProvider serverUser={serverUser}>
@@ -63,8 +59,6 @@ const IndexPage = ({ lang, serverUser, serverProfile, products }) => {
             <Layout>
               <AddProductButton />
 
-              <Title>{t(strings, "myProducts")}</Title>
-
               {products && <ProductsGrid products={products} seller />}
             </Layout>
           </ContentDirectionProvider>
@@ -73,9 +67,5 @@ const IndexPage = ({ lang, serverUser, serverProfile, products }) => {
     </AuthProvider>
   );
 };
-
-const Title = styled.h2`
-  ${title}
-`;
 
 export default IndexPage;
