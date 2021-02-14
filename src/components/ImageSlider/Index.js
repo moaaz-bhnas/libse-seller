@@ -34,7 +34,7 @@ const ImageSlider = ({
   const { contentDirection } = useContext(ContentDirectionContext);
   const { t } = useTranslation();
 
-  const [imageOriginalWidth, setImageOriginalWidth] = useState(null);
+  const [imageNaturalDimensions, setImageOriginalWidth] = useState(null);
 
   useEffect(() => {
     if (fullscreen) firstInteractive.current.focus();
@@ -113,23 +113,18 @@ const ImageSlider = ({
         calculateAndSetTopOffset(event);
       }
     },
-    [fullscreen, imageOriginalWidth]
+    [fullscreen, imageNaturalDimensions]
   );
 
   const calculateTopOffset = useCallback(
     (event) => {
-      const imageWidth =
-        imageOriginalWidth > window.innerWidth
-          ? window.innerWidth
-          : imageOriginalWidth;
-      const imageHeight = imageWidth / measurements.ratio.productImage;
-      const imageOffset = imageHeight - window.innerHeight;
+      const imageOffset = imageNaturalDimensions.height - window.innerHeight;
       const ratio = imageOffset / window.innerHeight;
       const { pageY } = event;
       const topOffset = pageY * ratio;
       return topOffset;
     },
-    [imageOriginalWidth]
+    [imageNaturalDimensions]
   );
 
   const setTopOffset = useCallback(
@@ -144,21 +139,32 @@ const ImageSlider = ({
       const topOffset = calculateTopOffset(event);
       setTopOffset(topOffset);
     },
-    [imageOriginalWidth]
+    [imageNaturalDimensions]
   );
 
-  const handleImageLoad = useCallback(({ target: { naturalWidth } }) => {
-    setImageOriginalWidth(naturalWidth);
-  }, []);
+  const handleImageLoad = useCallback(
+    ({ target: { naturalWidth, naturalHeight } }) => {
+      setImageOriginalWidth({ width: naturalWidth, height: naturalHeight });
+    },
+    []
+  );
 
-  const innerWrapperWidth =
-    fullscreen && imageOriginalWidth && imageOriginalWidth < window.innerWidth
-      ? imageOriginalWidth + "px"
-      : null;
+  if (
+    fullscreen &&
+    imageNaturalDimensions &&
+    imageNaturalDimensions.width < window.innerWidth
+  ) {
+    var innerWrapperWidth = imageNaturalDimensions.width + "px";
+    var innerWrapperHeight = imageNaturalDimensions.height + "px";
+  }
 
   return (
     <Wrapper fullscreen={fullscreen}>
-      <InnerWrapper fullscreen={fullscreen} width={innerWrapperWidth}>
+      <InnerWrapper
+        fullscreen={fullscreen}
+        width={innerWrapperWidth}
+        height={innerWrapperHeight}
+      >
         <Slider
           fullscreen={fullscreen}
           ref={sliderRef}
@@ -193,8 +199,8 @@ const ImageSlider = ({
             <>
               <PreviousButton
                 gap={
-                  fullscreen && window.innerWidth > imageOriginalWidth
-                    ? (window.innerWidth - imageOriginalWidth) / 2
+                  fullscreen && window.innerWidth > imageNaturalDimensions.width
+                    ? (window.innerWidth - imageNaturalDimensions.width) / 2
                     : 0
                 }
                 contentDirection={contentDirection}
@@ -210,8 +216,8 @@ const ImageSlider = ({
 
               <NextButton
                 gap={
-                  fullscreen && window.innerWidth > imageOriginalWidth
-                    ? (window.innerWidth - imageOriginalWidth) / 2
+                  fullscreen && window.innerWidth > imageNaturalDimensions.width
+                    ? (window.innerWidth - imageNaturalDimensions.width) / 2
                     : 0
                 }
                 contentDirection={contentDirection}
@@ -249,6 +255,7 @@ const ImageSlider = ({
 const wrapperFullscreenStyles = css`
   display: flex;
   justify-content: center;
+  align-items: center;
 
   position: fixed;
   top: 0;
@@ -267,6 +274,7 @@ const Wrapper = styled.div`
 const InnerWrapper = styled.div`
   position: relative;
   width: ${({ width }) => width};
+  height: ${({ height }) => height};
 `;
 
 const Slider = styled.div`
