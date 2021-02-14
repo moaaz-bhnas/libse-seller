@@ -88,7 +88,7 @@ const Details = ({
         required={true}
       />
 
-      {details.map((detail, detailIndex) => (
+      {selectedDetails.map((detail, detailIndex) => (
         <React.Fragment key={detailIndex}>
           <SubTitle>{detail[`name_${locale}`]}:</SubTitle>
           <RadioButtonsGroup

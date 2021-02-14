@@ -16,6 +16,7 @@ const MaterialInputsGroup = ({
   errorVisible,
   setErrorVisible,
 }) => {
+  console.log("selectedMaterials: ", selectedMaterials);
   const { locale } = useContext(LocaleContext);
   const { contentDirection } = useContext(ContentDirectionContext);
   const { t } = useTranslation();

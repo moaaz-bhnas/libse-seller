@@ -53,38 +53,31 @@ const AddProductForm = () => {
   const [selectedGroupIndex, setSelectedGroupIndex] = useState(0);
   const { groups } = selectedSubCategory;
   const selectedGroup = groups[selectedGroupIndex];
+  const { details } = selectedGroup;
+  const { materials } = selectedGroup;
   useUpdateEffect(
     function clearSelectedDetails() {
-      setSelectedDetails(
-        selectedDetails.map((detail) => ({
-          ...detail,
-          value_ar: "",
-          value_en: "",
-        }))
-      );
-      setSelectedMaterials(
-        selectedMaterials.map((material) => ({
-          ...material,
-          proportion: "",
-        }))
-      );
+      console.log("test");
+      setSelectedDetails(initialDetailsState());
+      setSelectedMaterials(initialMaterialsState());
     },
     [selectedCategoryIndex, selectedSubCategoryIndex, selectedGroupIndex]
   ); // re-render
 
-  const { details } = selectedGroup;
-  const initialDetailsState = details.map(({ name_ar, name_en, required }) => ({
-    name_ar,
-    name_en,
-    value_ar: "",
-    value_en: "",
-    required,
-  }));
-  const [selectedDetails, setSelectedDetails] = useState(initialDetailsState);
+  const initialDetailsState = () => {
+    return details.map((detail) => ({
+      ...detail,
+      value_ar: "",
+      value_en: "",
+    }));
+  };
+  const [selectedDetails, setSelectedDetails] = useState(initialDetailsState());
 
-  const { materials } = selectedGroup;
+  const initialMaterialsState = () => {
+    return materials && cloneArrayOfObjects(materials);
+  };
   const [selectedMaterials, setSelectedMaterials] = useState(
-    materials ? cloneArrayOfObjects(materials) : null
+    initialMaterialsState()
   );
 
   useUpdateEffect(
@@ -92,7 +85,7 @@ const AddProductForm = () => {
       const detailsFinished = selectedDetails
         .filter((detail) => detail.required)
         .every((detail) => detail.value_ar && detail.value_en);
-      const materialsFinished = materials
+      const materialsFinished = selectedMaterials
         ? calculateProportionsTotal(selectedMaterials) === 100
         : true;
       const stepFinished = detailsFinished && materialsFinished;
@@ -192,7 +185,7 @@ const AddProductForm = () => {
   };
   const [steps, stepsDispatch] = useReducer(stepsReducer, initSteps);
 
-  const [activeStep, setActiveStep] = useState(1);
+  const [activeStep, setActiveStep] = useState(2);
 
   const handleStepSubmit = useCallback(
     (event, disabled = false) => {
