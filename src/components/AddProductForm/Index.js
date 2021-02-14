@@ -21,6 +21,8 @@ import strings from "../../translations/strings/addProductPage";
 import { ContentDirectionContext } from "../../contexts/contentDirection";
 import cloneArrayOfObjects from "../../utils/cloneArrayOfObjects";
 import calculateProportionsTotal from "../../utils/calculateMaterialsProportionsTotal";
+import BounceLoader from "react-spinners/BounceLoader";
+import theme from "../../shared/theme";
 
 const AddProductForm = () => {
   const { locale } = useContext(LocaleContext);
@@ -32,6 +34,8 @@ const AddProductForm = () => {
   const { user } = useContext(AuthContext);
   const sellerId = user && user.uid;
   const router = useRouter();
+
+  const [loading, setLoading] = useState(false);
 
   // Inputs
   const [productName, setProductName] = useState("Product Name");
@@ -208,6 +212,9 @@ const AddProductForm = () => {
       if (!allStepsFinished) return;
       // Naming login goes here ..
 
+      // Set loading to true
+      setLoading(true);
+
       const category = categories[selectedCategoryIndex];
       const product = {
         name: productName,
@@ -259,57 +266,63 @@ const AddProductForm = () => {
         subCategoryHasGroups={!!groups.length}
       />
 
-      <FormContainer
-        size={activeStep === 2 ? "md" : activeStep === 3 ? "lg" : "sm"}
-      >
-        {activeStep === 1 ? (
-          <Category
-            categories={categories}
-            subCategories={subCategories}
-            selectedCategory={selectedCategory[`name_${locale}`]}
-            setSelectedCategoryIndex={setSelectedCategoryIndex}
-            selectedSubCategory={
-              selectedSubCategory && selectedSubCategory[`name_${locale}`]
-            }
-            setSelectedSubCategoryIndex={setSelectedSubCategoryIndex}
-            onStepSubmit={handleStepSubmit}
-          />
-        ) : activeStep === 2 ? (
-          <Details
-            selectedCategory={selectedCategory}
-            selectedSubCategory={selectedSubCategory}
-            details={details}
-            groups={groups}
-            selectedGroup={selectedGroup}
-            setSelectedGroupIndex={setSelectedGroupIndex}
-            selectedDetails={selectedDetails}
-            setSelectedDetails={setSelectedDetails}
-            selectedMaterials={selectedMaterials}
-            setSelectedMaterials={setSelectedMaterials}
-            goToPreviousStep={goToPreviousStep}
-            onStepSubmit={handleStepSubmit}
-            finished={steps[1].finished}
-          />
-        ) : activeStep === 3 ? (
-          <ColorsAndSizes
-            colors={colors}
-            setColors={setColors}
-            goToPreviousStep={goToPreviousStep}
-            onStepSubmit={handleStepSubmit}
-            finished={steps[2].finished}
-          />
-        ) : (
-          <Price
-            price={price}
-            setPrice={setPrice}
-            salePrice={salePrice}
-            setSalePrice={setSalePrice}
-            goToPreviousStep={goToPreviousStep}
-            onSubmit={handleFormSubmit}
-            finished={steps[3].finished}
-          />
-        )}
-      </FormContainer>
+      {loading ? (
+        <LoaderContainer>
+          <BounceLoader size={150} color={theme.bg.accent} />
+        </LoaderContainer>
+      ) : (
+        <FormContainer
+          size={activeStep === 2 ? "md" : activeStep === 3 ? "lg" : "sm"}
+        >
+          {activeStep === 1 ? (
+            <Category
+              categories={categories}
+              subCategories={subCategories}
+              selectedCategory={selectedCategory[`name_${locale}`]}
+              setSelectedCategoryIndex={setSelectedCategoryIndex}
+              selectedSubCategory={
+                selectedSubCategory && selectedSubCategory[`name_${locale}`]
+              }
+              setSelectedSubCategoryIndex={setSelectedSubCategoryIndex}
+              onStepSubmit={handleStepSubmit}
+            />
+          ) : activeStep === 2 ? (
+            <Details
+              selectedCategory={selectedCategory}
+              selectedSubCategory={selectedSubCategory}
+              details={details}
+              groups={groups}
+              selectedGroup={selectedGroup}
+              setSelectedGroupIndex={setSelectedGroupIndex}
+              selectedDetails={selectedDetails}
+              setSelectedDetails={setSelectedDetails}
+              selectedMaterials={selectedMaterials}
+              setSelectedMaterials={setSelectedMaterials}
+              goToPreviousStep={goToPreviousStep}
+              onStepSubmit={handleStepSubmit}
+              finished={steps[1].finished}
+            />
+          ) : activeStep === 3 ? (
+            <ColorsAndSizes
+              colors={colors}
+              setColors={setColors}
+              goToPreviousStep={goToPreviousStep}
+              onStepSubmit={handleStepSubmit}
+              finished={steps[2].finished}
+            />
+          ) : (
+            <Price
+              price={price}
+              setPrice={setPrice}
+              salePrice={salePrice}
+              setSalePrice={setSalePrice}
+              goToPreviousStep={goToPreviousStep}
+              onSubmit={handleFormSubmit}
+              finished={steps[3].finished}
+            />
+          )}
+        </FormContainer>
+      )}
     </Form>
   );
 };
@@ -323,6 +336,12 @@ const Form = styled.form`
 
 const Title = styled.h2`
   ${title}
+`;
+
+const LoaderContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 4em 0;
 `;
 
 const FormContainer = styled.div`
