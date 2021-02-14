@@ -74,7 +74,7 @@ const AddProductForm = () => {
   const [selectedDetails, setSelectedDetails] = useState(initialDetailsState());
 
   const initialMaterialsState = () => {
-    return materials && cloneArrayOfObjects(materials);
+    return materials ? cloneArrayOfObjects(materials) : null;
   };
   const [selectedMaterials, setSelectedMaterials] = useState(
     initialMaterialsState()
@@ -185,7 +185,7 @@ const AddProductForm = () => {
   };
   const [steps, stepsDispatch] = useReducer(stepsReducer, initSteps);
 
-  const [activeStep, setActiveStep] = useState(2);
+  const [activeStep, setActiveStep] = useState(1);
 
   const handleStepSubmit = useCallback(
     (event, disabled = false) => {

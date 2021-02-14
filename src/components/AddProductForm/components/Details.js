@@ -53,7 +53,10 @@ const Details = ({
 
   const handleSubmit = useCallback(
     (event) => {
-      if (calculateProportionsTotal(selectedMaterials) !== 100) {
+      if (
+        selectedMaterials &&
+        calculateProportionsTotal(selectedMaterials) !== 100
+      ) {
         setMaterialErrorVisible(true);
       }
       onStepSubmit(event, !finished);
