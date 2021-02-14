@@ -346,9 +346,9 @@ const DirectionButton = styled.button`
 
 const NextButton = styled(DirectionButton)`
   right: ${({ contentDirection, gap }) =>
-    contentDirection === "ltr" ? gap + "px" : null};
+    contentDirection === "ltr" ? `-${gap}px` : null};
   left: ${({ contentDirection, gap }) =>
-    contentDirection === "rtl" ? gap + "px" : null};
+    contentDirection === "rtl" ? `-${gap}px` : null};
   padding-right: ${({ contentDirection }) =>
     contentDirection === "ltr" ? ".4em" : "1.3em"};
   padding-left: ${({ contentDirection }) =>
@@ -357,9 +357,9 @@ const NextButton = styled(DirectionButton)`
 
 const PreviousButton = styled(DirectionButton)`
   left: ${({ contentDirection, gap }) =>
-    contentDirection === "ltr" ? gap + "px" : null};
+    contentDirection === "ltr" ? `-${gap}px` : null};
   right: ${({ contentDirection, gap }) =>
-    contentDirection === "rtl" ? gap + "px" : null};
+    contentDirection === "rtl" ? `-${gap}px` : null};
   padding-right: ${({ contentDirection }) =>
     contentDirection === "ltr" ? "1.3em" : ".4em"};
   padding-left: ${({ contentDirection }) =>
