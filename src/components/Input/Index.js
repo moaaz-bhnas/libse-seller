@@ -17,9 +17,13 @@ export const InputWithAffix = ({
   max = null,
   inputClassname,
 }) => {
+  const { contentDirection } = useContext(ContentDirectionContext);
+
   return (
     <InputContainer>
-      <Affix position={position}>{affixText}</Affix>
+      <Affix contentDirection={contentDirection} position={position}>
+        {affixText}
+      </Affix>
       <StyledInputWithAffix
         className={inputClassname}
         type={type}
@@ -157,10 +161,22 @@ const Affix = styled.span`
   justify-content: center;
   align-items: center;
   border: ${affixBorderStyle};
-  border-right: ${({ position }) =>
-    position === "prefix" ? "none" : affixBorderStyle};
-  border-left: ${({ position }) =>
-    position === "suffix" ? "none" : affixBorderStyle};
+  border-right: ${({ position, contentDirection }) =>
+    contentDirection === "ltr"
+      ? position === "prefix"
+        ? "none"
+        : affixBorderStyle
+      : position === "suffix"
+      ? "none"
+      : affixBorderStyle};
+  border-left: ${({ position, contentDirection }) =>
+    contentDirection === "ltr"
+      ? position === "suffix"
+        ? "none"
+        : affixBorderStyle
+      : position === "prefix"
+      ? "none"
+      : affixBorderStyle};
   flex: 0 0 2.6em;
   order: ${({ position }) => (position === "prefix" ? 0 : 1)};
 `;

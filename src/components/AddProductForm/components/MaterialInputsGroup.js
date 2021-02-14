@@ -16,7 +16,6 @@ const MaterialInputsGroup = ({
   errorVisible,
   setErrorVisible,
 }) => {
-  console.log("selectedMaterials: ", selectedMaterials);
   const { locale } = useContext(LocaleContext);
   const { contentDirection } = useContext(ContentDirectionContext);
   const { t } = useTranslation();
@@ -46,7 +45,7 @@ const MaterialInputsGroup = ({
         {selectedMaterials.map((material, index) => {
           return (
             <Label key={index} contentDirection={contentDirection}>
-              <InputContainer>
+              <InputContainer contentDirection={contentDirection}>
                 <InputWithAffix
                   position="suffix"
                   affixText="%"
@@ -106,7 +105,10 @@ const Label = styled.label`
 
 const InputContainer = styled.div`
   flex: 0 0 6rem;
-  margin-right: 0.3em;
+  margin-right: ${(props) =>
+    props.contentDirection === "ltr" ? "0.3em" : null};
+  margin-left: ${(props) =>
+    props.contentDirection === "rtl" ? "0.3em" : null};
 `;
 
 export default memo(MaterialInputsGroup);
