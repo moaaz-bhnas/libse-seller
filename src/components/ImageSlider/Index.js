@@ -34,7 +34,7 @@ const ImageSlider = ({
   const { contentDirection } = useContext(ContentDirectionContext);
   const { t } = useTranslation();
 
-  const [imageNaturalDimensions, setImageOriginalWidth] = useState(null);
+  const [imageOriginalWidth, setImageOriginalWidth] = useState(null);
 
   useEffect(() => {
     if (fullscreen) firstInteractive.current.focus();
@@ -113,18 +113,23 @@ const ImageSlider = ({
         calculateAndSetTopOffset(event);
       }
     },
-    [fullscreen, imageNaturalDimensions]
+    [fullscreen, imageOriginalWidth]
   );
 
   const calculateTopOffset = useCallback(
     (event) => {
-      const imageOffset = imageNaturalDimensions.height - window.innerHeight;
+      const imageWidth =
+        imageOriginalWidth > window.innerWidth
+          ? window.innerWidth
+          : imageOriginalWidth;
+      const imageHeight = imageWidth / measurements.ratio.productImage;
+      const imageOffset = imageHeight - window.innerHeight;
       const ratio = imageOffset / window.innerHeight;
       const { pageY } = event;
       const topOffset = pageY * ratio;
       return topOffset;
     },
-    [imageNaturalDimensions]
+    [imageOriginalWidth]
   );
 
   const setTopOffset = useCallback(
@@ -139,32 +144,21 @@ const ImageSlider = ({
       const topOffset = calculateTopOffset(event);
       setTopOffset(topOffset);
     },
-    [imageNaturalDimensions]
+    [imageOriginalWidth]
   );
 
-  const handleImageLoad = useCallback(
-    ({ target: { naturalWidth, naturalHeight } }) => {
-      setImageOriginalWidth({ width: naturalWidth, height: naturalHeight });
-    },
-    []
-  );
+  const handleImageLoad = useCallback(({ target: { naturalWidth } }) => {
+    setImageOriginalWidth(naturalWidth);
+  }, []);
 
-  if (
-    fullscreen &&
-    imageNaturalDimensions &&
-    imageNaturalDimensions.width < window.innerWidth
-  ) {
-    var innerWrapperWidth = imageNaturalDimensions.width + "px";
-    var innerWrapperHeight = imageNaturalDimensions.height + "px";
-  }
+  const innerWrapperWidth =
+    fullscreen && imageOriginalWidth && imageOriginalWidth < window.innerWidth
+      ? imageOriginalWidth + "px"
+      : null;
 
   return (
     <Wrapper fullscreen={fullscreen}>
-      <InnerWrapper
-        fullscreen={fullscreen}
-        width={innerWrapperWidth}
-        height={innerWrapperHeight}
-      >
+      <InnerWrapper fullscreen={fullscreen} width={innerWrapperWidth}>
         <Slider
           fullscreen={fullscreen}
           ref={sliderRef}
@@ -199,8 +193,8 @@ const ImageSlider = ({
             <>
               <PreviousButton
                 gap={
-                  fullscreen && window.innerWidth > imageNaturalDimensions.width
-                    ? (window.innerWidth - imageNaturalDimensions.width) / 2
+                  fullscreen && window.innerWidth > imageOriginalWidth
+                    ? (window.innerWidth - imageOriginalWidth) / 2
                     : 0
                 }
                 contentDirection={contentDirection}
@@ -216,8 +210,8 @@ const ImageSlider = ({
 
               <NextButton
                 gap={
-                  fullscreen && window.innerWidth > imageNaturalDimensions.width
-                    ? (window.innerWidth - imageNaturalDimensions.width) / 2
+                  fullscreen && window.innerWidth > imageOriginalWidth
+                    ? (window.innerWidth - imageOriginalWidth) / 2
                     : 0
                 }
                 contentDirection={contentDirection}
@@ -255,15 +249,12 @@ const ImageSlider = ({
 const wrapperFullscreenStyles = css`
   display: flex;
   justify-content: center;
-  align-items: center;
-
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: 4;
-
   background-color: #222;
 `;
 
@@ -274,7 +265,6 @@ const Wrapper = styled.div`
 const InnerWrapper = styled.div`
   position: relative;
   width: ${({ width }) => width};
-  height: ${({ height }) => height};
 `;
 
 const Slider = styled.div`
@@ -293,7 +283,6 @@ const List = styled.ul`
   margin: 0;
   padding-left: 0;
   padding-right: 0;
-
   display: flex;
   justify-content: flex-start;
   overflow: hidden;
@@ -303,7 +292,6 @@ const Slide = styled.li`
   flex-shrink: 0;
   width: 100%;
   display: flex;
-
   &:first-child {
     transition-property: margin-left, margin-right;
     transition-duration: ${({ fullscreen }) => (fullscreen ? "0.4s" : "0.3s")};
@@ -345,7 +333,6 @@ const DirectionButton = styled.button`
     contentDirection === "rtl"
       ? "rotate(180deg) translateY(50%)"
       : "translateY(-50%)"};
-
   &:hover,
   &:focus {
     opacity: 1;
