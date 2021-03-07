@@ -9,10 +9,9 @@ import errorIcon from "../../../img/error.svg";
 import { title4 } from "../../Title/style";
 import { ErrorIcon, ErrorMsg } from "../style";
 import theme from "../../../shared/theme";
-import { MultiLanguageSelect } from "../../Input/Index";
-import CheckboxesGroup from "./CheckboxesGroup";
 import { LocaleContext } from "../../../contexts/locale";
 import ImageUploader from "./ImageUploader";
+import Select from "react-select";
 
 const ColorInputsContainer = ({
   colorIndex,
@@ -84,10 +83,13 @@ const ColorInputsContainer = ({
         )}
       </LabelContainer>
 
-      <MultiLanguageSelect
+      <Select
+        instanceId="colorSelect"
         options={colorOptions}
-        value={color[`name_${locale}`]}
-        onChange={(optionIndex) => handleColorChange(optionIndex, colorIndex)}
+        value={{ label: color[`name_${locale}`] || colorOptions[0].label }}
+        onChange={(selectedOption) =>
+          handleColorChange(selectedOption, colorIndex)
+        }
       />
       {colorError.visible && colorError.index === colorIndex && (
         <ErrorMsg className="inputContainer__errMsg" role="alert">
@@ -100,23 +102,15 @@ const ColorInputsContainer = ({
         </ErrorMsg>
       )}
 
-      <SizesSelectContainer>
-        <AvailableSizes contentDirection={contentDirection}>
-          {t(translations, "availableSizes")}:
-        </AvailableSizes>
-        <CheckboxesGroup
-          name="sizes"
-          items={sizeOptions}
-          multiLanguage={false}
-          required={true}
-          onChange={({ event, index: optionIndex }) =>
-            handleSizeChange(event, optionIndex, colorIndex)
-          }
-          selectedItems={color.sizes}
-          itemsPerRow={5}
-          inline
-        />
-      </SizesSelectContainer>
+      <Select
+        instanceId="sizeSelect"
+        isMulti
+        options={sizeOptions}
+        value={color.sizes}
+        onChange={(selectedOptions) =>
+          handleSizeChange(selectedOptions, colorIndex)
+        }
+      />
       {sizeError.visible && sizeError.index === colorIndex && (
         <ErrorMsg className="inputContainer__errMsg" role="alert">
           {t(translations, "sizeErrorMsg")}

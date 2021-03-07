@@ -93,23 +93,6 @@ export const CheckboxInput = ({
   );
 };
 
-export const MultiLanguageSelect = ({ options, value, onChange }) => {
-  const { locale } = useContext(LocaleContext);
-
-  return (
-    <Select
-      value={value}
-      onChange={(event) => onChange(event.target.selectedIndex)}
-    >
-      {options.map((option, index) => (
-        <Option key={index} value={option[`name_${locale}`]}>
-          {option[`name_${locale}`]}
-        </Option>
-      ))}
-    </Select>
-  );
-};
-
 const Label = styled.label`
   width: ${(props) => props.width}%;
   padding: 0.2em 0;

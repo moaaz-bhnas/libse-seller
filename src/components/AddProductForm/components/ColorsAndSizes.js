@@ -15,6 +15,8 @@ const sizeOptions = [
   { name: "m" },
   { name: "l" },
   { name: "xl" },
+  { name: "xxl" },
+  { name: "xxxl" },
 ];
 
 const colorOptions = [
@@ -47,6 +49,18 @@ const ColorsAndSizes = ({
 
   const { locale } = useContext(LocaleContext);
 
+  const selectColorOptions = colorOptions.map((option, index) => ({
+    ...option,
+    label: option[`name_${locale}`],
+    value: index,
+  }));
+
+  const selectSizeOptions = sizeOptions.map((option, index) => ({
+    ...option,
+    label: option.name,
+    value: index,
+  }));
+
   const [colorsNumber, setColorsNumber] = useState(colors.length);
   const [colorsNumberError, setColorsNumberError] = useState({
     visible: false,
@@ -78,13 +92,13 @@ const ColorsAndSizes = ({
   );
 
   const handleColorChange = useCallback(
-    (optionIndex, colorIndex) => {
-      if (optionIndex) setColorError({ visible: false, index: null });
+    (option, colorIndex) => {
+      if (option) setColorError({ visible: false, index: null });
 
       const updatedColors = colors.map((color, i) => {
         if (i === colorIndex) {
-          color.name_en = colorOptions[optionIndex].name_en;
-          color.name_ar = colorOptions[optionIndex].name_ar;
+          color.name_en = option.name_en;
+          color.name_ar = option.name_ar;
         }
         return color;
       });
@@ -94,19 +108,13 @@ const ColorsAndSizes = ({
   );
 
   const handleSizeChange = useCallback(
-    (event, optionIndex, colorIndex) => {
+    (options, colorIndex) => {
+      console.log("options: ", options);
       setSizeError({ visible: false, index: null });
-
-      const size = sizeOptions[optionIndex].name;
 
       const updatedColors = colors.map((color, i) => {
         if (i === colorIndex) {
-          if (event.target.checked) {
-            color.sizes.push(size);
-          } else {
-            const indexToRemove = color.sizes.indexOf(size);
-            color.sizes.splice(indexToRemove, 1);
-          }
+          color.sizes = options;
         }
         return color;
       });
@@ -209,7 +217,6 @@ const ColorsAndSizes = ({
     [colors]
   );
 
-  console.log("colors: ", colors);
   return (
     <>
       <Title>{t(translations, "colorsSizes")}</Title>
@@ -233,10 +240,10 @@ const ColorsAndSizes = ({
               colors={colors}
               setDefaultColor={setDefaultColor}
               removeColor={removeColor}
-              colorOptions={colorOptions}
+              colorOptions={selectColorOptions}
               handleColorChange={handleColorChange}
               colorError={colorError}
-              sizeOptions={sizeOptions}
+              sizeOptions={selectSizeOptions}
               handleSizeChange={handleSizeChange}
               sizeError={sizeError}
               addImage={addImage}
