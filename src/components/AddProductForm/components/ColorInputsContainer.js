@@ -12,6 +12,8 @@ import theme from "../../../shared/theme";
 import { LocaleContext } from "../../../contexts/locale";
 import ImageUploader from "./ImageUploader";
 import Select from "react-select";
+import measurements from "../../../shared/measurements";
+import { inputStyles } from "../../Input/style";
 
 const ColorInputsContainer = ({
   colorIndex,
@@ -90,6 +92,8 @@ const ColorInputsContainer = ({
         onChange={(selectedOption) =>
           handleColorChange(selectedOption, colorIndex)
         }
+        className="colorSelectContainer"
+        classNamePrefix="colorSelect"
       />
       {colorError.visible && colorError.index === colorIndex && (
         <ErrorMsg className="inputContainer__errMsg" role="alert">
@@ -110,6 +114,8 @@ const ColorInputsContainer = ({
         onChange={(selectedOptions) =>
           handleSizeChange(selectedOptions, colorIndex)
         }
+        className="sizeSelectContainer"
+        classNamePrefix="sizeSelect"
       />
       {sizeError.visible && sizeError.index === colorIndex && (
         <ErrorMsg className="inputContainer__errMsg" role="alert">
@@ -148,22 +154,35 @@ const SubTitle = styled.h4`
   margin: 0;
 `;
 
-const AvailableSizes = styled.p`
-  font-weight: 500;
-  margin-top: 0;
-  margin-bottom: 0;
-  margin-right: ${(props) =>
-    props.contentDirection === "ltr" ? ".75em" : "initial"};
-  margin-left: ${(props) =>
-    props.contentDirection === "rtl" ? ".75em" : "initial"};
-`;
-
 const InputContainer = styled.div`
   position: relative;
   flex: 0 1 25em;
 
   .inputContainer__errMsg {
     margin: -0.2em 0 0.65em;
+  }
+
+  .sizeSelect__control,
+  .colorSelect__control {
+    border: 1px solid ${theme.border.grey};
+    padding: 0.15em 0;
+    margin-bottom: 0.075em;
+    border-bottom: none;
+
+    &:hover {
+      border-color: ${theme.border.grey};
+    }
+  }
+
+  .colorSelect__control {
+    border-top-left-radius: ${measurements.borderRadius.input};
+    border-top-right-radius: ${measurements.borderRadius.input};
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .sizeSelect__control {
+    border-radius: 0;
   }
 `;
 
@@ -223,11 +242,6 @@ const DefaultIcon = styled.img`
     props.contentDirection === "ltr" ? ".25em" : "initial"};
   margin-left: ${(props) =>
     props.contentDirection === "rtl" ? ".25em" : "initial"};
-`;
-
-const SizesSelectContainer = styled.div`
-  display: flex;
-  margin-bottom: 0.8em;
 `;
 
 export default memo(ColorInputsContainer);
