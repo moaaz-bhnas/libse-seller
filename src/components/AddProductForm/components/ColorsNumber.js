@@ -8,6 +8,7 @@ import useTranslation from "../../../hooks/useTranslation";
 import translations from "../../../translations/strings/addProductPage";
 import { LocaleContext } from "../../../contexts/locale";
 import time from "../../../shared/time";
+import theme from "../../../shared/theme";
 
 const ColorsNumber = ({
   colors,
@@ -98,7 +99,7 @@ const ColorsNumber = ({
     <>
       <StyledColorsNumber>
         <Label htmlFor="productForm__colorsNumber">
-          {t(translations, "numberOfColors")}:
+          {t(translations, "numberOfColors")}
         </Label>
         <Input
           data-tiny="true"
@@ -130,6 +131,20 @@ const StyledColorsNumber = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 1em;
+  padding-bottom: 1em;
+  /* position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    height: 1px;
+    width: 50%;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: ${theme.border.darkGrey};
+  } */
+  border-bottom: 1px solid ${theme.border.darkGrey};
 `;
 
 const Label = styled.label``;

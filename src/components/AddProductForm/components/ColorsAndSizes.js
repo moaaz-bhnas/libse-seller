@@ -269,6 +269,7 @@ const ColorsAndSizes = ({
 // styles
 const Title = styled.h3`
   ${title3}
+  margin-bottom: .6em;
 `;
 
 const ColorsContainer = styled.div`
