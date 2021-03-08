@@ -13,7 +13,7 @@ import { LocaleContext } from "../../../contexts/locale";
 import ImageUploader from "./ImageUploader";
 import Select from "react-select";
 import measurements from "../../../shared/measurements";
-import { inputStyles } from "../../Input/style";
+import strings from "../../../translations/strings/addProductPage";
 
 const ColorInputsContainer = ({
   colorIndex,
@@ -88,10 +88,13 @@ const ColorInputsContainer = ({
       <Select
         instanceId="colorSelect"
         options={colorOptions}
-        value={{ label: color[`name_${locale}`] || colorOptions[0].label }}
+        value={
+          color[`name_${locale}`] ? { label: color[`name_${locale}`] } : null
+        }
         onChange={(selectedOption) =>
           handleColorChange(selectedOption, colorIndex)
         }
+        placeholder={t(strings, "selectColor")}
         className="colorSelectContainer"
         classNamePrefix="colorSelect"
       />
@@ -109,11 +112,13 @@ const ColorInputsContainer = ({
       <Select
         instanceId="sizeSelect"
         isMulti
+        closeMenuOnSelect={false}
         options={sizeOptions}
         value={color.sizes}
         onChange={(selectedOptions) =>
           handleSizeChange(selectedOptions, colorIndex)
         }
+        placeholder={t(strings, "selectSize")}
         className="sizeSelectContainer"
         classNamePrefix="sizeSelect"
       />
@@ -183,6 +188,11 @@ const InputContainer = styled.div`
 
   .sizeSelect__control {
     border-radius: 0;
+  }
+
+  .colorSelect__placeholder,
+  .sizeSelect__placeholder {
+    color: inherit;
   }
 `;
 

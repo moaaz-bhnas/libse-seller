@@ -20,7 +20,6 @@ const sizeOptions = [
 ];
 
 const colorOptions = [
-  { name_en: "--Pick a color--", name_ar: "--اختر لون--" },
   { name_en: "black", name_ar: "أسود" },
   { name_en: "grey", name_ar: "رمادي" },
   { name_en: "white", name_ar: "أبيض" },
