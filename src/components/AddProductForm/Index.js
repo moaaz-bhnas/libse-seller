@@ -189,7 +189,7 @@ const AddProductForm = () => {
   };
   const [steps, stepsDispatch] = useReducer(stepsReducer, initSteps);
 
-  const [activeStep, setActiveStep] = useState(3);
+  const [activeStep, setActiveStep] = useState(1);
 
   const handleStepSubmit = useCallback(
     (event, disabled = false) => {
@@ -267,7 +267,7 @@ const AddProductForm = () => {
       />
 
       {loading ? (
-        <LoaderContainer>
+        <LoaderContainer aria-label="loading..">
           <BounceLoader size={150} color={theme.bg.accent} />
         </LoaderContainer>
       ) : (
