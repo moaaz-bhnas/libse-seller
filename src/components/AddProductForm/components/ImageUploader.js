@@ -63,9 +63,9 @@ const ImageUploader = ({
       )}
 
       <Gallery>
-        {sortedGallery.map((item, imageIndex) => (
+        {sortedGallery.map((image, imageIndex) => (
           <Item key={imageIndex}>
-            <Image src={item.url} alt={t(translations, "productImage")} />
+            <Image src={image.url} alt={t(translations, "productImage")} />
             <RemoveButton type="button" onClick={() => removeImage(imageIndex)}>
               <Icon src={removeIcon} alt={t(translations, "removeImage")} />
             </RemoveButton>
@@ -74,7 +74,7 @@ const ImageUploader = ({
               type="number"
               min={1}
               max={sortedGallery.length}
-              value={item.order}
+              value={image.order}
               onChange={({ target: { value } }) => {
                 orderInputs.current[value - 1].focus();
                 onOrderChange(colorIndex, imageIndex, Number(value));

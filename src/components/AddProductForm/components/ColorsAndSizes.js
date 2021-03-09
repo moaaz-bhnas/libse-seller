@@ -128,15 +128,19 @@ const ColorsAndSizes = ({
       if (colorsNumberError.visible)
         setColorsNumberError({ visible: false, colorsToClear: 0 });
 
-      const isLastColor = colors.length === 1;
-      const updatedColors = isLastColor
-        ? [{ name_ar: "", name_en: "", sizes: [], images: [], default: false }]
-        : colors.filter((color, i) => i !== index);
+      const updatedColors = colors.map((color, i) => {
+        if (i === index) {
+          return {
+            name_ar: "",
+            name_en: "",
+            sizes: [],
+            images: [],
+            default: false,
+          };
+        }
+        return color;
+      });
       setColors(updatedColors);
-
-      if (!isLastColor) {
-        setColorsNumber(colorsNumber - 1);
-      }
     },
     [colors, colorsNumber]
   );
@@ -160,6 +164,11 @@ const ColorsAndSizes = ({
     (colorIndex, imageIndex) => {
       const updatedColors = colors.map((color, i) => {
         if (i === colorIndex) {
+          color.images.forEach((image, index, array) => {
+            if (index > imageIndex) {
+              array[index].order--;
+            }
+          });
           color.images.splice(imageIndex, 1);
         }
         return color;

@@ -4,7 +4,7 @@ import { ContentDirectionContext } from "../../../contexts/contentDirection";
 import useTranslation from "../../../hooks/useTranslation";
 import translations from "../../../translations/strings/addProductPage";
 import defaultIcon from "../../../img/default.svg";
-import removeIcon from "../../../img/cross.svg";
+import removeIcon from "../../../img/eraser.svg";
 import errorIcon from "../../../img/error.svg";
 import { title4 } from "../../Title/style";
 import { ErrorIcon, ErrorMsg } from "../style";
@@ -78,9 +78,9 @@ const ColorInputsContainer = ({
             type="button"
             onClick={(event) => removeColor(event, colorIndex)}
             contentDirection={contentDirection}
-            title={t(translations, "removeColor")}
+            title={t(translations, "clearInputs")}
           >
-            <RemoveIcon src={removeIcon} alt={t(translations, "removeColor")} />
+            <RemoveIcon src={removeIcon} alt={t(translations, "clearInputs")} />
           </RemoveButton>
         )}
       </LabelContainer>
@@ -207,13 +207,13 @@ const RemoveButton = styled.button`
   background-color: transparent;
   width: 3em;
   border: none;
-  padding: 0.9em;
+  padding: 0.8em;
   margin-top: 0;
   margin-bottom: 0;
   margin-right: ${(props) =>
-    props.contentDirection === "ltr" ? "-0.9em" : ".5em"};
+    props.contentDirection === "ltr" ? "-0.8em" : ".5em"};
   margin-left: ${(props) =>
-    props.contentDirection === "rtl" ? "-0.9em" : ".5em"};
+    props.contentDirection === "rtl" ? "-0.8em" : ".5em"};
 
   &:hover {
     opacity: 0.6;

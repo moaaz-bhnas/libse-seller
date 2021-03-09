@@ -7,7 +7,7 @@ const AvailableSizes = ({ sizes }) => {
   return (
     <Sizes>
       {sizes.map((size) => (
-        <Size key={size}>{size}</Size>
+        <Size key={size.key}>{size.name}</Size>
       ))}
     </Sizes>
   );

@@ -67,9 +67,12 @@ const ProductPage = ({
   const router = useRouter();
   const { pathname, query } = router;
   const { colors } = product;
-  const activeColor = colors.find((color) => color.name_en === query.color);
 
+  const activeColor = colors.find((color) => color.name_en === query.color);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  useEffect(() => {
+    setActiveImageIndex(0);
+  }, [activeColor]);
 
   const [fullscreenVisible, setFullscreenVisible] = useState(false);
 
