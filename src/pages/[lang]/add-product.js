@@ -7,8 +7,11 @@ import { LocaleProvider } from "../../contexts/locale";
 import firebaseAdmin from "../../firebase/admin";
 import { ProfileProvider } from "../../contexts/profile";
 import { getProfile } from "../../api/firebase";
+import { connectToDatabase } from "../../db";
 
 export async function getServerSideProps(context) {
+  const { db } = await connectToDatabase();
+
   const {
     params: { lang },
   } = context;
