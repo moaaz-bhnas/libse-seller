@@ -8,9 +8,12 @@ import firebaseAdmin from "../../firebase/admin";
 import { ProfileProvider } from "../../contexts/profile";
 import { getProfile } from "../../api/firebase";
 import { connectToDatabase } from "../../db";
+import fetch from "isomorphic-unfetch";
+import { useState } from "react";
+import { useRouter } from "next/router";
 
 export async function getServerSideProps(context) {
-  const { db } = await connectToDatabase();
+  // const { db } = await connectToDatabase();
 
   const {
     params: { lang },
@@ -48,13 +51,21 @@ export async function getServerSideProps(context) {
 }
 
 const AddProduct = ({ lang, serverUser, serverProfile }) => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const router = useRouter();
+
   return (
     <AuthProvider serverUser={serverUser}>
       <ProfileProvider serverProfile={serverProfile}>
         <LocaleProvider lang={lang}>
           <ContentDirectionProvider>
             <Layout>
-              <AddProductForm />
+              {loading ? (
+                "Loading .."
+              ) : (
+                <AddProductForm setLoading={setLoading} />
+              )}
             </Layout>
           </ContentDirectionProvider>
         </LocaleProvider>
