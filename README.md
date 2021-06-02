@@ -1,5 +1,5 @@
-# Libse
+# Libse Seller
 
-### Updates
+### Next step
 
-- Use MongoDB client instead of Mongoose
+Use MongoDB to allow sellers to add products to the database, so that they can be viewed in Libse app.

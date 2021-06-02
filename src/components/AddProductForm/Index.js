@@ -213,8 +213,8 @@ const AddProductForm = ({ setLoading }) => {
       // Set loading to true
       setLoading(true);
 
-      const newProduct = modelProduct();
-      createProduct(newProduct);
+      // const newProduct = modelProduct();
+      // createProduct(newProduct);
 
       const category = categories[selectedCategoryIndex];
       const product = {
@@ -255,95 +255,95 @@ const AddProductForm = ({ setLoading }) => {
     ]
   );
 
-  const modelProduct = useCallback(() => {
-    const category = categories[selectedCategoryIndex];
-    const subCategory = category.subCategories[selectedSubCategoryIndex];
-    const details = selectedDetails
-      .map((detail) => ({
-        name: {
-          en: detail.name_en,
-          ar: detail.name_ar,
-        },
-        value: {
-          en: detail.value_en,
-          ar: detail.value_ar,
-        },
-      }))
-      .filter((detail) => detail.value.en !== "Other");
+  // const modelProduct = useCallback(() => {
+  //   const category = categories[selectedCategoryIndex];
+  //   const subCategory = category.subCategories[selectedSubCategoryIndex];
+  //   const details = selectedDetails
+  //     .map((detail) => ({
+  //       name: {
+  //         en: detail.name_en,
+  //         ar: detail.name_ar,
+  //       },
+  //       value: {
+  //         en: detail.value_en,
+  //         ar: detail.value_ar,
+  //       },
+  //     }))
+  //     .filter((detail) => detail.value.en !== "Other");
 
-    const materials =
-      selectedMaterials &&
-      selectedMaterials
-        .map(({ name_en, name_ar, proportion }) => ({
-          name: {
-            en: name_en,
-            ar: name_ar,
-          },
-          proportion,
-        }))
-        .filter((material) => material.proportion);
+  //   const materials =
+  //     selectedMaterials &&
+  //     selectedMaterials
+  //       .map(({ name_en, name_ar, proportion }) => ({
+  //         name: {
+  //           en: name_en,
+  //           ar: name_ar,
+  //         },
+  //         proportion,
+  //       }))
+  //       .filter((material) => material.proportion);
 
-    const formattedColors = colors.map(
-      ({ name_ar, name_en, sizes, images, ...color }) => ({
-        default: color.default,
-        name: {
-          en: name_en,
-          ar: name_ar,
-        },
-        sizes: sizes.map((size) => size.name),
-        images,
-      })
-    );
+  //   const formattedColors = colors.map(
+  //     ({ name_ar, name_en, sizes, images, ...color }) => ({
+  //       default: color.default,
+  //       name: {
+  //         en: name_en,
+  //         ar: name_ar,
+  //       },
+  //       sizes: sizes.map((size) => size.name),
+  //       images,
+  //     })
+  //   );
 
-    const product = {
-      sellerId,
-      name: productName,
-      category: {
-        en: category.name_en,
-        ar: category.name_ar,
-      },
-      clothing: {
-        en: subCategory.name_en,
-        ar: subCategory.name_ar,
-      },
-      group: {
-        en: selectedGroup.name_en,
-        ar: selectedGroup.name_ar,
-      },
-      details,
-      materials,
-      colors: formattedColors,
-      price,
-    };
+  //   const product = {
+  //     sellerId,
+  //     name: productName,
+  //     category: {
+  //       en: category.name_en,
+  //       ar: category.name_ar,
+  //     },
+  //     clothing: {
+  //       en: subCategory.name_en,
+  //       ar: subCategory.name_ar,
+  //     },
+  //     group: {
+  //       en: selectedGroup.name_en,
+  //       ar: selectedGroup.name_ar,
+  //     },
+  //     details,
+  //     materials,
+  //     colors: formattedColors,
+  //     price,
+  //   };
 
-    return product;
-  }, [
-    selectedCategoryIndex,
-    selectedSubCategoryIndex,
-    selectedGroupIndex,
-    selectedDetails,
-    selectedMaterials,
-    colors,
-    price,
-  ]);
+  //   return product;
+  // }, [
+  //   selectedCategoryIndex,
+  //   selectedSubCategoryIndex,
+  //   selectedGroupIndex,
+  //   selectedDetails,
+  //   selectedMaterials,
+  //   colors,
+  //   price,
+  // ]);
 
-  const createProduct = useCallback(async (product) => {
-    console.log("mongo product: ", product);
+  // const createProduct = useCallback(async (product) => {
+  //   console.log("mongo product: ", product);
 
-    try {
-      const res = await fetch("http://localhost:3000/api/product", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(product),
-      });
-      router.push(`/${locale}/`);
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  //   try {
+  //     const res = await fetch("http://localhost:3000/api/product", {
+  //       method: "POST",
+  //       headers: {
+  //         Accept: "application/json",
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(product),
+  //     });
+  //     router.push(`/${locale}/`);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }, []);
 
   return (
     <Form contentDirection={contentDirection} onSubmit={handleFormSubmit}>
